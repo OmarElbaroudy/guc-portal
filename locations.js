@@ -6,4 +6,5 @@ const LocationSchema = new schema({
     capacity: Number,
     type: String
 })
+
 module.exports = mongoose.model('Location', LocationSchema)
