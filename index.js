@@ -31,7 +31,7 @@ mongoose.connect(cluster, {useNewUrlParser: true, useUnifiedTopology: true, useC
                     if(!verified){
                         return res.status(403).send("wrong password")
                     }
-                    const payload={email:h.email}
+                    const payload={email:a.email,type:"academic"}
                     const token=jwt.sign(payload,key)
                     res.header('auth-token',token)
                     res.send("login successfull")
@@ -43,7 +43,7 @@ mongoose.connect(cluster, {useNewUrlParser: true, useUnifiedTopology: true, useC
                 if(!verified){
                     return res.status(403).send("wrong password")
                 }
-                const payload={email:h.email}
+                const payload={email:h.email,type:"hr"}
                 const token=jwt.sign(payload,key)
                 res.header('auth-token',token)
                 res.send("login successfull")
