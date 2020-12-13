@@ -7,7 +7,7 @@ const HRSchema = new schema({
         required: true
     },
     password: {
-        type: Number,
+        type: String,
         default: "123456"
     },
     id: {
