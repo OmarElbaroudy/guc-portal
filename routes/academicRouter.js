@@ -22,5 +22,23 @@ router.route("/HOD/assign_course_instructor")
             }
         }
     })
+    router.route("/CI/view_assigned_slots")
+    .get(async (req, res) => {
+        const token = req.header('auth-token')
+        const decoded = jwt_decode(token);
+
+        if (decoded.type === "academic") {
+            const h = await Academic.findOne({
+                id: decoded.id,
+            })
+
+            if (h) {
+                    res.send(h.Schedule)
+            }
+            else{
+                res.send('You dont have access to schedule')
+            }
+        }
+    })
 
 module.exports = router
