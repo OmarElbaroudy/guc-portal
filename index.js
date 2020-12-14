@@ -11,6 +11,7 @@ const department = require('./models/department.js')
 const location = require('./models/locations.js')
 const CIRouter = require('./routes/CIRouter')
 const HODRouter=require('./routes/HODRouter')
+const AcademicMember=require('./routes/acRouter')
 const key = 'iehfoeihfpwhoqhfiu083028430bvf'
 
 const app = express()
@@ -61,6 +62,8 @@ mongoose.connect(cluster, {useNewUrlParser: true, useUnifiedTopology: true, useC
         app.use(authenticate)
         app.use("", CIRouter)
         app.use("", HODRouter)
+        app.use("",AcademicMember)
+
 
         app.listen(3000, () => {
             console.log("connected")
