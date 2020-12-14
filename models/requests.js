@@ -1,14 +1,13 @@
 const mongoose=require('mongoose')
 const schema =mongoose.Schema
 const requestSchema=new schema({
- request_ID:String,
  Status:String,
  type:String,
  sender_comment:String,
- reciever_comment:String,
- dpartment:String,
+ receiver_comment:String,
+ department:String,
  sender:String,
- reciever:String,
+ receiver:String,
  course:String
 })
 module.exports=mongoose.model('request', requestSchema)

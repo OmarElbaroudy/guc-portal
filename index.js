@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcryptjs')
+
 const Academic = require('./models/academic.js')
 const HR = require('./models/HR.js')
 const course = require('./models/course.js')
@@ -9,40 +9,20 @@ const faculty = require('./models/faculty.js')
 const request = require('./models/requests.js')
 const department = require('./models/department.js')
 const location = require('./models/locations.js')
+
 const academicRouter = require('./routes/academicRouter')
 const HODRouter=require('./routes/HODRouter')
+const loginRouter = require('./routes/loginRouter')
+const myProfileRouter = require('./routes/myProfileRouter');
+
 const key = 'iehfoeihfpwhoqhfiu083028430bvf'
 
 const app = express()
 app.use(express.json())
 
 const cluster = 'mongodb+srv://admin:admin@cluster0.ryozj.mongodb.net/Proj?retryWrites=true&w=majority';
-
 mongoose.connect(cluster, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
     .then(() => {
-
-        app.post('/login', async (req, res) => {
-            const email = req.body.email;
-            const h = await HR.findOne({email: email})
-            const a = await Academic.findOne({email: email})
-
-            if (!h && !a) {
-                return res.status(403).send("This email doesn't exist");
-            }
-
-            const user = h !== null ? h : a;
-            //const verified = await bcrypt.compare(req.body.password, user.password)
-            const verified = (user.password ===req.body.password)
-            if (!verified) {
-                return res.status(403).send("wrong password")
-            }
-
-            const payload = {id: user.id, type: h !== null ? "hr" : "academic"}
-            const token = jwt.sign(payload, key)
-
-            res.header('auth-token', token)
-            res.send("login successfull")
-        })
 
         function authenticate(req, res, next) {
             if (!req.header('auth-token')) {
@@ -53,20 +33,24 @@ mongoose.connect(cluster, {useNewUrlParser: true, useUnifiedTopology: true, useC
                 jwt.verify(req.header('auth-token'), key)
                 next()
             } catch (err) {
-                res.status(403).send("invalid token")
+                res.status(401).send("invalid token")
             }
         }
 
-        app.use("", academicRouter)
-        app.use("", HODRouter)
         app.use(authenticate)
+        app.use("", loginRouter);
+        app.use("", academicRouter)
+        app.use("", myProfileRouter);
+        app.use("", HODRouter)
 
         app.listen(3000, () => {
             console.log("connected")
         })
+
     }).catch((err) => {
     console.log(err)
 })
+
 //localhost:3000/HOD/assign_course_instructor/
 // {
 //     "email" :  "x@x",
