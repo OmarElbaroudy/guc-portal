@@ -37,7 +37,7 @@ const AcademicSchema = new schema({
     courses: Array,
     department: String,
     faculty: String,
-    Course_coverage: Number,
+    gender:String,
     Schedule: Array
 
 })
