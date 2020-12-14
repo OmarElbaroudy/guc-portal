@@ -9,7 +9,7 @@ const faculty = require('./models/faculty.js')
 const request = require('./models/requests.js')
 const department = require('./models/department.js')
 const location = require('./models/locations.js')
-const academicRouter = require('./routes/academicRouter')
+const CIRouter = require('./routes/CIRouter')
 const HODRouter=require('./routes/HODRouter')
 const key = 'iehfoeihfpwhoqhfiu083028430bvf'
 
@@ -57,9 +57,10 @@ mongoose.connect(cluster, {useNewUrlParser: true, useUnifiedTopology: true, useC
             }
         }
 
-        app.use("", academicRouter)
-        app.use("", HODRouter)
+       
         app.use(authenticate)
+        app.use("", CIRouter)
+        app.use("", HODRouter)
 
         app.listen(3000, () => {
             console.log("connected")
@@ -76,3 +77,8 @@ mongoose.connect(cluster, {useNewUrlParser: true, useUnifiedTopology: true, useC
 // }
 
 //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjLTEiLCJ0eXBlIjoiYWNhZGVtaWMiLCJpYXQiOjE2MDc4OTIyODN9.IHNSqzO3R9PJuw1Tg6BEHCPVW6FQAgIp72vEfy2SeOY
+
+
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNhZGVtaWMiLCJpYXQiOjE2MDc5NTM2NzJ9.zrY1kNdnz0_hGXcm-AF03x6tc0vU_Qp0qv3Rm-8kqBE
+
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjLTMiLCJ0eXBlIjoiYWNhZGVtaWMiLCJpYXQiOjE2MDc5NjE1MDJ9.WUofsgXIjLfe1ZDksOpG6B8L6py4cuvNe3XP7PwMLvw
