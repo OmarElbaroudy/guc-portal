@@ -10,10 +10,10 @@ const request = require('./models/requests.js')
 const department = require('./models/department.js')
 const location = require('./models/locations.js')
 
-const academicRouter = require('./routes/academicRouter')
 const HODRouter=require('./routes/HODRouter')
 const loginRouter = require('./routes/loginRouter')
-const myProfileRouter = require('./routes/myProfileRouter');
+const myProfileRouter = require('./routes/myProfileRouter')
+const CIRouter = require('./routes/CIRouter')
 
 const key = 'iehfoeihfpwhoqhfiu083028430bvf'
 
@@ -39,9 +39,9 @@ mongoose.connect(cluster, {useNewUrlParser: true, useUnifiedTopology: true, useC
 
         app.use(authenticate)
         app.use("", loginRouter);
-        app.use("", academicRouter)
         app.use("", myProfileRouter);
-        app.use("", HODRouter)
+        app.use("", HODRouter);
+        app.use("", CIRouter);
 
         app.listen(3000, () => {
             console.log("connected")
