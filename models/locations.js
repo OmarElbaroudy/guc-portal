@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const schema = mongoose.Schema
 const LocationSchema = new schema({
     name: String,
-    object: Array,
+    schedule: Array,
     capacity: Number,
     type: String
 })

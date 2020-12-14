@@ -6,9 +6,11 @@ const Academic = require('./models/academic.js')
 const HR = require('./models/HR.js')
 const course = require('./models/course.js')
 const faculty = require('./models/faculty.js')
+const request = require('./models/requests.js')
 const department = require('./models/department.js')
 const location = require('./models/locations.js')
 const academicRouter = require('./routes/academicRouter')
+const HODRouter=require('./routes/HODRouter')
 const key = 'iehfoeihfpwhoqhfiu083028430bvf'
 
 const app = express()
@@ -29,8 +31,8 @@ mongoose.connect(cluster, {useNewUrlParser: true, useUnifiedTopology: true, useC
             }
 
             const user = h !== null ? h : a;
-            const verified = await bcrypt.compare(req.body.password, user.password)
-
+            //const verified = await bcrypt.compare(req.body.password, user.password)
+            const verified = (user.password ===req.body.password)
             if (!verified) {
                 return res.status(403).send("wrong password")
             }
@@ -56,6 +58,7 @@ mongoose.connect(cluster, {useNewUrlParser: true, useUnifiedTopology: true, useC
         }
 
         app.use("", academicRouter)
+        app.use("", HODRouter)
         app.use(authenticate)
 
         app.listen(3000, () => {
