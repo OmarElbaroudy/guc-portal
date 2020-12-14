@@ -15,9 +15,11 @@ const AcademicSchema = new schema({
         type: String,
         unique: true,
     },
+
     name: String,
     attendance_records: Array,
     sign_in_out: Array,
+
     missing_days: {
         type: Number,
         default: 0
@@ -38,8 +40,10 @@ const AcademicSchema = new schema({
     department: String,
     faculty: String,
     gender:String,
-    Schedule: Array
-
+    Schedule: Array,
+    personalInfo : String,
+    sent_requests : Array,
+    received_requests : Array
 })
 
 module.exports = mongoose.model('Academic', AcademicSchema)
