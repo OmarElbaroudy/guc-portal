@@ -2,7 +2,6 @@ const express = require("express");
 const Academic = require("../models/academic");
 const course = require("../models/course");
 const jwt_decode = require('jwt-decode');
-const academic = require("../models/academic");
 const requests = require("../models/requests");
 const router = express.Router()
 
@@ -23,7 +22,7 @@ const auth= async (req,res,next)=>{
 }
 
 router.route("/HOD/assign_course_instructor")
-    .put(auth,async (req, res,next) => {
+    .put(auth,async (req, res) => {
         const token = req.header('auth-token')
         const decoded = jwt_decode(token);
 
@@ -64,7 +63,7 @@ router.route("/HOD/assign_course_instructor")
             }
 })
 router.route("/HOD/delete_course_instructor")
-    .put(auth,async (req,res,next)=>{
+    .put(auth,async (req,res)=>{
             const token = req.header('auth-token')
             const decoded = jwt_decode(token);
 
@@ -107,7 +106,7 @@ router.route("/HOD/delete_course_instructor")
             }
 })
  router.route("/HOD/view_staff")
-    .post(auth,async(req,res,next)=>{
+    .post(auth,async(req,res)=>{
            const token = req.header('auth-token')
            const decoded = jwt_decode(token);
       
@@ -121,13 +120,13 @@ router.route("/HOD/delete_course_instructor")
            })
            if(c){
                console.log("if")
-               const ress=c.instructors_ID.filter(function(value){
+               const ress=c.instructors_ID.filter(function(){
                    return c.department===h.department
                })
               Academic.find({id: {$in: ress} }).then(doc => {
                 res.send(doc)
-                }).catch(err => {
-                    console.error("err")
+                }).catch((err) => {
+                    console.error(err)
                     }) 
            }
            else{
@@ -141,7 +140,7 @@ router.route("/HOD/delete_course_instructor")
       }
 })
  router.route("/HOD/update_course_instructor")
-     .put(auth,async(req,res,next)=>{
+     .put(auth,async(req,res)=>{
         const token = req.header('auth-token')
         const decoded = jwt_decode(token);
    
@@ -194,7 +193,7 @@ router.route("/HOD/delete_course_instructor")
    }
 })
 router.route("/HOD/view_day_off")  
-    .post(auth,async(req,res,next)=>{
+    .post(auth,async(req,res)=>{
     const token = req.header('auth-token')
     const decoded = jwt_decode(token);
     
@@ -220,7 +219,7 @@ router.route("/HOD/view_day_off")
      
 }) 
 router.route("/HOD/view_requests")
-    .post(auth,async(req,res,next)=>{
+    .post(auth,async(req,res)=>{
         const token = req.header('auth-token')
         const decoded = jwt_decode(token);
         
@@ -237,7 +236,7 @@ router.route("/HOD/view_requests")
            }
 })
 router.route("/HOD/view_course_coverage")
-    .post(auth,async(req,res,next)=>{
+    .post(auth,async(req,res)=>{
         const token = req.header('auth-token')
         const decoded = jwt_decode(token);
    
@@ -255,7 +254,7 @@ router.route("/HOD/view_course_coverage")
          }
 })
 router.route("/HOD/view_course_schedule")
-    .post(auth,async(req,res,next)=>{
+    .post(auth,async(req,res)=>{
         const token = req.header('auth-token')
         const decoded = jwt_decode(token);
    
@@ -274,7 +273,7 @@ router.route("/HOD/view_course_schedule")
          }
 })
 router.route("/HOD/accept_requests")
-    .put(auth,async(req,res,next)=>{
+    .put(auth,async(req,res)=>{
         const token = req.header('auth-token')
         const decoded = jwt_decode(token);
    
@@ -309,14 +308,14 @@ router.route("/HOD/accept_requests")
              const filter = { name: c[i].name };
              const update = { schedule:  c[i].schedule};
             
-             const doc = await course.findOneAndUpdate(filter, update,{
+             await course.findOneAndUpdate(filter, update,{
                  new:true
              });
          }
             request.Status="accepted"
             request.save()
             acad.save()
-            res.send("changed succefuly")
+            res.send("changed successfully")
        }
          }
 
