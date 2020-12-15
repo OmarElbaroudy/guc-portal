@@ -8,6 +8,9 @@ const requestSchema=new schema({
  department:String,
  sender:String,
  receiver:String,
- course:String
+ course:String,
+ day : Date,
+ slot : Number,
+ location : String,
 })
 module.exports=mongoose.model('request', requestSchema)

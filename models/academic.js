@@ -43,7 +43,8 @@ const AcademicSchema = new schema({
     Schedule: Array,
     personalInfo : String,
     sent_requests : Array,
-    received_requests : Array
+    received_requests : Array,
+    position : String
 })
 
 module.exports = mongoose.model('Academic', AcademicSchema)
