@@ -17,8 +17,8 @@ const requestSchema=new schema({
  sender:String,
  receiver:String,
  issue_date : Date,
- replacementRequests : [replacementRequest]
-
+ replacementRequest : replacementRequest
+ 
 })
 
 module.exports=mongoose.model('request', requestSchema)
