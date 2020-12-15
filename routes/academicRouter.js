@@ -58,8 +58,6 @@ router.route("/ac/viewSchedule").get(auth, async (req, res) => {
 					course: request.replacementRequest.course,
 				};
 				sessions.push(session);
-
-
 			}
 		}
 		res.send(sessions.concat(cur.Schedule)); //should have replacements if present
@@ -150,19 +148,44 @@ router
 		try {
 			const token = req.header("auth-token");
 			const decoded = jwt_decode(token);
-			let response = [];
-			const reqs = await Requests.find({
-				sender: decoded.id,
-				type: "Replacement",
+			let replacements = [];
+			const ac = await Academic.findOne({
+				id : decoded.id
 			});
-			response.push(reqs);
-			const reqs2 = await Requests.find({
-				receiver: decoded.id,
-				type: "Replacement",
-			});
+			
+			if (!ac)	return res.status(408).send("no such academic member");
 
-			response.push(reqs2);
-			res.send(response);
+			for (const reqID of ac.sent_requests) {
+				const request = await Requests.findOne({ //check request.sender is decoded.id or
+														 //request.receiver is decoded.id
+					_id: reqID,
+					type: "Replacement"
+				});
+					let replacementReq = {
+						course:request.replacementRequest.course,
+						slotDate : request.replacementRequest.slotDate,
+						slot : request.replacementRequest.slot,
+						location : request.replacementRequest.location,
+						status : request.replacementRequest.status //accepted or rejected by receiver ta
+					};
+					replacements.push(replacementReq);
+				}
+			for (const reqID of ac.received_requests) {
+				const request = await Requests.findOne({
+					_id: reqID,
+					type: "Replacement"
+				});
+				let replacementReq = {
+					course:request.replacementRequest.course,
+					slotDate : request.replacementRequest.slotDate,
+					slot : request.replacementRequest.slot,
+					location : request.replacementRequest.location,
+					status : request.replacementRequest.status //accepted or rejected by receiver ta
+				};
+				replacements.push(replacementReq);
+				
+			}
+			res.send(replacements);
 		} catch (err) {
 			console.log(err);
 		}
