@@ -44,23 +44,22 @@ const AcademicSchema = new schema({
 		type: Number,
 		default: 0,
 	},
-
-	accidental_leaves_balance: {
+    accidental_leaves_balance: {
 		type: Number,
 		default: 6,
     },
     annual_leaves_balance : Number,
-	salary: Number,
-	office_location: String,
-	day_off: String,
-	courses: [course],
-	department: String,
-	faculty: String,
-	gender: String,
-	Schedule: [session],
-	personalInfo: String,
-	sent_requests: Array,
-	received_requests: Array,
-});
+    salary: Number,
+    office_location: String,
+    day_off: Number,
+    courses: [course], 
+    department: String,
+    faculty: String,
+    gender:String,
+    Schedule: [session],
+    personalInfo : String,
+    sent_requests : Array,
+    received_requests : Array,
+})
 
 module.exports = mongoose.model("Academic", AcademicSchema);
