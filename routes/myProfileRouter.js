@@ -6,7 +6,6 @@ const Academic = require("../models/academic")
 const HR = require("../models/HR")
 
 const router = express.Router()
-const salt = await bcrypt.genSalt(10);
 
 
 router.route("/myProfile")
@@ -32,6 +31,7 @@ router.route("/myProfile")
     .put(async (req, res) => {
         const token = req.header('auth-token');
         const decoded = jwt_decode(token);
+        const salt = await bcrypt.genSalt(10);
         const vals = req.body;
         try {
                 let doc = {};
