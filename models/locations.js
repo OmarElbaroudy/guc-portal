@@ -12,7 +12,8 @@ const LocationSchema = new schema({
     name: String,
     schedule: [session],
     capacity: Number,
-    type: String
+    type: String,
+    currCapacity:{type:Number, default:0}
 })
 
 module.exports = mongoose.model('Location', LocationSchema)
