@@ -52,7 +52,8 @@ router.route("/HOD/assign_course_instructor")
                  }
                 if(x){
                     if(c.department ===h.department){
-                        x.courses.push(req.body.course_name)
+                        x.courses.push({name:req.body.course_name,
+                            position:"instructor"})
                 x.save()
                 res.send("Done x")
                         }
@@ -95,7 +96,7 @@ router.route("/HOD/delete_course_instructor")
                 if(x){
                     if (c.department === h.department){
                 x.courses= x.courses.filter(function(value){
-                        return value!==req.body.course_name
+                        return value.name!==req.body.course_name
                 })
                 x.save()
             }
@@ -170,7 +171,7 @@ router.route("/HOD/delete_course_instructor")
             if(x){
                 if (c.department === h.department){
             x.courses= x.courses.filter(function(value){
-                    return value!==req.body.course_name
+                    return value.name!==req.body.course_name
             })
             x.save()
         }
