@@ -35,8 +35,6 @@ const HRSchema = new schema({
     day_off: {
         type: String,
         default: "Saturday"
-    },
-    Schedule: Array
-
+    }
 })
 module.exports = mongoose.model('HR', HRSchema)

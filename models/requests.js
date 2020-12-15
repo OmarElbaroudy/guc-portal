@@ -1,5 +1,13 @@
 const mongoose=require('mongoose')
 const schema =mongoose.Schema
+
+const replacementRequest = new schema({
+    course:String,
+    day : Date,
+    slot : Number,
+    location : String,
+})
+
 const requestSchema=new schema({
  Status:String,
  type:String,
@@ -8,9 +16,9 @@ const requestSchema=new schema({
  department:String,
  sender:String,
  receiver:String,
- course:String,
- day : Date,
- slot : Number,
- location : String,
+ issue_date : Date,
+ replacementRequests : [replacementRequest]
+
 })
+
 module.exports=mongoose.model('request', requestSchema)

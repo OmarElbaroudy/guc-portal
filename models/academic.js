@@ -1,6 +1,13 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
+const session = new schema({
+    course : String,
+    location : String,
+    day : Number, //0 for Sunday, 1 for Monday, 2 for Tuesday, 3 for Wednesday ....
+    slot : Number, //1 for first, 2 for second, 3 for third ...
+})
+
 const AcademicSchema = new schema({
     email: {
         type: String,
@@ -36,11 +43,11 @@ const AcademicSchema = new schema({
     salary: Number,
     office_location: String,
     day_off: String,
-    courses: Array,
+    courses: Array, //array of string
     department: String,
     faculty: String,
     gender:String,
-    Schedule: Array,
+    Schedule: [session],
     personalInfo : String,
     sent_requests : Array,
     received_requests : Array,
