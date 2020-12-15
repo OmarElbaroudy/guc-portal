@@ -163,10 +163,41 @@ router.route("/HOD/delete_course_instructor")
              if(c){
                 if(c.department === h.department){
                     const foundIndex = c.instructors_ID.findIndex(value => value === x.id);
+                    console.log(foundIndex)
                     c.instructors_ID[foundIndex] = y.id;
-                c.save()
+              
                 console.log(foundIndex)
             }   
+            }
+            const loc=new Array()
+            x.Schedule=x.Schedule.filter(function(value){
+                if(value.course === c.name)
+                y.Schedule.push(value)
+                return(value.course !== c.name )
+            })
+            for(var i=0;i<c.schedule.length;i++){
+                if(c.schedule[i].instructor===x.id){
+                    loc.push(c.schedule[i].location)
+                    c.schedule[i].instructor=y.id
+                }
+            }
+            console.log(c)
+            c.save()
+            const locs= await locations.find(
+                { name: { $in: loc } }
+             )
+            for(var i=0;i<locs.length;i++){
+                locs[i].schedule= locs[i].schedule.filter(function(value){
+                    if(value.instructor===x.id && value.course === c.name)
+                    value.instructor=y.id
+                   return true
+                })
+                const filter = { name: locs[i].name };
+                const update = { schedule:  locs[i].schedule};
+   
+                await locations.findOneAndUpdate(filter, update,{
+                   new:true
+               });
             }
             if(x){
                 if (c.department === h.department){
@@ -182,7 +213,8 @@ router.route("/HOD/delete_course_instructor")
         }
         if(y){
             if(c.department ===h.department){
-                y.courses.push(req.body.course_name)
+                y.courses.push({name:req.body.course_name,
+                position:"instructor"})
         y.save()
         res.send("Done y")
                 }
