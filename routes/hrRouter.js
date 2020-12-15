@@ -83,7 +83,7 @@ router.route("/hr/location")
                 x.save()
 
                 do{
-                const u=await academic.findOneAndUpdate({officeLocation : oldName}, {officeLocation: newName},{new:true})
+                const u=await academic.findOneAndUpdate({office_location : oldName}, {office_location: newName},{new:true})
                 u.save()
                 }while(u);
 
@@ -121,7 +121,7 @@ router.route("/hr/location")
                 const x=await Location.findOne({
                     name:req.body.name
                 })
-                const u=await academic.findOne({officeLocation : oldName})
+                const u=await academic.findOne({office_location : oldName})
                 if(u || x.schedule.length!==0){
                     return res.status(403).send("cannot delete this location as it is occupied by an instructor/session")
                 }
@@ -142,7 +142,7 @@ router.route("/hr/location")
                 const token = req.header('auth-token')
                 const decoded = jwt_decode(token);
                 const vals = req.body;
-                if((!req.body.id) || (!req.body.name)||(!req.body.salary)||(!req.body.officeLocation)||(!req.body.email)){
+                if((!req.body.id) || (!req.body.name)||(!req.body.salary)||(!req.body.office_location)||(!req.body.email)){
                     return res.status(403).send("each member should have name, salary, email, office location and id")
                 }
                 else{
@@ -157,10 +157,11 @@ router.route("/hr/location")
                         const x= await HR.insertOne({
                             name:req.body.name,
                             id:req.body.id,
-                            officeLocation:req.body.officeLocation,
+                            office_location:req.body.office_location,
                             email:req.body.email,
                             salary:req.body.salary,
-                            dayOff:"Saturday"
+                            dayOff:"Saturday",
+                            personalInfo:req.body.personalInfo
                         })
                         x.save()
                     }
@@ -168,9 +169,10 @@ router.route("/hr/location")
                         const x= await Academic.insertOne({
                             name:req.body.name,
                             id:req.body.id,
-                            officeLocation:req.body.officeLocation,
+                            office_location:req.body.office_location,
                             email:req.body.email,
                             salary:req.body.salary,
+                            personalInfo:req.body.personalInfo
                         })
                         x.save()
                     }

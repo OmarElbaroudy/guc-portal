@@ -32,6 +32,7 @@ const HRSchema = new schema({
     },
     salary: Number,
     office_location: String,
+    personalInfo : String,
     day_off: {
         type: String,
         default: "Saturday"
