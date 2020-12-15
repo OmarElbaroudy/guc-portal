@@ -303,7 +303,7 @@ router.route("/HOD/accept_requests")
 
          for(var i=0;i<c.length;i++){
              c[i].schedule=c[i].schedule.filter(function(value){
-                return value[3]!==acad.id
+                return value.instructor!==acad.id
              })
              const filter = { name: c[i].name };
              const update = { schedule:  c[i].schedule};
