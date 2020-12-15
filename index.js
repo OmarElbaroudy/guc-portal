@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 
 
 const HODRouter=require('./routes/HODRouter')
-const AcademicMember=require('./routes/acRouter')
+const AcademicMember=require('./routes/academicRouter')
 const loginRouter = require('./routes/loginRouter')
 const myProfileRouter = require('./routes/myProfileRouter')
 const CIRouter = require('./routes/CIRouter')
@@ -20,7 +20,7 @@ mongoose.connect(cluster, {useNewUrlParser: true, useUnifiedTopology: true, useC
 
         function authenticate(req, res, next) {
             if (!req.header('auth-token')) {
-                return res.status(403).send("unauthorized access")
+                return res.status(403).send("unauthenticated access")
             }
 
             try {
