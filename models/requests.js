@@ -6,9 +6,13 @@ const requestSchema=new schema({
  type:String,
  sender_comment:String,
  reciever_comment:String,
- dpartment:String,
+ department:String,
  sender:String,
  reciever:String,
- course:String
+ course:String,
+ date:String,
+ replacment_ID:String,
+ new_day_off:String
+
 })
 module.exports=mongoose.model('request', requestSchema)
