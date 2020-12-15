@@ -19,7 +19,10 @@ const requestSchema=new schema({
  receiver:String,
  issue_date : Date,
  replacementRequest : replacementRequest,
- targetDate : Date //sick, accidental, maternity 
+ targetDate : Date, //sick, accidental, maternity 
+ new_day_off:Number
+
+ 
 })
 
 module.exports=mongoose.model('request', requestSchema)

@@ -3,6 +3,7 @@ const Academic = require("../models/academic");
 const course = require("../models/course");
 const jwt_decode = require('jwt-decode');
 const requests = require("../models/requests");
+const locations = require("../models/locations");
 const router = express.Router()
 
 const auth= async (req,res,next)=>{
@@ -51,7 +52,8 @@ router.route("/HOD/assign_course_instructor")
                  }
                 if(x){
                     if(c.department ===h.department){
-                        x.courses.push(req.body.course_name)
+                        x.courses.push({name:req.body.course_name,
+                            position:"instructor"})
                 x.save()
                 res.send("Done x")
                         }
@@ -94,7 +96,7 @@ router.route("/HOD/delete_course_instructor")
                 if(x){
                     if (c.department === h.department){
                 x.courses= x.courses.filter(function(value){
-                        return value!==req.body.course_name
+                        return value.name!==req.body.course_name
                 })
                 x.save()
             }
@@ -169,7 +171,7 @@ router.route("/HOD/delete_course_instructor")
             if(x){
                 if (c.department === h.department){
             x.courses= x.courses.filter(function(value){
-                    return value!==req.body.course_name
+                    return value.name!==req.body.course_name
             })
             x.save()
         }
@@ -273,7 +275,7 @@ router.route("/HOD/view_course_schedule")
          }
 })
 router.route("/HOD/accept_requests")
-    .put(auth,async(req,res)=>{
+    .put(auth,async(req,res,next)=>{
         const token = req.header('auth-token')
         const decoded = jwt_decode(token);
    
@@ -285,7 +287,8 @@ router.route("/HOD/accept_requests")
              const request=await requests.findOne({
                 request_ID: req.body.reqs_id
        })
-    
+       request.Status="accepted"
+       request.save()
        if(request.type === "change day off"){
 
            const acad=await Academic.findOne({
@@ -293,32 +296,64 @@ router.route("/HOD/accept_requests")
       })
 
             acad.day_off=request.new_day_off
-
-            acad.Schedule=acad.Schedule.filter(function(value){
-                return value[1]!==acad.day_off
-        })
+             acad.Schedule=acad.Schedule.filter(function(value){
+                 return value.day!==acad.day_off
+         })
         const c= await course.find(
             { name: { $in: acad.courses } }
          )
-
+         const l=new Array(); 
          for(var i=0;i<c.length;i++){
              c[i].schedule=c[i].schedule.filter(function(value){
-                return value.instructor!==acad.id
-             })
+                 if(value.instructor===acad.id && value.day === acad.day_off)
+                 l.push(value.location)
+                 return (value.instructor!==acad.id && value.day !== acad.day_off)
+              })
              const filter = { name: c[i].name };
              const update = { schedule:  c[i].schedule};
-            
              await course.findOneAndUpdate(filter, update,{
-                 new:true
-             });
+                  new:true
+              });
+         }
+         const locs= await locations.find(
+            { name: { $in: l } }
+         )
+        
+         for(var i=0;i<locs.length;i++){
+             locs[i].schedule= locs[i].schedule.filter(function(value){
+                return (value.instructor!==acad.id && value.day !== acad.day_off)
+             })
+             const filter = { name: locs[i].name };
+             const update = { schedule:  locs[i].schedule};
+
+             await locations.findOneAndUpdate(filter, update,{
+                new:true
+            });
          }
             request.Status="accepted"
             request.save()
             acad.save()
             res.send("changed successfully")
        }
+
          }
 
     })
-
+ router.route("/HOD/reject_requests")
+    .put(auth,async(req,res,next)=>{
+        const token = req.header('auth-token')
+        const decoded = jwt_decode(token);
+   
+         const h = await Academic.findOne({
+             id: decoded.id,
+             type: "HOD"
+         })
+         if(h){
+             const request=await requests.findOne({
+                request_ID: req.body.reqs_id
+       })
+       request.Status="rejected"
+       request.save()
+    }
+    })
 module.exports = router
