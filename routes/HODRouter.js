@@ -2,6 +2,8 @@ const express = require("express");
 const Academic = require("../models/academic");
 const course = require("../models/course");
 const jwt_decode = require('jwt-decode');
+const academic = require("../models/academic");
+const requests = require("../models/requests");
 const router = express.Router()
 
 const auth= async (req,res,next)=>{
@@ -22,6 +24,8 @@ const auth= async (req,res,next)=>{
 
 router.route("/HOD/assign_course_instructor")
     .put(auth,async (req, res,next) => {
+        const token = req.header('auth-token')
+        const decoded = jwt_decode(token);
 
             const h = await Academic.findOne({
                 id: decoded.id,
@@ -58,17 +62,17 @@ router.route("/HOD/assign_course_instructor")
                     res.send("not found")
                 }
             }
-    })
-   
-    router.route("/HOD/delete_course_instructor")
+})
+router.route("/HOD/delete_course_instructor")
     .put(auth,async (req,res,next)=>{
-       
+            const token = req.header('auth-token')
+            const decoded = jwt_decode(token);
+
             const h = await Academic.findOne({
                 id: decoded.id,
                 type: "HOD"
             })
 
-       
             if (h) {
                 const x = await Academic.findOne({
                     id: req.body.id
@@ -101,11 +105,11 @@ router.route("/HOD/assign_course_instructor")
                 res.send("not found")
             }
             }
-    })
-
-    router.route("/HOD/view_staff")
-    .get(auth,async(req,res,next)=>{
-
+})
+ router.route("/HOD/view_staff")
+    .post(auth,async(req,res,next)=>{
+           const token = req.header('auth-token')
+           const decoded = jwt_decode(token);
       
             const h = await Academic.findOne({
                 id: decoded.id,
@@ -117,15 +121,17 @@ router.route("/HOD/assign_course_instructor")
            })
            if(c){
                console.log("if")
-               const res=c.instructors_ID.filter(function(value){
+               const ress=c.instructors_ID.filter(function(value){
                    return c.department===h.department
                })
-               const f=Academic.filter(function(value){
-                  return res.includes(value.id)
-               })
-
+              Academic.find({id: {$in: ress} }).then(doc => {
+                res.send(doc)
+                }).catch(err => {
+                    console.error("err")
+                    }) 
            }
            else{
+            console.log("else")
                Academic.find({ department:h.department}).then(doc => {
                 res.send(doc)
                 }).catch(err => {
@@ -133,6 +139,187 @@ router.route("/HOD/assign_course_instructor")
                     }) 
            }
       }
- })
+})
+ router.route("/HOD/update_course_instructor")
+     .put(auth,async(req,res,next)=>{
+        const token = req.header('auth-token')
+        const decoded = jwt_decode(token);
    
+         const h = await Academic.findOne({
+             id: decoded.id,
+             type: "HOD"
+         })
+         if(h){
+            const x = await Academic.findOne({
+                id: req.body.org_id
+            })
+            const y = await Academic.findOne({
+                id: req.body.upd_id
+            })
+             const c= await course.findOne({
+                     name: req.body.course_name
+             })
+             if(c){
+                if(c.department === h.department){
+                    const foundIndex = c.instructors_ID.findIndex(value => value === x.id);
+                    c.instructors_ID[foundIndex] = y.id;
+                c.save()
+                console.log(foundIndex)
+            }   
+            }
+            if(x){
+                if (c.department === h.department){
+            x.courses= x.courses.filter(function(value){
+                    return value!==req.body.course_name
+            })
+            x.save()
+        }
+        }
+        else{
+            console.log("not found")
+            res.send("not found")
+        }
+        if(y){
+            if(c.department ===h.department){
+                y.courses.push(req.body.course_name)
+        y.save()
+        res.send("Done y")
+                }
+        }
+        else{
+            console.log("not found")
+            res.send("not found")
+        }
+           
+   }
+})
+router.route("/HOD/view_day_off")  
+    .post(auth,async(req,res,next)=>{
+    const token = req.header('auth-token')
+    const decoded = jwt_decode(token);
+    
+     const h = await Academic.findOne({
+         id: decoded.id,
+         type: "HOD"
+     })
+     if(h){
+        const s= await Academic.findOne({
+            id: req.body.id
+   })
+   if(s){
+        res.send(s.day_off)
+   }
+   else{
+    Academic.find({}, {day_off:1,name:1, _id:1}).then(doc => {
+        res.send(doc)
+        }).catch(err => {
+            console.error(err)
+            }) 
+   }
+   }
+     
+}) 
+router.route("/HOD/view_requests")
+    .post(auth,async(req,res,next)=>{
+        const token = req.header('auth-token')
+        const decoded = jwt_decode(token);
+        
+         const h = await Academic.findOne({
+             id: decoded.id,
+             type: "HOD"
+         })
+         if(h){
+            requests.find({ department:h.department}).then(doc => {
+                res.send(doc)
+                }).catch(err => {
+                    console.error(err)
+                    }) 
+           }
+})
+router.route("/HOD/view_course_coverage")
+    .post(auth,async(req,res,next)=>{
+        const token = req.header('auth-token')
+        const decoded = jwt_decode(token);
+   
+         const h = await Academic.findOne({
+             id: decoded.id,
+             type: "HOD"
+         })
+         if(h){
+            const c= await course.findOne({
+                name: req.body.course_name
+       })
+       if(c){
+           res.send((c.course_coverage).toString())
+       }
+         }
+})
+router.route("/HOD/view_course_schedule")
+    .post(auth,async(req,res,next)=>{
+        const token = req.header('auth-token')
+        const decoded = jwt_decode(token);
+   
+         const h = await Academic.findOne({
+             id: decoded.id,
+             type: "HOD"
+         })
+         if(h){
+            const c= await course.findOne({
+                name: req.body.course_name
+       })
+       if(c){
+       if(c.department === h.department)
+       res.send(c.schedule)
+       }
+         }
+})
+router.route("/HOD/accept_requests")
+    .put(auth,async(req,res,next)=>{
+        const token = req.header('auth-token')
+        const decoded = jwt_decode(token);
+   
+         const h = await Academic.findOne({
+             id: decoded.id,
+             type: "HOD"
+         })
+         if(h){
+             const request=await requests.findOne({
+                request_ID: req.body.reqs_id
+       })
+    
+       if(request.type === "change day off"){
+
+           const acad=await Academic.findOne({
+            id: request.sender
+      })
+
+            acad.day_off=request.new_day_off
+
+            acad.Schedule=acad.Schedule.filter(function(value){
+                return value[1]!==acad.day_off
+        })
+        const c= await course.find(
+            { name: { $in: acad.courses } }
+         )
+
+         for(var i=0;i<c.length;i++){
+             c[i].schedule=c[i].schedule.filter(function(value){
+                return value[3]!==acad.id
+             })
+             const filter = { name: c[i].name };
+             const update = { schedule:  c[i].schedule};
+            
+             const doc = await course.findOneAndUpdate(filter, update,{
+                 new:true
+             });
+         }
+            request.Status="accepted"
+            request.save()
+            acad.save()
+            res.send("changed succefuly")
+       }
+         }
+
+    })
+
 module.exports = router
