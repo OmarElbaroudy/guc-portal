@@ -2,7 +2,6 @@ const express = require("express");
 const Academic = require("../models/academic");
 const course = require("../models/course");
 const jwt_decode = require('jwt-decode');
-const academic = require("../models/academic");
 const router = express.Router()
 
 const auth= async (req,res,next)=>{

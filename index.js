@@ -2,13 +2,6 @@ const express = require('express')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 
-const Academic = require('./models/academic.js')
-const HR = require('./models/HR.js')
-const course = require('./models/course.js')
-const faculty = require('./models/faculty.js')
-const request = require('./models/requests.js')
-const department = require('./models/department.js')
-const location = require('./models/locations.js')
 
 const HODRouter=require('./routes/HODRouter')
 const AcademicMember=require('./routes/acRouter')

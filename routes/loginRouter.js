@@ -1,8 +1,10 @@
 const express = require("express");
 const Academic = require("../models/academic");
+const bcrypt = require("bcryptjs")
 const HR = require("../models/HR")
-const router = express.Router()
 const jwt = require('jsonwebtoken')
+
+const router = express.Router()
 const key = 'iehfoeihfpwhoqhfiu083028430bvf'
 
 
