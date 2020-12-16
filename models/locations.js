@@ -6,6 +6,7 @@ const session = new schema({
     instructor : String,
     day : Number, //0 for Sunday, 1 for Monday, 2 for Tuesday, 3 for Wednesday ....
     slot : Number, //1 for first, 2 for second, 3 for third ...
+    //Maybe I will need type 
 })
 
 const LocationSchema = new schema({
