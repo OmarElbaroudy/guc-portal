@@ -2,6 +2,7 @@ const express = require("express");
 const jwt_decode = require("jwt-decode");
 const Academic = require("../models/academic");
 const Requests = require("../models/requests");
+const Course = require("../models/course");
 const router = express.Router();
 
 const dateDiff = (slotDate, curDate) => {
@@ -68,8 +69,7 @@ router.route("/ac/viewSchedule").get(auth, async (req, res) => {
 	}
 });
 
-router
-	.route("/ac/ReplacementRequest")
+router.route("/ac/ReplacementRequest")
 	.post(auth, async (req, res) => {
 		try {
 			const token = req.header("auth-token");
@@ -205,6 +205,54 @@ router
 			}
 			res.send(replacements);
 		} catch (err) {
+			console.log(err);
+		}
+	});
+
+	router.route("/ac/slotRequest")//need to check valid inputs
+	.post(auth, async (req, res) =>{
+		try {
+			const token = req.header("auth-token");
+			const decoded = jwt_decode(token);
+			const input = req.body; //slot,weekday and course in req.body
+
+			const sender = await Academic.findOne({
+				id: decoded.id
+			});
+			if(!sender || sender.type==="HOD"||sender.type==="CI") res.status(410).send("invalid academic member");
+			const course = await Course.findOne({
+				name : input.course_name
+			});
+			//console.log(sender.type); undefined
+			const coordinator_ID = course.coordinator_ID;
+			const coordinator = await Academic.findOne({
+				id: coordinator_ID
+			});
+			if (!course) res.status(411).send("invalid course");
+			const y = new Date().getFullYear();
+			const m = new Date().getMonth();
+			const d = new Date().getDate();
+			let curDate = new Date(Date.UTC(y, m, d));
+			const Request = {
+					Status: "pending",
+					type: "slotLinking",
+					sender: sender.id,
+					receiver: coordinator_ID,
+					issue_date: curDate,
+					slotLinking: {course: input.course_name, slot: input.slot,weekDay:input.weekDay }					
+				};
+	
+				const arr = await Requests.insertMany(Request);
+				const reqID = arr[0]._id;
+
+				sender.sent_requests.push(reqID);
+				coordinator.received_requests.push(reqID);
+	
+				sender.save();
+				coordinator.save();
+				res.send("slotLinking request sent successfully");
+		}
+		catch(err){
 			console.log(err);
 		}
 	});

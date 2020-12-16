@@ -8,10 +8,15 @@ const replacementRequest = new schema({
     location : String,
     status : String //accepted or rejected by receiver ta
 })
+const slotLinking = new schema({
+    course: String,
+    slot: Number,
+    weekDay: Number
+})
 
 const requestSchema=new schema({
  Status:String,//pending, rejected, accepted by hod
- type:String, //Replacement, 
+ type:String, //Replacement,slotLinking
  sender_comment:String,
  receiver_comment:String,
  department:String,
@@ -19,10 +24,9 @@ const requestSchema=new schema({
  receiver:String,
  issue_date : Date,
  replacementRequest : replacementRequest,
+ slotLinking : slotLinking,
  targetDate : Date, //sick, accidental, maternity 
  new_day_off:Number
-
- 
 })
 
 module.exports=mongoose.model('request', requestSchema)
