@@ -25,7 +25,7 @@ const requestSchema=new schema({
  issue_date : Date,
  replacementRequest : replacementRequest,
  slotLinking : slotLinking,
- targetDate : Date, //sick, accidental, maternity 
+ targetDate : Date, //sick, accidental, maternity
  new_day_off:Number
 })
 
