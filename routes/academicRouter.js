@@ -5,7 +5,12 @@ const Requests = require("../models/requests");
 const Course = require("../models/course");
 const academic = require("../models/academic");
 const department = require("../models/department");
+const requests = require("../models/requests");
 const router = express.Router();
+
+//TODO:
+//academic member can still direct a replacement request to
+//hod regardless of it's state
 
 const dateDiff = (slotDate, curDate) => {
 	return (slotDate - curDate.getTime()) / (1000 * 3600 * 24);
@@ -145,8 +150,8 @@ router
 			sender.sent_requests.push(reqID);
 			receiver.received_requests.push(reqID);
 
-			sender.save();
-			receiver.save();
+			await sender.save();
+			await receiver.save();
 
 			res.send("request sent successfully");
 		} catch (err) {
@@ -213,7 +218,9 @@ router
 		}
 	});
 
-//need to check valid inputs
+//TODO:
+//check for valid inputs
+
 router.post("/ac/slotRequest", auth, async (req, res) => {
 	try {
 		const token = req.header("auth-token");
@@ -223,18 +230,25 @@ router.post("/ac/slotRequest", auth, async (req, res) => {
 		const sender = await Academic.findOne({
 			id: decoded.id,
 		});
-		if (!sender || sender.type === "HOD" || sender.type === "CI")
-			res.status(410).send("invalid academic member"); //CI ??
+		if (!sender) res.status(410).send("invalid id");
+
+		let flag = false;
+		for (const course of sender.courses) {
+			if (course.name === input.name && course.position !== "coordinator")
+				flag = true;
+		}
+
+		if (!flag) return res.send("you don't teach this course");
 
 		const course = await Course.findOne({
 			name: input.course_name,
 		});
 
-		//console.log(sender.type); undefined
 		const coordinator_ID = course.coordinator_ID;
 		const coordinator = await Academic.findOne({
 			id: coordinator_ID,
 		});
+
 		if (!course) res.status(411).send("invalid course");
 
 		let curDate = getCurDate();
@@ -257,8 +271,8 @@ router.post("/ac/slotRequest", auth, async (req, res) => {
 		sender.sent_requests.push(reqID);
 		coordinator.received_requests.push(reqID);
 
-		sender.save();
-		coordinator.save();
+		await sender.save();
+		await coordinator.save();
 		res.send("slotLinking request sent successfully");
 	} catch (err) {
 		console.log(err);
@@ -304,9 +318,132 @@ router.post("/ac/changeDayOff", auth, async (req, res) => {
 		sender.sent_requests.push(reqID);
 		hod.received_requests.push(reqID);
 
-		sender.save();
-		hod.save();
+		await sender.save();
+		await hod.save();
 		res.send("change day off request sent successfully");
+	} catch (err) {
+		console.log(err);
+	}
+});
+
+router.post("/ac/leaveRequest", auth, async (req, res) => {
+	try {
+		//maternity, accidental, sick, compensation
+		//targetDay,
+		const token = req.header("auth-token");
+		const decoded = jwt_decode(token);
+
+		const sender = await academic.findOne({ id: decoded.id });
+		if (!sender) return res.status(413).send("invalid id");
+
+		//maternity => check for female , proof documents
+
+		//accidental => check accidental leave balance and annual leave balance
+		//deduce the balance in hod
+
+		//sick => current date <= target day + 3,  proof documents
+
+		//compensation
+		//day missed must have passed
+	} catch (err) {
+		console.log(err);
+	}
+});
+
+//TODO:
+//validate input
+router.post("/ac/viewSubmittedRequests", auth, async (req, res) => {
+	try {
+		//status : all, accepted, pending, rejected,
+		const token = req.header("auth-token");
+		const decoded = jwt_decode(token);
+		const status = req.body.status;
+
+		const sender = await academic.findOne({ id: decoded.id });
+		if (!sender) return res.status(413).send("invalid id");
+		const reqID = sender.sent_requests;
+
+		if (status === "all") {
+			return academic.find({
+				_id: { $in: reqID },
+			});
+		} else {
+			return academic.find({
+				_id: { $in: reqID },
+				status: status,
+			});
+		}
+	} catch (err) {
+		console.log(err);
+	}
+});
+
+router.post("/ac/cancelRequest", auth, async (req, res) => {
+	try {
+		const token = req.header("auth-token");
+		const decoded = jwt_decode(token);
+
+		const sender = await academic.findOne({ id: decoded.id });
+		if (!sender) return res.status(413).send("invalid id");
+
+		const del = requests.find({
+			_id: req.body._id,
+		});
+
+		if (!del) return res.status(414).send("no such request");
+		const curDate = getCurDate();
+
+		if (!sender.sent_requests.includes(del._id))
+			return res.status(415).send("user not owner of request");
+
+		let flag = false;
+		flag |= del.status === "pending";
+
+		flag |=
+			del.type === "Replacement" &&
+			dateDiff(del.replacementRequest.slotDate, curDate) > 0;
+
+		flag |= del.targetDate && dateDiff(del.targetDate, curDate) > 0;
+
+		if (flag) {
+			const delID = del._id;
+			if (del.type === "Replacement") {
+				const hodID = await department.find({
+					name: del.department,
+				}).hod_ID;
+
+				const hod = await academic.findOne({
+					id: hodID,
+				});
+
+				const idx = hod.received_requests.indexOf(delID);
+				if (idx > -1) {
+					hod.received_requests.splice(idx, 1);
+				}
+
+				await hod.save();
+			}
+
+			if (del.receiver) {
+				const receiver = await academic.findOne({
+					id: del.receiver,
+				});
+
+				const idx = receiver.received_requests.indexOf(delID);
+
+				if (idx > -1) {
+					receiver.received_requests.splice.indexOf(idx, 1);
+				}
+
+				await receiver.save();
+			}
+
+			const idx = sender.sent_requests.indexOf(delID);
+			sender.sent_requests.splice(idx, 1);
+
+			await sender.save();
+			await requests.deleteOne({ _id: delID });
+		}
 	} catch (err) {
 		console.log(err);
 	}

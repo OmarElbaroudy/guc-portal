@@ -16,7 +16,7 @@ const slotLinking = new schema({
 
 const requestSchema=new schema({
  Status:String,//pending, rejected, accepted by hod
- type:String, //Replacement,slotLinking
+ type:String, //Replacement,slotLinking, compensation, 
  sender_comment:String,
  receiver_comment:String,
  department:String,

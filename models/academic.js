@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
+
+//TODO:
+//camelCase
+//notifications
+//compensated boolean in requests
+//changed password boolean in academic
+
 const session = new schema({
 	course: String,
 	location: String,
