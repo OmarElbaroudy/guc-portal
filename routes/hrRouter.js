@@ -4,7 +4,7 @@ const Academic = require("../models/academic");
 const Location=require("../models/locations")
 const Department=require("../models/department")
 const Course=require("../models/course");
-const academic = require("../models/academic");
+const Requests=require("../models/requests")
 const { Router } = require("express");
 const router = express.Router()
 
@@ -126,7 +126,7 @@ router.route("/hr/location")
                 const x=await Location.findOne({
                     name:req.body.name
                 })
-                const u=await academic.findOne({officeLocationId : x._id})
+                const u=await Academic.findOne({officeLocationId : x._id})
                 if(u || x.schedule.length!==0){
                     return res.status(403).send("cannot delete this location as it is occupied by an instructor/session")
                 }
@@ -304,7 +304,7 @@ router.route("/hr/location")
                     }
                     if(req.body.newFaculty){
                         const f=await Faculty.findOne({name:req.body.newFaculty})
-                        x.facultyId=f._id
+                        x.facultyId.equals(f._id)
                     }
                     const d=await Department.insertOne({name:req.body.name},x,{new:true})
 
@@ -349,5 +349,124 @@ router.route("/hr/location")
                 console.log(err)
             }
         })
+
+        Router.Route("hr/addCourse")
+            .post(async(req,res)=>{
+                try{
+                    const token = req.header('auth-token')
+                    const decoded = jwt_decode(token);
+                    const x=await Course.findOne({
+                        name:req.body.name
+                    })
+                    if(x){
+                        return res.status(403).send("this course already exist")
+                    }
+                    else{
+                        if(!req.body.department){
+                            return res.status(403).send("please enter a department")
+                        }
+                        else{
+                            const d= await Department.findOne({name:req.body.department})
+                            const c=Course.insertOne({
+                                name:req.body.name,
+                                departmentId: d._id,
+                                facultyId:d.facultyId })
+                            await c.save()
+                        }
+                    }
+                }
+                catch(err){
+                    console.log(err)
+                }
+
+            })
+
+            Router.route("hr/updateCourse")
+            .put(async (req,res)=>{
+                try{
+                    const token = req.header('auth-token')
+                    const decoded = jwt_decode(token);
+                    const x=await Course.findOne({
+                        name:req.body.name
+                    })
+                    if(!x){
+                        return res.status(403).send("this course does not exist")
+                    }
+                    else{
+                        if(req.body.department){
+                            const d= await Department.findOne({name:req.body.department})
+                            x.departmentId=d._id
+                        }
+                        if(req.body.newName){
+                            x.name=req.body.newName
+                        }
+                        const c=await Course.findOneAndUpdate({name:req.body.name},x,{new:true})
+                    }
+
+                }
+                catch(err){
+                    console.log(err)
+                }
+
+            })
+
+            Router.route("hr/deleteCourse")
+            .delete(async (req,res)=>{
+                try{
+                    const token = req.header('auth-token')
+                    const decoded = jwt_decode(token);
+                    const x=await Course.findOne({
+                        name:req.body.name
+                    })
+                    if(!x){
+                        return res.status(403).send("this course does not exist")
+                    }
+                    else{//delete replacement requests for this course
+                        const r=await Requests.find({type:"replacement"})
+                        const temp=r.Filter(function(value){
+                            return value.replacement.courseId.equals(x._id)
+                        })
+                        for(let i=0;i<temp.length;i++){
+                            await Requests.findByIdAndDelete(temp[i]._id)
+                        }
+
+                        //delete slotLinking requests for this course
+                        const r=await Requests.find({type:"slotLinking"})
+                        const temp=r.filter(function(value){
+                            return value.slotLinking.courseId.equals(x._id)
+                        })
+                        for(let i=0;i<temp.length;i++){
+                            await Requests.findByIdAndDelete(temp[i]._id)
+                        }
+
+                        //delete this course from instructor and location schedules
+
+                        for(let i=0;i<x.schedule.length;i++){
+                            const loc=Location.findById(x.schedule[i].locationId)
+                            for(let j=0;j<loc.schedule.length;j++){
+                                loc.schedule=loc.schedule.filter(function(value){
+                                    return !(value.courseId.equals(x._id))
+                                })
+                                await loc.save()
+
+                            }
+                            const inst=Academic.findById(x.schedule[i].instructorId)
+                            for(let j=0;j<inst.schedule.length;j++){
+                                inst.schedule=inst.schedule.filter(function(value){
+                                    return !(value.courseId.equals(x._id))
+                                })
+                                await inst.save()
+                            }
+                        }
+                        
+
+                    
+                }
+            }
+                catch(err){
+                    console.log(err)
+                }
+
+            })
 
     
