@@ -1,23 +1,24 @@
 {
-  "name": "proj",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
-    "jwt-decode": "^3.1.2",
-    "mongoose": "^5.11.7",
-    "nodemon": "^2.0.6"
-  },
-  "devDependencies": {
-    "eslint": "^7.15.0",
-    "eslint-plugin-react": "^7.21.5"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+	"name": "proj",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"express": "^4.17.1",
+		"jsonwebtoken": "^8.5.1",
+		"jwt-decode": "^3.1.2",
+		"mongoose": "^5.11.7",
+		"nodemon": "^2.0.6"
+	},
+	"devDependencies": {
+		"eslint": "^7.15.0",
+		"eslint-plugin-react": "^7.21.5"
+	},
+	"scripts": {
+		"start": "nodemon",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC"
 }
