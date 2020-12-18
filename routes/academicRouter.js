@@ -1,11 +1,10 @@
 const express = require("express");
 const jwt_decode = require("jwt-decode");
-const Academic = require("../models/academic");
-const Requests = require("../models/requests");
-const Course = require("../models/course");
+const mongoose = require("mongoose");
+const requests = require("../models/requests");
+const course = require("../models/course");
 const academic = require("../models/academic");
 const department = require("../models/department");
-const requests = require("../models/requests");
 const router = express.Router();
 
 //TODO:
@@ -29,14 +28,8 @@ const auth = async (req, res, next) => {
 	const decoded = jwt_decode(token);
 
 	if (decoded.type === "academic") {
-		const ac = await Academic.findOne({
-			id: decoded.id,
-		});
-
-		if (!ac) {
-			return res.status(403).send("unauthorized access");
-		}
-
+		const ac = await academic.findById(decoded.id);
+		if (!ac) return res.status(403).send("unauthorized access");
 		next();
 	}
 };
@@ -45,68 +38,62 @@ router.get("/ac/viewSchedule", auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 	try {
-		const cur = await Academic.findOne({
-			id: decoded.id,
-		});
+		const cur = await academic.findById(decoded.id);
 
 		let sessions = [];
 		let curDate = getCurDate();
 
-		for (const reqID of cur.received_requests) {
-			const request = await Requests.findOne({
+		for (const reqID of cur.receivedRequests) {
+			const request = await requests.findOne({
 				_id: reqID,
 			});
 
 			if (
 				request &&
-				request.type === "Replacement" &&
-				request.Status === "accepted" &&
-				request.replacementRequest.status === "accepted" &&
-				dateDiff(request.replacementRequest.slotDate, curDate) < 7 &&
-				dateDiff(request.replacementRequest.slotDate, curDate) >= 0
+				request.type === "replacement" &&
+				request.status === "accepted" &&
+				request.replacement.status === "accepted" &&
+				dateDiff(request.replacement.slotDate, curDate) < 7 &&
+				dateDiff(request.replacement.slotDate, curDate) >= 0
 			) {
 				let session = {
-					slot: request.replacementRequest.slot,
-					weekDay: request.replacementRequest.slotDate.getDay(),
-					location: request.replacementRequest.location,
-					course: request.replacementRequest.course,
+					slot: request.replacement.slot,
+					weekDay: request.replacement.slotDate.getDay(),
+					location: request.replacement.location,
+					course: request.replacement.course,
 				};
 
 				sessions.push(session);
 			}
 		}
-		res.send(sessions.concat(cur.Schedule)); //should have replacements if present
+		res.send(sessions.concat(cur.schedule)); 
 	} catch (err) {
 		console.log(err);
 	}
 });
 
 router
-	.route("/ac/ReplacementRequest")
+	.route("/ac/replacement")
 	.post(auth, async (req, res) => {
 		try {
 			const token = req.header("auth-token");
 			const decoded = jwt_decode(token);
 			const input = req.body; //id receiver, slot, location, {year, month, day}, course
+			const courseId = mongoose.Types.ObjectId(input.courseId);
 
-			const sender = await Academic.findOne({
-				id: decoded.id,
-			});
-
-			const receiver = await Academic.findOne({
-				id: input.id,
-			});
+			const sender = await academic.findById(decoded.id);
+			const receiver = await academic.findById(input.id);
 
 			if (!receiver) return res.status(405).send("invalid receiver id");
 
 			let fst = false;
 			sender.courses.forEach((item) => {
-				fst |= item.name === input.course && item.position === "academic";
+				fst |= item.courseId.equals(courseId) && item.position === "academic";
 			});
 
 			let snd = false;
 			receiver.courses.forEach((item) => {
-				snd |= item.name === input.course && item.position === "academic";
+				snd |= item.courseId.equals(courseId) && item.position === "academic";
 			});
 
 			if (!fst || !snd) return res.status(406).send("invalid course");
@@ -114,13 +101,14 @@ router
 			let slotDate = new Date(
 				Date.UTC(input.day.year, input.day.month - 1, input.day.day)
 			);
-			let weekDay = slotDate.getDay();
 
+			let weekDay = slotDate.getDay();
 			let flag = false;
-			sender.Schedule.forEach((session) => {
+			
+			sender.schedule.forEach((session) => {
 				flag |=
 					session.weekDay === parseInt(weekDay) &&
-					session.course === input.course &&
+					session.courseId.equals(courseId) &&
 					session.slot === parseInt(input.slot);
 			});
 
@@ -135,7 +123,7 @@ router
 				sender: sender.id,
 				receiver: receiver.id,
 				issue_date: curDate,
-				replacementRequest: {
+				replacement: {
 					course: input.course,
 					slot: input.slot,
 					location: input.location,
@@ -144,11 +132,11 @@ router
 				},
 			};
 
-			const arr = await Requests.insertMany(Request);
+			const arr = await requests.insertMany(Request);
 			const reqID = arr[0]._id;
 
-			sender.sent_requests.push(reqID);
-			receiver.received_requests.push(reqID);
+			sender.sentRequests.push(reqID);
+			receiver.receivedRequests.push(reqID);
 
 			await sender.save();
 			await receiver.save();
@@ -165,14 +153,14 @@ router
 			const decoded = jwt_decode(token);
 
 			let replacements = [];
-			const ac = await Academic.findOne({
+			const ac = await academic.findOne({
 				id: decoded.id,
 			});
 
 			if (!ac) return res.status(408).send("no such academic member");
 
-			for (const reqID of ac.sent_requests) {
-				const request = await Requests.findOne({
+			for (const reqID of ac.sentRequests) {
+				const request = await requests.findOne({
 					_id: reqID,
 					type: "Replacement",
 				});
@@ -180,11 +168,11 @@ router
 				if (!request) res.status(409).send("no requests");
 
 				let replacementReq = {
-					course: request.replacementRequest.course,
-					slotDate: request.replacementRequest.slotDate,
-					slot: request.replacementRequest.slot,
-					location: request.replacementRequest.location,
-					status: request.replacementRequest.status,
+					course: request.replacement.course,
+					slotDate: request.replacement.slotDate,
+					slot: request.replacement.slot,
+					location: request.replacement.location,
+					status: request.replacement.status,
 					hodStatus: request.status,
 					receiver: request.receiver,
 					issue_date: request.issue_date,
@@ -193,18 +181,18 @@ router
 				replacements.push(replacementReq);
 			}
 
-			for (const reqID of ac.received_requests) {
-				const request = await Requests.findOne({
+			for (const reqID of ac.receivedRequests) {
+				const request = await requests.findOne({
 					_id: reqID,
 					type: "Replacement",
 				});
 
 				let replacementReq = {
-					course: request.replacementRequest.course,
-					slotDate: request.replacementRequest.slotDate,
-					slot: request.replacementRequest.slot,
-					location: request.replacementRequest.location,
-					status: request.replacementRequest.status,
+					course: request.replacement.course,
+					slotDate: request.replacement.slotDate,
+					slot: request.replacement.slot,
+					location: request.replacement.location,
+					status: request.replacement.status,
 					hodStatus: request.status,
 					sender: request.sender,
 					issue_date: request.issue_date,
@@ -227,7 +215,7 @@ router.post("/ac/slotRequest", auth, async (req, res) => {
 		const decoded = jwt_decode(token);
 		const input = req.body; //slot,weekday and course in req.body
 
-		const sender = await Academic.findOne({
+		const sender = await academic.findOne({
 			id: decoded.id,
 		});
 		if (!sender) res.status(410).send("invalid id");
@@ -240,12 +228,12 @@ router.post("/ac/slotRequest", auth, async (req, res) => {
 
 		if (!flag) return res.send("you don't teach this course");
 
-		const course = await Course.findOne({
+		const course = await course.findOne({
 			name: input.course_name,
 		});
 
 		const coordinator_ID = course.coordinator_ID;
-		const coordinator = await Academic.findOne({
+		const coordinator = await academic.findOne({
 			id: coordinator_ID,
 		});
 
@@ -265,11 +253,11 @@ router.post("/ac/slotRequest", auth, async (req, res) => {
 			},
 		};
 
-		const arr = await Requests.insertMany(Request);
+		const arr = await requests.insertMany(Request);
 		const reqID = arr[0]._id;
 
-		sender.sent_requests.push(reqID);
-		coordinator.received_requests.push(reqID);
+		sender.sentRequests.push(reqID);
+		coordinator.receivedRequests.push(reqID);
 
 		await sender.save();
 		await coordinator.save();
@@ -312,11 +300,11 @@ router.post("/ac/changeDayOff", auth, async (req, res) => {
 			sender_comment: comment,
 		};
 
-		const arr = await Requests.insertMany(request);
+		const arr = await requests.insertMany(request);
 		const reqID = arr[0]._id;
 
-		sender.sent_requests.push(reqID);
-		hod.received_requests.push(reqID);
+		sender.sentRequests.push(reqID);
+		hod.receivedRequests.push(reqID);
 
 		await sender.save();
 		await hod.save();
@@ -401,7 +389,7 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 
 		flag |=
 			del.type === "Replacement" &&
-			dateDiff(del.replacementRequest.slotDate, curDate) > 0;
+			dateDiff(del.replacement.slotDate, curDate) > 0;
 
 		flag |= del.targetDate && dateDiff(del.targetDate, curDate) > 0;
 

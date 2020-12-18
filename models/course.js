@@ -1,24 +1,33 @@
-const mongoose=require('mongoose')
-const schema =mongoose.Schema
+const mongoose = require("mongoose");
+const schema = mongoose.Schema;
 
 const session = new schema({
-  instructor : String,
-  location : String,
-  day : Number, //0 for Sunday, 1 for Monday, 2 for Tuesday, 3 for Wednesday ....
-  slot : Number, //1 for first, 2 for second, 3 for third ...
-})
+	instructorId: schema.Types.ObjectId, //if undefined slot has not been linked yet
+	locationId: schema.Types.ObjectId,
+	weekDay: {
+		type: Number,
+		enum: [0, 1, 2, 3, 4, 6], //0 for sunday
+	},
+	slot: {
+		type: Number,
+		min: 1,
+		max: 5,
+	},
+	type: {
+		type: String,
+		enum: ["lecture", "tutorial", "practical"],
+	},
+});
 
-const CourseSchema=new schema({
-  name:String,
-  department:String,
-  faculty:String,
-  hod:String,
-  instructors_ID:Array,
-  TAs_ID:Array,
-  coordinator_ID:String,
-  course_coverage:Number,
-  schedule:[session],
-  Max_num_slots:Number
+const courseSchema = new schema({
+	name: String,
+	departmentId: schema.Types.ObjectId,
+	facultyId: schema.Types.ObjectId,
+	hodId: schema.Types.ObjectId,
+	instructorId: Array,
+	academicId: Array,
+	coordinatorId: schema.Types.ObjectId,
+	schedule: [session]
+});
 
-})
-module.exports=mongoose.model('Course', CourseSchema)
+module.exports = mongoose.model("course", courseSchema);

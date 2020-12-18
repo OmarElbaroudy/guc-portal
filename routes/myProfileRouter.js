@@ -1,70 +1,66 @@
-const express = require("express")
-const bcrypt = require('bcryptjs')
-const jwt_decode = require('jwt-decode')
+const express = require("express");
+const bcrypt = require("bcryptjs");
+const jwt_decode = require("jwt-decode");
 
-const Academic = require("../models/academic")
-const HR = require("../models/HR")
+const academic = require("../models/academic");
+const hr = require("../models/hr");
 
-const router = express.Router()
+const router = express.Router();
 
+router
+	.route("/myProfile")
+	.get(async (req, res) => {
+		const token = req.header("auth-token");
+		const decoded = jwt_decode(token);
+		try {
+			if (decoded.type === "hr") {
+				const h = await hr.findOne({
+					id: decoded.id,
+				});
+				return res.send(h);
+			}
+			const a = await academic.findOne({
+				id: decoded.id,
+			});
+			return res.send(a);
+		} catch (err) {
+			console.log(err);
+		}
+	})
+	.put(async (req, res) => {
+		const token = req.header("auth-token");
+		const decoded = jwt_decode(token);
+		const salt = await bcrypt.genSalt(10);
+		const input = req.body;
+		try {
+			const doc = await academic.findById(decoded.id);
 
-router.route("/myProfile")
-    .get(async (req, res) => {
-        const token = req.header('auth-token')
-        const decoded = jwt_decode(token);
-        try{
-            if (decoded.type === "hr") {
-                const h = await HR.findOne({
-                    id: decoded.id
-                })
-                return res.send(h)
-            }
-            const a = await Academic.findOne({
-                id: decoded.id
-            })
-            return res.send(a)
-        }catch (err) {
-            console.log(err)
+			if (input.gender === "male" || input.gender === "female") {
+				doc.gender = input.gender;
+			}
 
-        }
-    })
-    .put(async (req, res) => {
-        const token = req.header('auth-token');
-        const decoded = jwt_decode(token);
-        const salt = await bcrypt.genSalt(10);
-        const vals = req.body;
-        try {
-                let doc = {};
+			if (input.password) {
+				doc.password = await bcrypt.hash(input.password, salt);
+			}
 
-                if(vals.gender === "male" || vals.gender === "female"){
-                    doc.gender = vals.gender;
-                }
+			if (input.personalInfo) {
+				doc.personalInfo = input.personalInfo;
+			}
 
-                if(vals.password){
-                    doc.password = await bcrypt.hash(vals.password,salt);
-                }
+			if (decoded.type === "hr") {
+				if (input.salary) {
+					doc.salary = input.salary;
+				}
+			}
 
-                if(vals.personalInfo){
-                    doc.personalInfo = vals.personalInfo;
-                 }
-
-                if(decoded.type === "hr"){
-                    if(vals.office_location){
-                        doc.office_location = vals.office_location;
-                    }
-
-                    if(vals.salary){
-                        doc.salary = vals.salary;
-                    }
-                }
-
-                const cur = await Academic.findOneAndUpdate(
-                    {id: decoded.id }, doc, {new: true});
-
-                res.send(cur);
-            } catch (err) {
-                console.log(err)
-            }
-    })
+			doc.save();
+			res.send(`profile updated successfully\n ${doc}`);
+		} catch (err) {
+			console.log(err);
+		}
+	});
 
 module.exports = router;
+
+//TODO:
+//other fields that hr or academic can update

@@ -23,7 +23,7 @@ router.post("/login", async (req, res) => {
 		return res.status(403).send("wrong password");
 	}
 
-	const payload = { id: user.id, type: h !== null ? "hr" : "academic" };
+	const payload = { id: user._id, type: h !== null ? "hr" : "academic" };
 	const token = jwt.sign(payload, key);
 
 	res.header("auth-token", token);

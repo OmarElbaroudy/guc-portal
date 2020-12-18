@@ -2,11 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
-const HODRouter = require("./routes/HODRouter");
-const AcademicMember = require("./routes/academicRouter");
+const hodRouter = require("./routes/hodRouter");
+const academicRouter = require("./routes/academicRouter");
 const loginRouter = require("./routes/loginRouter");
 const myProfileRouter = require("./routes/myProfileRouter");
-const CIRouter = require("./routes/CIRouter");
+const instructorRouter = require("./routes/instructorRouter");
 
 const key = "iehfoeihfpwhoqhfiu083028430bvf";
 
@@ -37,9 +37,9 @@ mongoose
 
 		app.use("", loginRouter);
 		app.use(authenticate);
-		app.use("", CIRouter);
-		app.use("", HODRouter);
-		app.use("", AcademicMember);
+		app.use("", instructorRouter);
+		app.use("", hodRouter);
+		app.use("", academicRouter);
 		app.use("", myProfileRouter);
 
 		app.listen(3000, () => {
@@ -50,12 +50,10 @@ mongoose
 		console.log(err);
 	});
 
-//localhost:3000/HOD/assign_course_instructor/
-// {
-//     "email" :  "x@x",
-//     "password" : "123456",
-//     "course" : "omar"
-//
-// }
-
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjLTEiLCJ0eXBlIjoiYWNhZGVtaWMiLCJpYXQiOjE2MDc4OTIyODN9.IHNSqzO3R9PJuw1Tg6BEHCPVW6FQAgIp72vEfy2SeOY
+//TODO:
+//middleware update annual leave balance and accidental leave balance
+//sign in and sign out also hr sign out
+//view my missing hours per month
+//view missing days
+//fix code on new schema
+//send other requests

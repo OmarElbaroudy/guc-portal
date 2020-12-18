@@ -11,7 +11,7 @@ const auth= async (req,res,next)=>{
     const decoded = jwt_decode(token);
 
     if (decoded.type === "academic") {
-        const h = await Academic.findOne({
+        const h = await academic.findOne({
             id: decoded.id,
             type: "HOD"
         })
