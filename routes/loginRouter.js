@@ -1,7 +1,7 @@
 const express = require("express");
 const Academic = require("../models/academic");
 const bcrypt = require("bcryptjs");
-const HR = require("../models/HR");
+const hr = require("../models/hr");
 const jwt = require("jsonwebtoken");
 
 const router = express.Router();
@@ -9,7 +9,7 @@ const key = "iehfoeihfpwhoqhfiu083028430bvf";
 
 router.post("/login", async (req, res) => {
 	const email = req.body.email;
-	const h = await HR.findOne({ email: email });
+	const h = await hr.findOne({ email: email });
 	const a = await Academic.findOne({ email: email });
 
 	if (!h && !a) {

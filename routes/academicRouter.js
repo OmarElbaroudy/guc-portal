@@ -1,10 +1,11 @@
 const express = require("express");
 const jwt_decode = require("jwt-decode");
-const mongoose = require("mongoose");
 const requests = require("../models/requests");
-const course = require("../models/course");
-const academic = require("../models/academic");
-const department = require("../models/department");
+const courses = require("../models/course");
+const academics = require("../models/academic");
+const departments = require("../models/department");
+const locations = require("../models/locations");
+
 const router = express.Router();
 
 //TODO:
@@ -12,7 +13,25 @@ const router = express.Router();
 //hod regardless of it's state
 
 const dateDiff = (slotDate, curDate) => {
-	return (slotDate - curDate.getTime()) / (1000 * 3600 * 24);
+	return (slotDate.getTime() - curDate.getTime()) / (1000 * 3600 * 24);
+};
+
+const getCourseNameById = async (id) => {
+	return await courses.findById(id).name;
+};
+
+const getCourseIdByName = async (name) => {
+	const ret = await courses.findOne({ name: name });
+	return ret ? ret._id : undefined;
+};
+
+const getLocationNameById = async (id) => {
+	return await locations.findById(id).name;
+};
+
+const getLocationIdByName = async (name) => {
+	const ret = await locations.findOne({ name: name });
+	return ret ? ret._id : undefined;
 };
 
 const getCurDate = () => {
@@ -28,7 +47,7 @@ const auth = async (req, res, next) => {
 	const decoded = jwt_decode(token);
 
 	if (decoded.type === "academic") {
-		const ac = await academic.findById(decoded.id);
+		const ac = await academics.findById(decoded.id);
 		if (!ac) return res.status(403).send("unauthorized access");
 		next();
 	}
@@ -38,7 +57,7 @@ router.get("/ac/viewSchedule", auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 	try {
-		const cur = await academic.findById(decoded.id);
+		const cur = await academics.findById(decoded.id);
 
 		let sessions = [];
 		let curDate = getCurDate();
@@ -59,14 +78,24 @@ router.get("/ac/viewSchedule", auth, async (req, res) => {
 				let session = {
 					slot: request.replacement.slot,
 					weekDay: request.replacement.slotDate.getDay(),
-					location: request.replacement.location,
-					course: request.replacement.course,
+					location: await getLocationNameById(request.replacement.location),
+					course: await getCourseNameById(request.replacement.course),
 				};
 
 				sessions.push(session);
 			}
 		}
-		res.send(sessions.concat(cur.schedule)); 
+
+		for (const session of cur.schedule) {
+			sessions.push({
+				slot: session.slot,
+				weekDay: session.weekDay,
+				location: await getLocationNameById(session.location),
+				course: await getCourseNameById(session.courseId),
+			});
+		}
+
+		res.send(sessions);
 	} catch (err) {
 		console.log(err);
 	}
@@ -79,10 +108,10 @@ router
 			const token = req.header("auth-token");
 			const decoded = jwt_decode(token);
 			const input = req.body; //id receiver, slot, location, {year, month, day}, course
-			const courseId = mongoose.Types.ObjectId(input.courseId);
 
-			const sender = await academic.findById(decoded.id);
-			const receiver = await academic.findById(input.id);
+			const sender = await academics.findById(decoded.id);
+			const receiver = await academics.findById(input.id);
+			const courseId = await getCourseIdByName(input.course);
 
 			if (!receiver) return res.status(405).send("invalid receiver id");
 
@@ -104,7 +133,7 @@ router
 
 			let weekDay = slotDate.getDay();
 			let flag = false;
-			
+
 			sender.schedule.forEach((session) => {
 				flag |=
 					session.weekDay === parseInt(weekDay) &&
@@ -114,21 +143,19 @@ router
 
 			if (!flag) return res.status(408).send("invalid slot");
 
-			let curDate = getCurDate();
-
 			const Request = {
-				Status: "pending",
+				status: "pending",
 				type: "Replacement",
 				department: sender.department,
-				sender: sender.id,
-				receiver: receiver.id,
-				issue_date: curDate,
+				senderId: sender._id,
+				receiverId: receiver._id,
+				issueDate: getCurDate(),
 				replacement: {
-					course: input.course,
+					course: courseId,
 					slot: input.slot,
-					location: input.location,
+					locationId: await getLocationIdByName(input.location),
 					slotDate: slotDate,
-					status: "pending",
+					academicResponse: "pending",
 				},
 			};
 
@@ -153,49 +180,47 @@ router
 			const decoded = jwt_decode(token);
 
 			let replacements = [];
-			const ac = await academic.findOne({
-				id: decoded.id,
-			});
+			const sender = await academics.findById(decoded.id);
 
-			if (!ac) return res.status(408).send("no such academic member");
+			if (!sender) return res.status(408).send("no such academic member");
 
-			for (const reqID of ac.sentRequests) {
+			for (const reqID of sender.sentRequests) {
 				const request = await requests.findOne({
 					_id: reqID,
-					type: "Replacement",
+					type: "replacement",
 				});
 
 				if (!request) res.status(409).send("no requests");
 
 				let replacementReq = {
-					course: request.replacement.course,
+					course: await getCourseNameById(request.replacement.course),
 					slotDate: request.replacement.slotDate,
 					slot: request.replacement.slot,
-					location: request.replacement.location,
+					location: await getLocationNameById(request.replacement.location),
 					status: request.replacement.status,
 					hodStatus: request.status,
 					receiver: request.receiver,
-					issue_date: request.issue_date,
+					issueDate: request.issueDate,
 				};
 
 				replacements.push(replacementReq);
 			}
 
-			for (const reqID of ac.receivedRequests) {
+			for (const reqID of sender.receivedRequests) {
 				const request = await requests.findOne({
 					_id: reqID,
 					type: "Replacement",
 				});
 
 				let replacementReq = {
-					course: request.replacement.course,
+					course: await getCourseNameById(request.replacement.course),
 					slotDate: request.replacement.slotDate,
 					slot: request.replacement.slot,
-					location: request.replacement.location,
+					location: await getLocationNameById(request.replacement.location),
 					status: request.replacement.status,
 					hodStatus: request.status,
 					sender: request.sender,
-					issue_date: request.issue_date,
+					issueDate: request.issueDate,
 				};
 
 				replacements.push(replacementReq);
@@ -213,47 +238,44 @@ router.post("/ac/slotRequest", auth, async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
-		const input = req.body; //slot,weekday and course in req.body
+		const input = req.body; //slot, weekday and course in req.body
 
-		const sender = await academic.findOne({
-			id: decoded.id,
-		});
+		const sender = await academics.findById(decoded.id);
 		if (!sender) res.status(410).send("invalid id");
 
 		let flag = false;
 		for (const course of sender.courses) {
-			if (course.name === input.name && course.position !== "coordinator")
+			const courseName = await getCourseNameById(course.courseId);
+			if (courseName === input.name && course.position !== "coordinator")
 				flag = true;
 		}
 
 		if (!flag) return res.send("you don't teach this course");
 
 		const course = await course.findOne({
-			name: input.course_name,
+			name: input.courseName,
 		});
 
-		const coordinator_ID = course.coordinator_ID;
-		const coordinator = await academic.findOne({
-			id: coordinator_ID,
-		});
+		const coordinatorId = course.coordinatorId;
+		const coordinator = await academics.findById(coordinatorId);
 
 		if (!course) res.status(411).send("invalid course");
 
 		let curDate = getCurDate();
-		const Request = {
-			Status: "pending",
+		const request = {
+			status: "pending",
 			type: "slotLinking",
-			sender: sender.id,
-			receiver: coordinator_ID,
-			issue_date: curDate,
+			sender: sender._id,
+			receiver: coordinatorId,
+			issueDate: curDate,
 			slotLinking: {
-				course: input.course_name,
+				course: course._id,
 				slot: input.slot,
 				weekDay: input.weekDay,
 			},
 		};
 
-		const arr = await requests.insertMany(Request);
+		const arr = await requests.insertMany(request);
 		const reqID = arr[0]._id;
 
 		sender.sentRequests.push(reqID);
@@ -273,7 +295,7 @@ router.post("/ac/changeDayOff", auth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
 
-		const sender = await academic.findOne({ id: decoded.id });
+		const sender = await academics.findById(decoded.id);
 
 		const newDayOff = req.body.newDayOff;
 		const comment = req.body.comment ? req.body.comment : "";
@@ -284,20 +306,17 @@ router.post("/ac/changeDayOff", auth, async (req, res) => {
 		if (newDayOff === sender.day_off)
 			return res.send("this is already your day off");
 
-		const hod = await department.findOne({
-			name: sender.department,
-		});
-
-		let curDate = getCurDate();
+		const hodId = await departments.findById(sender.department).hodId;
+		const hod = await academics.findById(hodId);
 
 		const request = {
-			Status: "pending",
+			status: "pending",
 			type: "changeDayOff",
-			sender: sender.id,
-			receiver: hod.hod_ID,
-			issue_date: curDate,
-			new_day_off: newDayOff,
-			sender_comment: comment,
+			sender: sender._id,
+			receiver: hodId,
+			issueDate: getCurDate(),
+			newDayOff: newDayOff,
+			senderComment: comment,
 		};
 
 		const arr = await requests.insertMany(request);
@@ -320,19 +339,122 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 		//targetDay,
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
-
-		const sender = await academic.findOne({ id: decoded.id });
+		const input = req.body;
+		const comment = req.body.comment ? req.body.comment : "";
+		let request = [];
+		const sender = await academics.findOne({ id: decoded.id });
 		if (!sender) return res.status(413).send("invalid id");
 
+		const departmentId = sender.departmentId;
+		const hodId = await departments.findById(departmentId).hodId;
+		const hod = await academics.findOne({ id: hodId });
+		let curDate = getCurDate();
+		const type = input.type;
 		//maternity => check for female , proof documents
-
+		if (type === "maternity") {
+			if (sender.gender === "male") {
+				return res.status(413).send("males cannot submit maternity leaves");
+			} else {
+				request = {
+					Status: "pending",
+					type: "maternity",
+					senderComment: comment,
+					departmentId: departmentId,
+					senderId: sender.id,
+					receiverId: hod.id,
+					issue_date: curDate,
+					targetDate: input.targetDate,
+				};
+			}
+		}
 		//accidental => check accidental leave balance and annual leave balance
-		//deduce the balance in hod
-
+		//deduct the balance in hod
+		if (type === "accidental") {
+			if (
+				sender.accidentalLeaveBalance.balance <= 0 ||
+				sender.annualLeaveBalance.balance <= 0
+			) {
+				return res.status(414).send("you consumed all your balance");
+			} else {
+				request = {
+					Status: "pending",
+					type: "accidental",
+					senderComment: comment,
+					departmentId: departmentId,
+					senderId: sender.id,
+					receiverId: hod.id,
+					issue_date: curDate,
+					targetDate: input.targetDate,
+				};
+			}
+		}
 		//sick => current date <= target day + 3,  proof documents
-
+		if (type === "sick") {
+			if (dateDiff(curDate, input.targetDate) > 3) {
+				return res
+					.status(415)
+					.send("you cannot submit a sick leave after more than 3 days");
+			}
+		} else {
+			request = {
+				Status: "pending",
+				type: "sick",
+				senderComment: comment,
+				departmentId: departmentId,
+				senderId: sender.id,
+				receiverId: hod.id,
+				issue_date: curDate,
+				targetDate: input.targetDate,
+			};
+		}
 		//compensation
-		//day missed must have passed
+		if (type === "compensation") {
+			if (comment != "") {
+				request = {
+					Status: "pending",
+					type: "compensation",
+					senderComment: comment,
+					departmentId: departmentId,
+					senderId: sender.id,
+					receiverId: hod.id,
+					issue_date: curDate,
+					targetDate: input.targetDate,
+				};
+			} else {
+				return res.status(416).send("compensation leaves must have a reason");
+			}
+		}
+		
+		if (type === "annual") {
+			if (sender.annualLeaveBalance.balance <= 0) {
+				return res.status(416).send("you consumed all your annual leaves");
+			}
+			if (dateDiff(input.targetDate, curDate) <= 0) {
+				return res
+					.status(416)
+					.send("Annual leaves should be submitted before the targeted day");
+			}
+			request = {
+				Status: "pending",
+				type: "annual",
+				senderComment: comment,
+				departmentId: departmentId,
+				senderId: sender.id,
+				receiverId: hod.id,
+				issue_date: curDate,
+				targetDate: input.targetDate,
+			};
+		}
+
+		const arr = await requests.insertMany(request);
+		const reqID = arr[0]._id;
+
+		sender.sentRequests.push(reqID);
+		hod.receivedRequests.push(reqID);
+
+		await sender.save();
+		await hod.save();
+		res.send("change day off request sent successfully");
 	} catch (err) {
 		console.log(err);
 	}
@@ -347,16 +469,16 @@ router.post("/ac/viewSubmittedRequests", auth, async (req, res) => {
 		const decoded = jwt_decode(token);
 		const status = req.body.status;
 
-		const sender = await academic.findOne({ id: decoded.id });
+		const sender = await academics.findById(decoded.id);
 		if (!sender) return res.status(413).send("invalid id");
-		const reqID = sender.sent_requests;
+		const reqID = sender.sentRequests;
 
 		if (status === "all") {
-			return academic.find({
+			return academics.find({
 				_id: { $in: reqID },
 			});
 		} else {
-			return academic.find({
+			return academics.find({
 				_id: { $in: reqID },
 				status: status,
 			});
@@ -371,7 +493,7 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
 
-		const sender = await academic.findOne({ id: decoded.id });
+		const sender = await academics.findById(decoded.id);
 		if (!sender) return res.status(413).send("invalid id");
 
 		const del = requests.find({
@@ -388,19 +510,19 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 		flag |= del.status === "pending";
 
 		flag |=
-			del.type === "Replacement" &&
+			del.type === "replacement" &&
 			dateDiff(del.replacement.slotDate, curDate) > 0;
 
 		flag |= del.targetDate && dateDiff(del.targetDate, curDate) > 0;
 
 		if (flag) {
 			const delID = del._id;
-			if (del.type === "Replacement") {
-				const hodID = await department.find({
+			if (del.type === "replacement") {
+				const hodID = await departments.find({
 					name: del.department,
 				}).hod_ID;
 
-				const hod = await academic.findOne({
+				const hod = await academics.findOne({
 					id: hodID,
 				});
 
@@ -413,7 +535,7 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 			}
 
 			if (del.receiver) {
-				const receiver = await academic.findOne({
+				const receiver = await academics.findOne({
 					id: del.receiver,
 				});
 
