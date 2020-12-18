@@ -61,13 +61,13 @@ router.route("/hr/location")
             const decoded = jwt_decode(token);
             const vals = req.body;
             const x=await Location.findOne({
-                name:req.body.oldName
+                name:req.body.name
             })
             if(x){
                 let loc={}
                 if(vals.capacity){
-                    if(vals.capacity>x.currCapacity){
-                        return res.status(403).send("Cannot update because the new capacity is more than the current capacity")
+                    if(vals.capacity<x.currCapacity){
+                        return res.status(403).send("Cannot update because the new capacity is less than the current capacity")
                     }
                     else{
                         loc.capacity=vals.capacity
@@ -76,33 +76,37 @@ router.route("/hr/location")
                 if(vals.newName){
                     loc.name=vals.newName;
                 }
+                else{
+                    loc.name=vals.name
+                }
                 if(vals.type){
                     loc.type=vals.type;
                 }
                 loc.schedule=x.schedule
                 loc.currCapacity=x.currCapacity
-                x.save()
+                const temp=await Location.findOneAndUpdate({name:req.body.name},loc,{new:true})
+                await temp.save()
 
-                do{
-                const u=await academic.findOneAndUpdate({office_location : oldName}, {office_location: newName},{new:true})
-                u.save()
-                }while(u);
+                // do{
+                // const u=await academic.findOneAndUpdate({office_location : name}, {office_location: newName},{new:true})
+                // u.save()
+                // }while(u);
 
-                for (let i = 0; i < x.schedule.length; i++){
-                    const co=await Course.findOne({name : x.schedule.course}) 
-                    for(let j=0;j<co.schedule.length;j++){
-                        if(co.schedule[j].location===req.body.oldName){
-                            co.schedule[j].location=req.body.newName
-                        }
-                    }
-                    co.save()
-                    const inst=await academic.findOne({name:x.schedule.instructor})
-                    for(let j=0;j<inst.schedule.length;j++){
-                        if(inst.schedule[j].location===req.body.oldName){
-                            inst.schedule[j].location=req.body.newName
-                        }
-                    }
-                }
+                // for (let i = 0; i < x.schedule.length; i++){
+                //     const co=await Course.findOne({name : x.schedule.course}) 
+                //     for(let j=0;j<co.schedule.length;j++){
+                //         if(co.schedule[j].location===req.body.oldName){
+                //             co.schedule[j].location=req.body.newName
+                //         }
+                //     }
+                //     co.save()
+                //     const inst=await academic.findOne({name:x.schedule.instructor})
+                //     for(let j=0;j<inst.schedule.length;j++){
+                //         if(inst.schedule[j].location===req.body.oldName){
+                //             inst.schedule[j].location=req.body.newName
+                //         }
+                //     }
+               // }
             }
             else{
                 res.status(403).send("this location does not exist")
@@ -122,7 +126,7 @@ router.route("/hr/location")
                 const x=await Location.findOne({
                     name:req.body.name
                 })
-                const u=await academic.findOne({office_location : req.body.name})
+                const u=await academic.findOne({officeLocationId : x._id})
                 if(u || x.schedule.length!==0){
                     return res.status(403).send("cannot delete this location as it is occupied by an instructor/session")
                 }
@@ -143,7 +147,7 @@ router.route("/hr/location")
                 const token = req.header('auth-token')
                 const decoded = jwt_decode(token);
                 const vals = req.body;
-                if((!req.body.id) || (!req.body.name)||(!req.body.salary)||(!req.body.office_location)||(!req.body.email)){
+                if((!req.body.id) || (!req.body.name)||(!req.body.salary)||(!req.body.officeLocation)||(!req.body.email)){
                     return res.status(403).send("each member should have name, salary, email, office location and id")
                 }
                 else{
@@ -157,11 +161,12 @@ router.route("/hr/location")
                     if(temp.capacity==temp.currCapacity){
                         return res.status(403).send("this location is full")
                     }
+                    const loc=await Location.findOne({name:req.body.officeLocation})
                     if(req.body.type==="hr"){
                         const x= await HR.insertOne({
                             name:req.body.name,
                             id:req.body.id,
-                            office_location:req.body.office_location,
+                            officeLocation:loc._id,
                             email:req.body.email,
                             salary:req.body.salary,
                             dayOff:"Saturday",
@@ -173,7 +178,7 @@ router.route("/hr/location")
                         const x= await Academic.insertOne({
                             name:req.body.name,
                             id:req.body.id,
-                            office_location:req.body.office_location,
+                            office_location:loc._id,
                             email:req.body.email,
                             salary:req.body.salary,
                             dayOff:"Saturday",
@@ -205,7 +210,7 @@ router.route("/hr/location")
 
             }
             catch(err){
-
+                console.log(err)
             }
     })
 
@@ -218,7 +223,7 @@ router.route("/hr/location")
                     name:req.body.oldName
                 })
                 if(x){
-                    await Faculty.findOneAndUpdate({name:req.body.oldName},{name:req.body.newName},{new:true})
+                    await Faculty.findOneAndUpdate({name:req.body.name},{name:req.body.newName},{new:true})
                 }
                 else{
                     res.status(403).send("this faculty does not exist")
@@ -226,12 +231,12 @@ router.route("/hr/location")
 
             }
             catch(err){
-
+                console.log(err)
             }
         })
 
         Router.route("hr/deleteFaculty")
-        .put(auth,async (req,res)=>{
+        .delete(auth,async (req,res)=>{
             try{
                 const token = req.header('auth-token')
                 const decoded = jwt_decode(token);
@@ -241,10 +246,10 @@ router.route("/hr/location")
                 if(x){
                     await Faculty.deleteOne({name:req.body.name})
                     const dep=await Department.findOne({
-                        faculty:req.body.name
+                        facultyId:x._id
                      })
                      while(dep){
-                        const dep=await Department.findOneAndUpdate({faculty:req.body.name},{faculty:"none"},{new:true})
+                        const dep=await Department.findOneAndUpdate({facultyId:x._id},{facultyId:undefined},{new:true})
                         await dep.save()
                     }
                     }
@@ -254,7 +259,94 @@ router.route("/hr/location")
 
             }
             catch(err){
+                console.log(err)
+            }
+        })
 
+        Router.route("hr/addDepartment")
+        .post(auth,async (req,res)=>{
+            try{
+                const token = req.header('auth-token')
+                const decoded = jwt_decode(token);
+                const x=await Department.findOne({
+                    name:req.body.name
+                })
+                if(!x){
+                    if(!x.faculty){
+                        await Department.insertOne({name:req.body.name})
+                    }
+                    else{
+                        const f=await Faculty.findOne({name:req.body.faculty})
+                        await Department.insertOne({name:req.body.name,facultyId:f._id})
+                    }
+                }
+                else{
+                    res.status(403).send("this department already exist")
+                }
+
+            }
+            catch(err){
+                console.log(err)
+            }
+    })
+
+    Router.route("hr/updateDepartment")
+        .put(auth,async (req,res)=>{
+            try{
+                const token = req.header('auth-token')
+                const decoded = jwt_decode(token);
+                const x=await Department.findOne({
+                    name:req.body.name
+                })
+                if(x){
+                    if(req.body.newName){
+                        x.name=req.body.newName
+                    }
+                    if(req.body.newFaculty){
+                        const f=await Faculty.findOne({name:req.body.newFaculty})
+                        x.facultyId=f._id
+                    }
+                    const d=await Department.insertOne({name:req.body.name},x,{new:true})
+
+                    // else{
+                    //     const f=await Faculty.findOne({name:req.body.faculty})
+                    //     const d=await Department.insertOne({name:req.body.name},{name:req.body.newName,name:},{new:true})
+                    // }
+                }
+                else{
+                    res.status(403).send("this faculty does not exist")
+                }
+
+            }
+            catch(err){
+                console.log(err)
+            }
+        })
+
+        Router.route("hr/deleteDepartment")
+        .delete(auth,async (req,res)=>{
+            //delete in course and academic
+            try{
+                const token = req.header('auth-token')
+                const decoded = jwt_decode(token);
+                const x=await Department.findOne({
+                    name:req.body.name
+                })
+                if(x){
+                    do{
+                        const temp= await Course.findOneAndUpdate({departmentId:x._id},{departmentId:undefined},{new:true})
+                    }while(!temp)
+
+                    do{
+                        const temp= await Academic.findOneAndUpdate({departmentId:x._id},{departmentId:undefined},{new:true})
+                    }while(!temp)
+                    await Department.findByIdAndDelete(x._id)
+
+
+                }
+            }
+            catch(err){
+                console.log(err)
             }
         })
 
