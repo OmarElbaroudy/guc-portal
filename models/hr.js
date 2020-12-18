@@ -40,4 +40,4 @@ const hrSchema = new schema({
 	personalInfo: String,
 });
 
-module.exports = mongoose.model("HR", hrSchema);
+module.exports = mongoose.model("hr", hrSchema);
