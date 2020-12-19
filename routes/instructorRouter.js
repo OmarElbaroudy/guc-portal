@@ -1,186 +1,641 @@
 const express = require("express");
-const Academic = require("../models/academic");
-const course = require("../models/course");
+const academic = require("../models/academic");
+const courses = require("../models/course");
+const department = require("../models/department");
 const locations =  require("../models/locations");
 const jwt_decode = require('jwt-decode');
 const router = express.Router()
 const app = express()
 app.use(express.json())
-let h ="" ;
+let ac ="" ;
+
+   /* const insert = async () => {
+
+        let data ={
+            email:"omar@google.com",
+            password: "123456",
+            id: "ac-4",
+        
+            name: "Omar Hany",
+            missingHours : 0,
+            missingDays : 0,
+            attendanceRecords: [],
+        
+            salary: 10000,
+            dayOff: 0,
+            courses: [],
+            }
+            await academic.create(data)    };*/
+
+
+const numOfDefined = (array)  =>{
+let number = 0 
+for(entry of array ){
+    if(entry.instructorId!==undefined)
+        number++
+}
+return number
+}          
+const instructorUndefined =  (object) => {
+    return object.instructorId != null
+};
+
+
+const getCourseNameById = async (id) => {
+	return await courses.findById(id).name;
+};
+
+const getCourseIdByName = async (name) => {
+	const ret = await courses.findOne({ name: name });
+	return ret ? ret._id : undefined;
+};
+const getAcademicIdById = async (id) => {
+	const ret = await academic.findOne({ id: id });
+	return ret ? ret._id : undefined;
+};
+const getlocationIdByName = async (name) => {
+	const ret = await locations.findOne({ name: name });
+	return ret ? ret._id : undefined;
+};
+
+const getDepartmentIdByName = async (name) => {
+	const ret = await department.findOne({ name: name });
+	return ret ? ret._id : undefined;
+};
+
+const getLocationNameById = async (id) => {
+	return await locations.findById(id).name;
+};
+
+const getLocationIdByName = async (name) => {
+	const ret = await locations.findOne({ name: name });
+	return ret ? ret._id : undefined;
+};
 const auth= async (req,res,next)=>{
+  
     const token = req.header('auth-token')
     const decoded = jwt_decode(token);
 
-    if (decoded.type === "academic") {
-        h = await Academic.findOne({
-            id: decoded.id,
-            type: "CI"
+
+        ac = await academic.findOne({
+            _id:decoded.id,
+            "courses.position":"instructor"
         })
-        if(!h)
+        if(!ac)
         return res.status(403).send("unauthorized access")
 
         next()
-  }
+  
 }
-    router.route("/CI/view_assigned_slots")
+
+
+    router.route("/instructor/viewAssignedSlots")
     .get(auth,async (req, res) => {
-     
         let response = [] ;
-
-   
-        for (const entry of h.courses) {
-            const x = await course.findOne({
-                name : entry.name
+        for (const entry of ac.courses) {
+            const output = await courses.findOne({
+                _id : entry.courseId
             })
-            console.log(x)
-            if(x){
-                 response.push({"course" : x.name ,"Assigned Slots" :x.schedule})
+            console.log(output)
+            //console.log(output.schedule[0].instructor)
+            if(output){
+                //let assigned = output.schedule.filter(instructorUndefined)
+                //if(assigned.length>0)
+                    response.push({"course" : output.name ,"Assigned Slots" :output.schedule})
             }
-
           }
+          
+          /*let x = [ {locationId:"blablabla" , weekDay:"blablabla" , slot: "blablabla"} , 
+          {locationId:"blablabla" , weekDay:"blablabla" , slot: "blablabla"},
+          {instructorId : "blabla", locationId:"blablabla" , weekDay:"blablabla" , slot: "blablabla"}]
+
+            let assigned = numOfNotUndefined(x)
+            console.log(assigned)*/
+          
         
            res.send(response)
            
     })
-    router.route("/CI/view_courses_coverage")
+    
+    router.route("/instructor/viewCoursesCoverage")
     .get(auth,async (req, res) => {
 
         let response = [] ;
-
-
- 
-         for (const entry of h.courses) {
-            const x = await course.findOne({
-                name : entry.name
+         for (const entry of ac.courses) {
+            const output = await courses.findOne({
+                _id : entry.courseId
             })
-            if(x){
-                 response.push({"course" : x.name , "coverage" : x.course_coverage + " %" })
+            if(output){
+                if(output.schedule.length!==0)
+                     courseCoverage = (numOfDefined(output.schedule)/ output.schedule.length) * 100
+                else 
+                     courseCoverage = 0
+                 response.push({"course" : output.name , "coverage" : courseCoverage + " %" })
             }
 
           }
-        
            res.send(response)
-
-           
     })
 
    
 
-    router.route("/CI/view_course_department_staff")
+    router.route("/instructor/viewCoursOrDepartmentStaff")
     .post(auth,async (req, res) => {
         let response = []
         if(req.body.input==="department"){
-            const x = await Academic.find(
+            
+            const output = await academic.find(
                 {
-                    department:h.department
+                    departmentId:ac.departmentId
                 })
-                if(x)
-                 response.push(x)
+                if(output)
+                 response.push({departmentId:ac.departmentId , Staff:output})
         }
         else if(req.body.input==="course"){
-            for (const entry of h.courses) {
-                console.log(entry.name)
-                let x = await Academic.find(
+            for (const entry of ac.courses) {
+                console.log(entry)
+                const output = await academic.find(
                     {
-                        "courses.name":entry.name
-                        //type:"academic"
+                        "courses.courseId":entry.courseId
                     })
-                    console.log(x)
-                    if(x && x.length !=0)
-                     response.push(x)
-                x = await Academic.find(
-                        {
-                          "courses.name":entry.name
-                        })
-                        console.log(x)
-
-                    if(x && x.length !=0)
-                        response.push(x)
-              }
+                    if(output.length !=0)
+                     response.push({courseId:entry.courseId , Staff : output})
         }
            res.send(response)
+    }
     })
 
-    router.route("/CI/assign_to_slot")
+
+    
+    router.route("/instructor/assignSlotToAcademic")
     .post(auth,async (req, res) => {
         let response = []
-        let x = await course.findOne(
+        let courseId = await getCourseIdByName(req.body.course)
+        let course = await courses.findOne(
             {
-                "name":req.body.course
+                "_id":courseId
             })
-        if(x.length==0){
-             res.send("this course doesn't exit")
+           
+        if(!course){
+             res.send("this course doesn't exist")
              return
         }
-        console.log(x.schedule)
-    
-         let y = await Academic.findOne(
+     
+        let instructor = await academic.findOne(
             {
-                "courses.name":req.body.course,
-                "id":h.id
+                "courses.courseId":courseId,
+                "_id":ac._id,
+                "courses.position":"instructor"
             })
-        if(!y){
-             res.send("this course is not yours")
+        if(!instructor){
+             res.send("You are not the instructor of this course")
              return
         }
-        y = await locations.findOne(
+        let academicMember = await academic.findOne(
+            {
+                "courses.courseId":courseId,
+                "_id":await getAcademicIdById(req.body.academic),
+                "courses.position":"academic"
+
+            })
+        if(!academicMember){
+             res.send("This academic either doesn't exist or doesn't teach this course")
+             return
+        }
+        let location = await locations.findOne(
             {
                 "name":req.body.location
             })
-        if(!y){
+        if(!location){
              res.send("this location is incorrect")
              return
         }
-
-        y = await locations.findOne(
+        if(req.body.weekDay>6 || req.body.weekDay<0 || req.body.slot > 5 || req.body.slot<1 ){
+            res.send("check your slot or weekDay input")
+            return
+        }
+        if(req.body.type!="tutorial" && req.body.type!="lecture" && req.body.type!="practical"){
+            res.send("slot type is incorrect")
+            return
+        }
+        let slot = await courses.findOne(
             {
-                "name":req.body.location,
-                "schedule.day":req.body.day,
-                "schedule.slot":req.body.slot
+                "_id":courseId,
+                 instructorId :  [ac._id],
+                "schedule.locationId":await getlocationIdByName(req.body.location),
+                "schedule.weekDay":req.body.weekDay,
+                "schedule.slot":req.body.slot,
+                "schedule.type":req.body.type
 
             })
-        if(y){
-             res.send("this location is busy at this slot in this day")
+        if(!slot){
+             res.send("This slot doesn't exist")
              return
         }
-        y = await Academic.findOne(
+
+        let slotAssigned = await courses.findOne(
             {
-              "id":req.body.instructor
+                "_id":courseId,
+                 instructorId :  [ac._id],
+                 "schedule.instructorId":{ $ne: null },
+                "schedule.locationId":await getlocationIdByName(req.body.location),
+                "schedule.weekDay":req.body.weekDay,
+                "schedule.slot":req.body.slot,
+                "schedule.type":req.body.type
+
             })
-        if(!y){
-                res.send("this instructor doesn't exit")
-                return
-           }
-        y = await Academic.findOne(
-            {
-              "id":req.body.instructor,
-              "course.name":req.body.course
+         
+        if(slotAssigned){
+             res.send("This slot is already assgined")
+             return
+        }
+
+        for(entry of location.schedule){
+
+            if ( entry.courseId.equals( await getCourseIdByName(req.body.course))&&
+            entry.weekDay===req.body.weekDay &&
+            entry.slot===req.body.slot&&
+            entry.type===req.body.type){
+                console.log("here")
+                entry.instructorId = await getAcademicIdById(req.body.academic)
+                await location.save()
+                break
+            }
+
+        }
+
+        for(entry of slot.schedule){
+
+
+            if ( entry.locationId.equals( await getlocationIdByName(req.body.location))&&
+            entry.weekDay===req.body.weekDay &&
+            entry.slot===req.body.slot&&
+            entry.type===req.body.type){
+                entry.instructorId = await getAcademicIdById(req.body.academic)
+                await slot.save()
+                break
+            }
+
+        }
+
+
+            academicMember.schedule.push(
+                {courseId:await getCourseIdByName(req.body.course),
+                 locationId:await getlocationIdByName(req.body.location),
+                 weekDay:req.body.weekDay,
+                 slot:req.body.slot,
+                 type:req.body.type
             })
-        if(y){
-                res.send("this instructor doesn't teach this course")
-                return
-           }
-        
-        
-
-           course.updateOne( 
-               {
-            "name":req.body.course
-        }, 
-        { $push: { schedule: {
-            instructor : req.body.instructor,
-            location : req.body.location,
-            day : req.body.day, 
-            slot : req.body.slot
-         }}
-         }, { safe: true, upsert: true }, (err, data) => console.log(data))
-     
+            await academicMember.save()
 
         
-
-        
-        res.send(response)
+        res.send("Assignment made successfully")
     })
+
+    
+    router.route("/instructor/deleteSlotAssignment")
+    .post(auth,async (req, res) => {
+        let response = []
+        const comparedCourse = await getCourseIdByName(req.body.course)
+        const comparedLocation = await getlocationIdByName(req.body.location)
+        let courseId = await getCourseIdByName(req.body.course)
+        let course = await courses.findOne(
+            {
+                "_id":courseId
+            })
+           
+        if(!course){
+             res.send("this course doesn't exist")
+             return
+        }
+     
+        let instructor = await academic.findOne(
+            {
+                "courses.courseId":courseId,
+                "_id":ac._id,
+                "courses.position":"instructor"
+            })
+        if(!instructor){
+             res.send("You are not the instructor of this course")
+             return
+        }
+        let academicMember = await academic.findOne(
+            {
+                "courses.courseId":courseId,
+                "_id":await getAcademicIdById(req.body.academic),
+                "courses.position":"academic"
+
+            })
+        if(!academicMember){
+             res.send("This academic either doesn't exist or doesn't teach this course")
+             return
+        }
+        let location = await locations.findOne(
+            {
+                "name":req.body.location
+            })
+        if(!location){
+             res.send("this location is incorrect")
+             return
+        }
+        if(req.body.weekDay>6 || req.body.weekDay<0 || req.body.slot > 5 || req.body.slot<1 ){
+            res.send("check your slot or weekDay input")
+            return
+        }
+        if(req.body.type!="tutorial" && req.body.type!="lecture" && req.body.type!="practical"){
+            res.send("slot type is incorrect")
+            return
+        }
+        let slot = await courses.findOne(
+            {
+                "_id":courseId,
+                 instructorId :  [ac._id],
+                "schedule.locationId":await getlocationIdByName(req.body.location),
+                "schedule.weekDay":req.body.weekDay,
+                "schedule.slot":req.body.slot,
+                "schedule.type":req.body.type
+
+            })
+        if(!slot){
+             res.send("This slot doesn't exist")
+             return
+        }
+
+        let slotAssigned = await courses.findOne(
+            {
+                "_id":courseId,
+                 instructorId :  [ac._id],
+                 "schedule.instructorId":{ $ne: null },
+                "schedule.locationId":await getlocationIdByName(req.body.location),
+                "schedule.weekDay":req.body.weekDay,
+                "schedule.slot":req.body.slot,
+                "schedule.type":req.body.type
+
+            })
+         
+        if(!slotAssigned){
+             res.send("This slot is not assgined")
+             return
+        }
+
+        for(entry of location.schedule){
+
+
+            if ( entry.courseId.equals( await getCourseIdByName(req.body.course))&&
+            entry.instructorId.equals(await getAcademicIdById(req.body.academic))&&
+            entry.weekDay===req.body.weekDay &&
+            entry.slot===req.body.slot&&
+            entry.type===req.body.type){
+                entry.instructorId = undefined
+                await location.save()
+                break
+            }
+
+        }
+
+        for(entry of slot.schedule){
+            if ( entry.locationId.equals( await getlocationIdByName(req.body.location))&&
+            entry.instructorId.equals(await getAcademicIdById(req.body.academic))&&
+            entry.weekDay===req.body.weekDay &&
+            entry.slot===req.body.slot&&
+            entry.type===req.body.type){
+                entry.instructorId = undefined
+                await slot.save()
+                break
+            }
+
+        }
+
+            academicMember.schedule = await academicMember.schedule.filter( function(value){
+            return  !value.courseId.equals( comparedCourse)&&
+            !value.locationId.equals( comparedLocation)&&
+             value.weekDay!==req.body.weekDay&&
+             value.slot!==req.body.slot&&
+             value.type!==req.body.type
+
+        })
+        await academicMember.save()
+
+        
+        res.send("Assingnment deleted successfully")
+
+          
+      
+    })
+
+    router.route("/instructor/updateSlotAssignment")
+    .post(auth,async (req, res) => {
+        let response = []
+        const comparedCourse = await getCourseIdByName(req.body.course)
+        const comparedLocation = await getlocationIdByName(req.body.location)
+        let courseId = await getCourseIdByName(req.body.course)
+        let course = await courses.findOne(
+            {
+                "_id":courseId
+            })
+           
+        if(!course){
+             res.send("this course doesn't exist")
+             return
+        }
+     
+        let instructor = await academic.findOne(
+            {
+                "courses.courseId":courseId,
+                "_id":ac._id,
+                "courses.position":"instructor"
+            })
+        if(!instructor){
+             res.send("You are not the instructor of this course")
+             return
+        }
+        let academicMember = await academic.findOne(
+            {
+                "courses.courseId":courseId,
+                "_id":await getAcademicIdById(req.body.academic),
+                "courses.position":"academic"
+
+            })
+        if(!academicMember){
+             res.send("This academic either doesn't exist or doesn't teach this course")
+             return
+        }
+        let academicMember2 = await academic.findOne(
+            {
+                "courses.courseId":courseId,
+                "_id":await getAcademicIdById(req.body.academic2),
+                "courses.position":"academic"
+
+            })
+        if(!academicMember2){
+             res.send("The new academic either doesn't exist or doesn't teach this course")
+             return
+        }
+        let location = await locations.findOne(
+            {
+                "name":req.body.location
+            })
+        if(!location){
+             res.send("this location is incorrect")
+             return
+        }
+        if(req.body.weekDay>6 || req.body.weekDay<0 || req.body.slot > 5 || req.body.slot<1 ){
+            res.send("check your slot or weekDay input")
+            return
+        }
+        if(req.body.type!="tutorial" && req.body.type!="lecture" && req.body.type!="practical"){
+            res.send("slot type is incorrect")
+            return
+        }
+        let slot = await courses.findOne(
+            {
+                "_id":courseId,
+                 instructorId :  [ac._id],
+                "schedule.locationId":await getlocationIdByName(req.body.location),
+                "schedule.weekDay":req.body.weekDay,
+                "schedule.slot":req.body.slot,
+                "schedule.type":req.body.type
+
+            })
+        if(!slot){
+             res.send("This slot doesn't exist")
+             return
+        }
+
+        let slotAssigned = await courses.findOne(
+            {
+                "_id":courseId,
+                 instructorId :  [ac._id],
+                 "schedule.instructorId":{ $ne: null },
+                "schedule.locationId":await getlocationIdByName(req.body.location),
+                "schedule.weekDay":req.body.weekDay,
+                "schedule.slot":req.body.slot,
+                "schedule.type":req.body.type
+
+            })
+         
+        if(!slotAssigned){
+             res.send("This slot is not assgined")
+             return
+        }
+
+        for(entry of location.schedule){
+
+
+            if ( entry.courseId.equals( comparedCourse)&&
+            entry.instructorId.equals(await getAcademicIdById(req.body.academic))&&
+            entry.weekDay===req.body.weekDay &&
+            entry.slot===req.body.slot&&
+            entry.type===req.body.type){
+                entry.instructorId = await getAcademicIdById(req.body.academic2)
+                await location.save()
+                break
+            }
+
+        }
+
+        for(entry of slot.schedule){
+            if ( entry.locationId.equals( comparedLocation)&&
+            entry.instructorId.equals(await getAcademicIdById(req.body.academic))&&
+            entry.weekDay===req.body.weekDay &&
+            entry.slot===req.body.slot&&
+            entry.type===req.body.type){
+                entry.instructorId = await getAcademicIdById(req.body.academic2)
+                await slot.save()
+                break
+            }
+
+        }
+
+            academicMember.schedule = await academicMember.schedule.filter( function(value){
+            return  !value.courseId.equals( comparedCourse)&&
+            !value.locationId.equals( comparedLocation)&&
+             value.weekDay!==req.body.weekDay&&
+             value.slot!==req.body.slot&&
+             value.type!==req.body.type
+
+        })
+        await academicMember.save()
+
+        academicMember2.schedule.push(
+            {courseId:comparedCourse,
+             locationId:comparedLocation,
+             weekDay:req.body.weekDay,
+             slot:req.body.slot,
+             type:req.body.type
+        })
+        await academicMember2.save()
+
+        
+        res.send("Assingnment updated successfully")
+
+          
+      
+    })
+
+    router.route("/instructor/assignCourseCoordinator")
+    .post(auth,async (req, res) => {
+        let response = []
+        const comparedCourse = await getCourseIdByName(req.body.course)
+        const comparedLocation = await getlocationIdByName(req.body.location)
+        let courseId = await getCourseIdByName(req.body.course)
+        let course = await courses.findOne(
+            {
+                "_id":courseId
+            })
+           
+        if(!course){
+             res.send("this course doesn't exist")
+             return
+        }
+     
+        let instructor = await academic.findOne(
+            {
+                "courses.courseId":courseId,
+                "_id":ac._id,
+                "courses.position":"instructor"
+            })
+        if(!instructor){
+             res.send("You are not the instructor of this course")
+             return
+        }
+        let academicMember = await academic.findOne(
+            {
+                "courses.courseId":courseId,
+                "_id":await getAcademicIdById(req.body.academic),
+                "courses.position":"academic"
+
+            })
+        if(!academicMember){
+             res.send("This academic either doesn't exist or doesn't teach this course")
+             return
+        }
+        
+        course.coordinatorId = academicMember._id
+        await course.save()
+
+        
+        
+        for(entry of academicMember.courses){
+            if ( entry.courseId.equals(courseId)){
+                entry.position = "coordinator"
+                await academicMember.save()
+                break
+            }
+
+        }
+
+        
+        
+        res.send("Academic " + req.body.academic +  " assigned to be a coordinator successfully")
+
+          
+      
+    })
+
+
+
+    
 
 
     

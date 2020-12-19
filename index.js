@@ -7,6 +7,7 @@ const academicRouter = require("./routes/academicRouter");
 const loginRouter = require("./routes/loginRouter");
 const staffRouter = require("./routes/staffRouter");
 const instructorRouter = require("./routes/instructorRouter");
+const hrRouter = require("./routes/hrRouter");
 
 const key = "iehfoeihfpwhoqhfiu083028430bvf";
 
@@ -41,6 +42,7 @@ mongoose
 		app.use("", hodRouter);
 		app.use("", academicRouter);
 		app.use("", staffRouter);
+		app.use("", hrRouter);
 
 		app.listen(3000, () => {
 			console.log("connected");

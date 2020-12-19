@@ -1,11 +1,12 @@
 const express = require("express");
 const jwt_decode = require('jwt-decode');
 const Academic = require("../models/academic");
+const Hr=require("../models/hr")
 const Location=require("../models/locations")
 const Department=require("../models/department")
 const Course=require("../models/course");
 const Requests=require("../models/requests")
-const { Router } = require("express");
+//const { Router } = require("express");
 const router = express.Router()
 
 //4.4 HR
@@ -193,7 +194,7 @@ router.route("/hr/location")
             }
         })
 
-    Router.route("hr/addFaculty")
+    router.route("hr/addFaculty")
         .post(auth,async (req,res)=>{
             try{
                 const token = req.header('auth-token')
@@ -214,7 +215,7 @@ router.route("/hr/location")
             }
     })
 
-    Router.route("hr/updateFaculty")
+    router.route("hr/updateFaculty")
         .put(auth,async (req,res)=>{
             try{
                 const token = req.header('auth-token')
@@ -235,7 +236,7 @@ router.route("/hr/location")
             }
         })
 
-        Router.route("hr/deleteFaculty")
+        router.route("hr/deleteFaculty")
         .delete(auth,async (req,res)=>{
             try{
                 const token = req.header('auth-token')
@@ -263,7 +264,7 @@ router.route("/hr/location")
             }
         })
 
-        Router.route("hr/addDepartment")
+        router.route("hr/addDepartment")
         .post(auth,async (req,res)=>{
             try{
                 const token = req.header('auth-token')
@@ -290,7 +291,7 @@ router.route("/hr/location")
             }
     })
 
-    Router.route("hr/updateDepartment")
+    router.route("hr/updateDepartment")
         .put(auth,async (req,res)=>{
             try{
                 const token = req.header('auth-token')
@@ -323,7 +324,7 @@ router.route("/hr/location")
             }
         })
 
-        Router.route("hr/deleteDepartment")
+        router.route("hr/deleteDepartment")
         .delete(auth,async (req,res)=>{
             //delete in course and academic
             try{
@@ -350,7 +351,7 @@ router.route("/hr/location")
             }
         })
 
-        Router.Route("hr/addCourse")
+        router.route("hr/addCourse")
             .post(async(req,res)=>{
                 try{
                     const token = req.header('auth-token')
@@ -381,7 +382,7 @@ router.route("/hr/location")
 
             })
 
-            Router.route("hr/updateCourse")
+            router.route("hr/updateCourse")
             .put(async (req,res)=>{
                 try{
                     const token = req.header('auth-token')
@@ -410,7 +411,7 @@ router.route("/hr/location")
 
             })
 
-            Router.route("hr/deleteCourse")
+            router.route("hr/deleteCourse")
             .delete(async (req,res)=>{
                 try{
                     const token = req.header('auth-token')
@@ -431,8 +432,8 @@ router.route("/hr/location")
                         }
 
                         //delete slotLinking requests for this course
-                        const r=await Requests.find({type:"slotLinking"})
-                        const temp=r.filter(function(value){
+                         r=await Requests.find({type:"slotLinking"})
+                         temp=r.filter(function(value){
                             return value.slotLinking.courseId.equals(x._id)
                         })
                         for(let i=0;i<temp.length;i++){
@@ -468,5 +469,183 @@ router.route("/hr/location")
                 }
 
             })
+
+            router.route("hr/updateStaffMember")
+            .put(async (req,res)=>{
+                try{
+                    const token = req.header('auth-token')
+                    const decoded = jwt_decode(token)
+                    const h=await HR.findOne({
+                        id:req.body.id
+                    })
+                    if(!x){
+                        const a=await Academic.findOne({
+                            id:req.body.id
+                        })
+                        if(!a){
+                            return res.status(403).send("this user does not exist")
+                        }
+                        else{
+                            if(req.body.name){
+                                a.name=req.body.name
+                            }
+                            if(req.body.email){
+                                const temp=await Academic.findOne({email:req.body.email})
+                                if(!temp){
+                                    a.email=req.body.email
+                                }
+
+                            }
+                            if(req.body.id){
+                                const temp=await Academic.findOne({id:req.body.id})
+                            }
+                            if(req.body.officeLocation){
+                                const temp=Location.findOne({name:req.body.officeLocation})
+                                if(!temp){
+                                    return res.status(403).send("this location does not exist")
+                                }
+                                if(temp.type!=="office"){
+                                    return res.status(403).send("this location is not an office")
+                                }
+                                if(temp.capacity==temp.currCapacity){
+                                    return res.status(403).send("this location is full")
+                                }
+                                const loc=await Location.findOne({name:req.body.officeLocation})
+                                a.officeLocationId=loc._id
+                            }
+                            if(req.body.salary){
+                                a.salary=req.body.salary
+                            }
+
+                            const t=await Academic.findOneAndUpdate({id:req.body.id},a,{new:true})
+                        }
+
+                    }
+                    else{
+                        if(req.body.name){
+                            h.name=req.body.name
+                        }
+                        if(req.body.email){
+                            const temp=await Hr.findOne({email:req.body.email})
+                            if(!temp){
+                                h.email=req.body.email
+                            }
+
+                        }
+                        if(req.body.id){
+                            const temp=await Hr.findOne({id:req.body.id})
+                        }
+                        if(req.body.officeLocation){
+                            const temp=Location.findOne({name:req.body.officeLocation})
+                            if(!temp){
+                                return res.status(403).send("this location does not exist")
+                            }
+                            if(temp.type!=="office"){
+                                return res.status(403).send("this location is not an office")
+                            }
+                            if(temp.capacity==temp.currCapacity){
+                                return res.status(403).send("this location is full")
+                            }
+                            const loc=await Location.findOne({name:req.body.officeLocation})
+                            h.officeLocationId=loc._id
+                        }
+                        if(req.body.salary){
+                            h.salary=req.body.salary
+                        }
+
+                        const t=await Hr.findOneAndUpdate({id:req.body.id},a,{new:true})
+
+
+                    }
+                }
+                catch(err){
+                    console.log(err)
+                }
+
+
+            })
+
+            router.route("hr/deleteStaffMember")
+            .put(async (req,res)=>{
+                try{
+                    const token = req.header('auth-token')
+                    const decoded = jwt_decode(token)
+                    const x=await HR.findOne({
+                        id:req.body.id
+                    })
+                    let t="hr"
+                    if(!x){
+                        const x=await Academic.findOne({
+                            id:req.body.id
+                        })
+                        if(!x){
+                            res.status(403).return("this staff member does not exist")
+                        }
+                        let t="academic"
+                    }
+                    //delete request sent/received by this staff member
+
+                    do{
+                        const temp=await Requests.findOneAndDelete({senderId:x._id})
+                        if(temp.type==="replacememnt"){
+                            const departmentId = temp.departmentId;
+                            const hodId = (await departments.findById(departmentId)).hodId;
+                            const hod = await academics.findById(hodId);
+                            hod.receivedRequestsId=hod.receivedRequestsId.filter(function(value){
+                                return !(value.equals(temp._id))
+                            })
+                            hod.save()
+                        }
+                        const rcvr=await Academic.findOneById(temp.receiverId)
+                        if(rcvr){
+                        rcvr.receivedRequestsId=rcvr.receivedRequestsId.filter(function(value){
+                            return !(value.equals(temp._id))
+                        })}
+                    }while(temp)
+
+                    do{
+                        const temp=await Requests.findOneAndDelete({receiverId:x._id})
+                        const sndr=await Academic.findOneById(temp.senderId)
+                        sndr.sentRequestsId=sndr.receivedRequestsId.filter(function(value){
+                            return !(value.equals(temp._id))
+                        })
+                    }while(temp)
+
+                    //delete staff member from any course and department
+
+                    if(type==="academic"){
+                        for(let i=0;i<x.course;i++){
+                            const z=await Course.findById(x.course[i].courseId)
+                            z.instructorId=z.InstructorId.filter(function(value){
+                                return !(value.equals(x._id))
+                            })
+                            z.academicId=z.academicId.filter(function(value){
+                                return !(value.equals(x._id))
+                            })
+                            z.coordinatorId=z.coordinatorId.filter(function(value){
+                                return !(value.equals(x._id))
+                            })
+                            if(z.hod.equals(x._id)){
+                                z.hod=undefined
+                            }
+                            await z.save()
+
+                            
+                        }
+
+                    }
+
+                    //todo
+                    //delete instructorId from loc and course schedules
+
+                    
+                
+                }catch(err){
+                    console.log(err)
+                }
+            })
+
+
+            module.exports = router
 
     
