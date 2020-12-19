@@ -126,6 +126,8 @@ router
 			const sender = await academics.findById(decoded.id);
 			const receiver = await academics.findOne({ id: input.id });
 			const courseId = await getCourseIdByName(input.course);
+			const hodId = (await departments.findById(sender.departmentId)).hodId;
+			const hod = await academics.findById(hodId);
 
 			if (!receiver) return res.status(405).send("invalid receiver id");
 			if (!courseId) return res.status(416).send("no such course");
@@ -178,9 +180,11 @@ router
 
 			sender.sentRequestsId.push(reqID);
 			receiver.receivedRequestsId.push(reqID);
+			hod.receivedRequestsId.push(reqID);
 
 			await sender.save();
 			await receiver.save();
+			await hod.save();
 
 			res.send("request sent successfully");
 		} catch (err) {
@@ -456,11 +460,11 @@ router.post("/ac/viewSubmittedRequests", auth, async (req, res) => {
 		const reqID = sender.sentRequestsId;
 
 		if (status === "all") {
-			return academics.find({
+			return requests.find({
 				_id: { $in: reqID },
 			});
 		} else {
-			return academics.find({
+			return requests.find({
 				_id: { $in: reqID },
 				status: status,
 			});
