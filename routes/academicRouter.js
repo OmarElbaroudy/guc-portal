@@ -126,19 +126,20 @@ router
 			const sender = await academics.findById(decoded.id);
 			const receiver = await academics.findOne({ id: input.id });
 			const courseId = await getCourseIdByName(input.course);
-
-			if (!receiver) return res.status(405).send("invalid receiver id");
+			const hodId = (await departments.findById(sender.departmentId)).hodId;
+			const hod = await academics.findById(hodId);
+			
 			if (!courseId) return res.status(416).send("no such course");
 
 			let fst = false;
 			sender.courses.forEach((item) => {
 				fst |= item.courseId.equals(courseId) && item.position === "academic";
 			});
-
 			let snd = false;
 			receiver.courses.forEach((item) => {
 				snd |= item.courseId.equals(courseId) && item.position === "academic";
 			});
+			if(receiver) snd=true;
 
 			if (!fst || !snd) return res.status(406).send("invalid course");
 			let slotDate = new Date(
@@ -156,32 +157,53 @@ router
 			});
 
 			if (!flag) return res.status(408).send("invalid slot");
-
-			const Request = {
-				status: "pending",
-				type: "replacement",
-				departmentId: sender.departmentId,
-				senderId: sender._id,
-				receiverId: receiver._id,
-				issueDate: getCurDate(),
-				replacement: {
-					courseId: courseId,
-					slot: input.slot,
-					locationId: await getLocationIdByName(input.location),
-					slotDate: slotDate,
-					academicResponse: "pending",
-				},
-			};
+			if(receiver){
+				const Request = {
+					status: "pending",
+					type: "replacement",
+					departmentId: sender.departmentId,
+					senderId: sender._id,
+					receiverId: receiver._id,
+					issueDate: getCurDate(),
+					replacement: {
+						courseId: courseId,
+						slot: input.slot,
+						locationId: await getLocationIdByName(input.location),
+						slotDate: slotDate,
+						academicResponse: "pending",
+					},
+				};
+			}else{
+				const Request = {
+					status: "pending",
+					type: "replacement",
+					departmentId: sender.departmentId,
+					senderId: sender._id,
+					issueDate: getCurDate(),
+					replacement: {
+						courseId: courseId,
+						slot: input.slot,
+						locationId: await getLocationIdByName(input.location),
+						slotDate: slotDate,
+						academicResponse: "pending",
+					},
+				};
+			}
+			
 
 			const arr = await requests.insertMany(Request);
 			const reqID = arr[0]._id;
 
 			sender.sentRequestsId.push(reqID);
-			receiver.receivedRequestsId.push(reqID);
+			hod.receivedRequestsId.push(reqID);
 
 			await sender.save();
-			await receiver.save();
-
+			await hod.save();
+			if(receiver){
+				receiver.receivedRequestsId.push(reqID);
+				await receiver.save();
+			}
+			
 			res.send("request sent successfully");
 		} catch (err) {
 			console.log(err);
@@ -456,11 +478,11 @@ router.post("/ac/viewSubmittedRequests", auth, async (req, res) => {
 		const reqID = sender.sentRequestsId;
 
 		if (status === "all") {
-			return academics.find({
+			return requests.find({
 				_id: { $in: reqID },
 			});
 		} else {
-			return academics.find({
+			return requests.find({
 				_id: { $in: reqID },
 				status: status,
 			});
