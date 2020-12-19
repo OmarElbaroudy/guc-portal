@@ -1,6 +1,7 @@
 const express = require("express");
 const jwt_decode = require('jwt-decode');
 const Academic = require("../models/academic");
+const Hr=require("../models/hr")
 const Location=require("../models/locations")
 const Department=require("../models/department")
 const Course=require("../models/course");
@@ -466,6 +467,101 @@ router.route("/hr/location")
                 catch(err){
                     console.log(err)
                 }
+
+            })
+
+            Router.route("hr/updateStaffMember")
+            .put(async (req,res)=>{
+                try{
+                    const token = req.header('auth-token')
+                    const decoded = jwt_decode(token)
+                    const h=await HR.findOne({
+                        id:req.body.id
+                    })
+                    if(!x){
+                        const a=await Academic.findOne({
+                            id:req.body.id
+                        })
+                        if(!a){
+                            return res.status(403).send("this user does not exist")
+                        }
+                        else{
+                            if(req.body.name){
+                                a.name=req.body.name
+                            }
+                            if(req.body.email){
+                                const temp=await Academic.findOne({email:req.body.email})
+                                if(!temp){
+                                    a.email=req.body.email
+                                }
+
+                            }
+                            if(req.body.id){
+                                const temp=await Academic.findOne({id:req.body.id})
+                            }
+                            if(req.body.officeLocation){
+                                const temp=Location.findOne({name:req.body.officeLocation})
+                                if(!temp){
+                                    return res.status(403).send("this location does not exist")
+                                }
+                                if(temp.type!=="office"){
+                                    return res.status(403).send("this location is not an office")
+                                }
+                                if(temp.capacity==temp.currCapacity){
+                                    return res.status(403).send("this location is full")
+                                }
+                                const loc=await Location.findOne({name:req.body.officeLocation})
+                                a.officeLocationId=loc._id
+                            }
+                            if(req.body.salary){
+                                a.salary=req.body.salary
+                            }
+
+                            const t=await Academic.findOneAndUpdate({id:req.body.id},a,{new:true})
+                        }
+
+                    }
+                    else{
+                        if(req.body.name){
+                            h.name=req.body.name
+                        }
+                        if(req.body.email){
+                            const temp=await Hr.findOne({email:req.body.email})
+                            if(!temp){
+                                h.email=req.body.email
+                            }
+
+                        }
+                        if(req.body.id){
+                            const temp=await Hr.findOne({id:req.body.id})
+                        }
+                        if(req.body.officeLocation){
+                            const temp=Location.findOne({name:req.body.officeLocation})
+                            if(!temp){
+                                return res.status(403).send("this location does not exist")
+                            }
+                            if(temp.type!=="office"){
+                                return res.status(403).send("this location is not an office")
+                            }
+                            if(temp.capacity==temp.currCapacity){
+                                return res.status(403).send("this location is full")
+                            }
+                            const loc=await Location.findOne({name:req.body.officeLocation})
+                            h.officeLocationId=loc._id
+                        }
+                        if(req.body.salary){
+                            h.salary=req.body.salary
+                        }
+
+                        const t=await Hr.findOneAndUpdate({id:req.body.id},a,{new:true})
+
+
+                    }
+                }
+                catch(err){
+                    console.log(err)
+                }
+
 
             })
 
