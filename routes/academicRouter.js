@@ -269,7 +269,7 @@ router
 	});
 
 //TODO:
-//check for valid inputs
+//check for valid inputs, CI must assign a free slot for the course requested with corresponding slot
 
 router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 	try {
@@ -287,15 +287,14 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 				flag = true;
 		}
 
-		if (!flag) return res.send("you don't teach this course");
-
-		const course = await course.findOne({
+		const course = await courses.findOne({
 			name: input.courseName,
 		});
 
 		if (!course) res.status(411).send("invalid course");
+		if (!flag) return res.send("you don't teach this course");
 
-		flag = false;
+		/*flag = false;
 		for (const session of course.schedule) {
 			flag |=
 				!session.instructorId &&
@@ -303,10 +302,11 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 				session.slot === input.slot;
 		}
 
-		if (!flag) res.status(417).send("slot is not available for linkage");
+		if (!flag) res.status(417).send("slot is not available for linkage");*/
 
 		const coordinatorId = course.coordinatorId;
 		const coordinator = await academics.findById(coordinatorId);
+		if(!coordinator) res.status(417).send("no coordinator available for the course")
 
 		const request = {
 			status: "pending",
@@ -385,8 +385,8 @@ router.post("/ac/changeDayOff", auth, async (req, res) => {
 
 router.post("/ac/leaveRequest", auth, async (req, res) => {
 	try {
-		//maternity, accidental, sick, compensation
-		//date,
+		//type =maternity| accidental| sick| compensation
+		//date = {"year":"2020","month": "12","day":"22"}
 		const input = req.body;
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -401,14 +401,21 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 
 		let curDate = getCurDate();
 		const type = input.type;
-		const targetDate = new Date(
+		try{
+			const targetDate= new Date(
 			Date.UTC(input.date.year, input.date.month - 1, input.date.day)
 		);
-
+		}
+		catch(err){
+			return res.status(413).send("you must specify a target Date in the form {year: ,month: ,day: }");
+		}
+		const targetDate= new Date(
+			Date.UTC(input.date.year, input.date.month - 1, input.date.day));
+		
 		if (type === "maternity" && sender.gender === "male") {
 			return res.status(413).send("males cannot submit maternity leaves");
 		}
-
+		
 		if (
 			type === "accidental" &&
 			(sender.accidentalLeaveBalance.balance <= 0 ||
@@ -417,7 +424,7 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 			return res.status(414).send("you consumed all your balance");
 		}
 
-		if (type === "sick" && dateDiff(curDate, input.targetDate) > 3) {
+		if (type === "sick" && dateDiff(curDate,targetDate) > 3) {
 			return res
 				.status(415)
 				.send("you cannot submit a sick leave after more than 3 days");
@@ -432,7 +439,7 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 				return res.status(416).send("you consumed all your annual leaves");
 			}
 
-			if (dateDiff(input.targetDate, curDate) <= 0) {
+			if (dateDiff(targetDate, curDate) >= 0) {
 				return res
 					.status(416)
 					.send("Annual leaves should be submitted before the targeted day");
@@ -458,7 +465,7 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 
 		await sender.save();
 		await hod.save();
-		res.send("change day off request sent successfully");
+		res.send("leave request is sent successfully");
 	} catch (err) {
 		console.log(err);
 	}
@@ -478,14 +485,14 @@ router.post("/ac/viewSubmittedRequests", auth, async (req, res) => {
 		const reqID = sender.sentRequestsId;
 
 		if (status === "all") {
-			return requests.find({
-				_id: { $in: reqID },
-			});
+			return  res.send(await requests.find({
+					_id: { $in: reqID },
+			}));
 		} else {
-			return requests.find({
+			return res.send(await requests.find({
 				_id: { $in: reqID },
 				status: status,
-			});
+			}));
 		}
 	} catch (err) {
 		console.log(err);
@@ -500,12 +507,12 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 		const sender = await academics.findById(decoded.id);
 		if (!sender) return res.status(413).send("invalid id");
 
-		const del = requests.findById(req.body.reqId);
+		const del = await requests.findById(req.body.reqId);
 		if (!del) return res.status(414).send("no such request");
-
 		const curDate = getCurDate();
-
-		if (!sender.sentRequestsId.includes(del._id))
+		const x = await sender.sentRequestsId.includes(del._id);
+		
+		if (!x)
 			return res.status(415).send("user not owner of request");
 
 		let flag = false;
@@ -542,17 +549,16 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 					await hod.save();
 				}
 			}
-
 			if (del.receiverId) {
 				const receiver = await academics.findOne({
-					id: del.receiverId,
+					_id: del.receiverId,
 				});
-
+				
 				if (receiver) {
 					const idx = await receiver.receivedRequestsId.indexOf(delID);
 
 					if (idx > -1) {
-						await receiver.receivedRequestsId.splice.indexOf(idx, 1);
+						await receiver.receivedRequestsId.splice(idx, 1);
 					}
 
 					await receiver.save();
@@ -564,6 +570,7 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 
 			await sender.save();
 			await requests.deleteOne({ _id: delID });
+			res.send("request deleted successfully");
 		}
 	} catch (err) {
 		console.log(err);

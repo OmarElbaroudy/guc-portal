@@ -45,6 +45,7 @@ const requestSchema = new schema({
 			"sick",
 			"accidental",
 			"annual",
+			"changeDayOff"
 		],
 	},
 	senderComment: String,
