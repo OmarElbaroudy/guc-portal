@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const hodRouter = require("./routes/hodRouter");
 const academicRouter = require("./routes/academicRouter");
 const loginRouter = require("./routes/loginRouter");
-const myProfileRouter = require("./routes/myProfileRouter");
+const staffRouter = require("./routes/staffRouter");
 const instructorRouter = require("./routes/instructorRouter");
 
 const key = "iehfoeihfpwhoqhfiu083028430bvf";
@@ -40,7 +40,7 @@ mongoose
 		app.use("", instructorRouter);
 		app.use("", hodRouter);
 		app.use("", academicRouter);
-		app.use("", myProfileRouter);
+		app.use("", staffRouter);
 
 		app.listen(3000, () => {
 			console.log("connected");

@@ -16,7 +16,7 @@ const session = new schema({
 	type: {
 		type: String,
 		enum: ["lecture", "tutorial", "practical"],
-	}
+	},
 });
 
 const course = new schema({
@@ -45,9 +45,12 @@ const accidentalLeaveBalance = new schema({
 
 const attendanceRecord = new schema({
 	day: Date, //yyyy mm dd in utc
-	signIn: Array, //milliseconds utc //signInOut pair
+	signIn: Array, //milliseconds utc
 	signOut: Array, //milliseconds utc
-	totalTime: Date, //milliseconds utc
+	totalTime: {
+		type: Number,
+		default: 0,
+	}, //milliseconds utc
 	weekDay: {
 		//corresponding weekday
 		type: Number,
@@ -58,7 +61,7 @@ const attendanceRecord = new schema({
 		//leave has been accepted (must be within the same month)
 		type: Boolean,
 		default: false,
-	}
+	},
 });
 
 const academicSchema = new schema({
@@ -77,8 +80,8 @@ const academicSchema = new schema({
 	},
 
 	name: String,
-	missingHours : Number,
-	missingDays : Number,
+	missingHours: Number,
+	missingDays: Number,
 	attendanceRecords: [attendanceRecord],
 	accidentalLeaveBalance: accidentalLeaveBalance,
 	annualLeaveBalance: annualLeaveBalance,
