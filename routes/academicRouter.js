@@ -128,7 +128,7 @@ router
 			const courseId = await getCourseIdByName(input.course);
 			const hodId = (await departments.findById(sender.departmentId)).hodId;
 			const hod = await academics.findById(hodId);
-			
+
 			if (!courseId) return res.status(416).send("no such course");
 
 			let fst = false;
@@ -139,7 +139,7 @@ router
 			receiver.courses.forEach((item) => {
 				snd |= item.courseId.equals(courseId) && item.position === "academic";
 			});
-			if(receiver) snd=true;
+			if (receiver) snd = true;
 
 			if (!fst || !snd) return res.status(406).send("invalid course");
 			let slotDate = new Date(
@@ -157,8 +157,9 @@ router
 			});
 
 			if (!flag) return res.status(408).send("invalid slot");
-			if(receiver){
-				const Request = {
+			let Request;
+			if (receiver) {
+				Request = {
 					status: "pending",
 					type: "replacement",
 					departmentId: sender.departmentId,
@@ -173,8 +174,8 @@ router
 						academicResponse: "pending",
 					},
 				};
-			}else{
-				const Request = {
+			} else {
+				Request = {
 					status: "pending",
 					type: "replacement",
 					departmentId: sender.departmentId,
@@ -189,7 +190,6 @@ router
 					},
 				};
 			}
-			
 
 			const arr = await requests.insertMany(Request);
 			const reqID = arr[0]._id;
@@ -199,11 +199,11 @@ router
 
 			await sender.save();
 			await hod.save();
-			if(receiver){
+			if (receiver) {
 				receiver.receivedRequestsId.push(reqID);
 				await receiver.save();
 			}
-			
+
 			res.send("request sent successfully");
 		} catch (err) {
 			console.log(err);
@@ -306,7 +306,8 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 
 		const coordinatorId = course.coordinatorId;
 		const coordinator = await academics.findById(coordinatorId);
-		if(!coordinator) res.status(417).send("no coordinator available for the course")
+		if (!coordinator)
+			res.status(417).send("no coordinator available for the course");
 
 		const request = {
 			status: "pending",
@@ -401,21 +402,21 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 
 		let curDate = getCurDate();
 		const type = input.type;
-		try{
-			const targetDate= new Date(
+		try {
+			new Date(Date.UTC(input.date.year, input.date.month - 1, input.date.day));
+		} catch (err) {
+			return res
+				.status(413)
+				.send("you must specify a target Date in the form {year: ,month: ,day: }");
+		}
+		const targetDate = new Date(
 			Date.UTC(input.date.year, input.date.month - 1, input.date.day)
 		);
-		}
-		catch(err){
-			return res.status(413).send("you must specify a target Date in the form {year: ,month: ,day: }");
-		}
-		const targetDate= new Date(
-			Date.UTC(input.date.year, input.date.month - 1, input.date.day));
-		
+
 		if (type === "maternity" && sender.gender === "male") {
 			return res.status(413).send("males cannot submit maternity leaves");
 		}
-		
+
 		if (
 			type === "accidental" &&
 			(sender.accidentalLeaveBalance.balance <= 0 ||
@@ -424,7 +425,7 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 			return res.status(414).send("you consumed all your balance");
 		}
 
-		if (type === "sick" && dateDiff(curDate,targetDate) > 3) {
+		if (type === "sick" && dateDiff(curDate, targetDate) > 3) {
 			return res
 				.status(415)
 				.send("you cannot submit a sick leave after more than 3 days");
@@ -485,14 +486,18 @@ router.post("/ac/viewSubmittedRequests", auth, async (req, res) => {
 		const reqID = sender.sentRequestsId;
 
 		if (status === "all") {
-			return  res.send(await requests.find({
+			return res.send(
+				await requests.find({
 					_id: { $in: reqID },
-			}));
+				})
+			);
 		} else {
-			return res.send(await requests.find({
-				_id: { $in: reqID },
-				status: status,
-			}));
+			return res.send(
+				await requests.find({
+					_id: { $in: reqID },
+					status: status,
+				})
+			);
 		}
 	} catch (err) {
 		console.log(err);
@@ -511,9 +516,8 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 		if (!del) return res.status(414).send("no such request");
 		const curDate = getCurDate();
 		const x = await sender.sentRequestsId.includes(del._id);
-		
-		if (!x)
-			return res.status(415).send("user not owner of request");
+
+		if (!x) return res.status(415).send("user not owner of request");
 
 		let flag = false;
 		flag |= del.status === "pending";
@@ -553,7 +557,7 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 				const receiver = await academics.findOne({
 					_id: del.receiverId,
 				});
-				
+
 				if (receiver) {
 					const idx = await receiver.receivedRequestsId.indexOf(delID);
 
