@@ -587,10 +587,20 @@ router.route("/hr/location")
 
                     do{
                         const temp=await Requests.findOneAndDelete({senderId:x._id})
+                        if(temp.type==="replacememnt"){
+                            const departmentId = temp.departmentId;
+                            const hodId = (await departments.findById(departmentId)).hodId;
+                            const hod = await academics.findById(hodId);
+                            hod.receivedRequestsId=hod.receivedRequestsId.filter(function(value){
+                                return !(value.equals(temp._id))
+                            })
+                            hod.save()
+                        }
                         const rcvr=await Academic.findOneById(temp.receiverId)
+                        if(rcvr){
                         rcvr.receivedRequestsId=rcvr.receivedRequestsId.filter(function(value){
                             return !(value.equals(temp._id))
-                        })
+                        })}
                     }while(temp)
 
                     do{
