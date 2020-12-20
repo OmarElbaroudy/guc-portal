@@ -73,22 +73,45 @@ let ac ="" ;
     router.route("/coordinator/viewSlotLinking")
     .get(auth,async(req,res)=>{
         try{
-            const token = req.header("auth-token");
-			const decoded = jwt_decode(token);
-            const sender = await academic.findById(decoded.id);
-            let reqs=[];
+            let requests = await request.find(
+                {
+                    "receiverId":ac._id,
+                    "status": "pending",
+                    "type":"slotLinking"
+                })
+            if(requests.length===0){
+                res.send("No requests found")
+                return
+            }
 
-            sender.receivedRequestsId.forEach((reqId)=>{
-                const req = await request.findOne({_id : reqId, type: "slotLinking" });
-                reqs.push(req);
-            });
-
-            res.send(reqs);
+            res.send({Requests: requests});
 
         }catch(err){
             console.log(err);
         }
     });
+
+    router.route("/coordinator/rejectSlotLinking")
+    .post(auth,async(req,res)=>{
+        try{
+            let requests = await request.findOne(
+                {
+                    _id:req.body.reqs,
+                })
+            if(!requests){
+                res.send("This request doesn't exist")
+                return
+            }
+
+            requests.status = "rejected"
+            await requests.save()
+            res.send("request rejected")
+
+        }catch(err){
+            console.log(err);
+        }
+    });
+
 
     router.route("/coordinator/addCourseSlot")
     .post(auth,async (req, res) => {
@@ -243,8 +266,113 @@ let ac ="" ;
        
         
         res.send("SLot deleted successfully")
+      
+    })
 
-          
+
+    router.route("/coordinator/updateSlot")
+    .post(auth,async (req, res) => {
+        let response = []
+
+        let course = await courses.findOne(
+            {
+                "coordinatorId":ac._id
+            })
+        let location = await locations.findOne(
+            {
+                "name":req.body.location
+            })
+        if(!location){
+             res.send("this location is incorrect")
+             return
+        }
+        let newLocation = await locations.findOne(
+            {
+                "name":req.body.newLocation
+            })
+        if(!newLocation){
+             res.send("this location is incorrect")
+             return
+        }
+        if(req.body.weekDay>6 || req.body.weekDay<0 || req.body.slot > 5 || req.body.slot<1 ){
+            res.send("check your slot or weekDay input")
+            return
+        }
+        if(req.body.type!="tutorial" && req.body.type!="lecture" && req.body.type!="practical"){
+            res.send("slot type is incorrect")
+            return
+        }
+        if(req.body.newweekDay>6 || req.body.newweekDay<0 || req.body.newslot > 5 || req.body.newslot<1 ){
+            res.send("check your slot or weekDay input")
+            return
+        }
+        if(req.body.newtype!="tutorial" && req.body.newtype!="lecture" && req.body.newtype!="practical"){
+            res.send("slot type is incorrect")
+            return
+        }
+        let slot = await courses.findOne(
+            {
+                "_id":course._id,
+                "schedule.locationId":location._id,
+                "schedule.weekDay":req.body.weekDay,
+                "schedule.slot":req.body.slot,
+                "schedule.type":req.body.type
+
+            })
+        if(!slot){
+             res.send("This slot doesn't exist")
+             return
+        }
+
+        let slotAssigned = await courses.findOne(
+            {
+                "_id":course._id,
+                 "schedule.instructorId":{ $ne: null },
+                "schedule.locationId":await getlocationIdByName(req.body.location),
+                "schedule.weekDay":req.body.weekDay,
+                "schedule.slot":req.body.slot,
+                "schedule.type":req.body.type
+
+            })
+         
+        if(slotAssigned){
+             res.send("This slot is already assgined to an academic")
+             return
+        }
+
+        location.schedule = await location.schedule.filter( function(value){
+            return  !value.courseId.equals( course._id)&&
+             value.weekDay!==req.body.weekDay&&
+             value.slot!==req.body.slot&&
+             value.type!==req.body.type
+
+        })
+        await location.save()
+        newLocation.schedule.push({
+               weekDay : req.body.newweekDay,
+                slot : req.body.newslot,
+                type : req.body.newtype,
+                courseId: course._id
+        })
+        await newLocation.save()
+        for(entry of course.schedule){
+            if ( entry.locationId.equals( location._id)&&
+            entry.weekDay===req.body.weekDay &&
+            entry.slot===req.body.slot&&
+            entry.type===req.body.type){
+                entry.locationId = newLocation._id
+                entry.weekDay =req.body.newweekDay
+                entry.slot = req.body.newslot
+                entry.type = req.body.newtype
+
+                await course.save()
+                break
+            }
+
+        }
+       
+        
+        res.send("SLot updated successfully")
       
     })
 
