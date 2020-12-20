@@ -10,17 +10,7 @@ const app = express()
 app.use(express.json())
 let ac ="" ;
 
-    const numOfDefined = (array)  =>{
-        let number = 0 
-        for(entry of array ){
-            if(entry.instructorId!==undefined)
-                number++
-    }
-    return number
-    }          
-    const instructorUndefined =  (object) => {
-        return object.instructorId != null
-    };
+
     
     
     const getCourseNameById = async (id) => {
@@ -150,7 +140,7 @@ let ac ="" ;
             sender.notifications.push(requests._id)
             await sender.save()
             
-            res.send("request rejected")
+            res.send("request accepted")
 
         }catch(err){
             console.log(err);
@@ -190,7 +180,6 @@ let ac ="" ;
     router.route("/coordinator/addCourseSlot")
     .post(auth,async (req, res) => {
         let response = []
-        let courseId = await getCourseIdByName(req.body.course)
         let course = await courses.findOne(
             {
                 "coordinatorId":ac._id
