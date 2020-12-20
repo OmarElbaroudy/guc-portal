@@ -234,7 +234,7 @@ router.route("/hr/addFaculty").post(auth, async (req, res) => {
 	}
 });
 
-router.route("hr/updateFaculty").put(auth, async (req, res) => {
+router.route("/hr/updateFaculty").put(auth, async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -255,7 +255,7 @@ router.route("hr/updateFaculty").put(auth, async (req, res) => {
 	}
 });
 
-router.route("hr/deleteFaculty").delete(auth, async (req, res) => {
+router.route("/hr/deleteFaculty").delete(auth, async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -283,7 +283,7 @@ router.route("hr/deleteFaculty").delete(auth, async (req, res) => {
 	}
 });
 
-router.route("hr/addDepartment").post(auth, async (req, res) => {
+router.route("/hr/addDepartment").post(auth, async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -305,7 +305,7 @@ router.route("hr/addDepartment").post(auth, async (req, res) => {
 	}
 });
 
-router.route("hr/updateDepartment").put(auth, async (req, res) => {
+router.route("/hr/updateDepartment").put(auth, async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -336,7 +336,7 @@ router.route("hr/updateDepartment").put(auth, async (req, res) => {
 	}
 });
 
-router.route("hr/deleteDepartment").delete(auth, async (req, res) => {
+router.route("/hr/deleteDepartment").delete(auth, async (req, res) => {
 	//delete in course and academic
 	try {
 		const token = req.header("auth-token");
@@ -367,7 +367,7 @@ router.route("hr/deleteDepartment").delete(auth, async (req, res) => {
 	}
 });
 
-router.route("hr/addCourse").post(async (req, res) => {
+router.route("/hr/addCourse").post(async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -394,7 +394,7 @@ router.route("hr/addCourse").post(async (req, res) => {
 	}
 });
 
-router.route("hr/updateCourse").put(async (req, res) => {
+router.route("/hr/updateCourse").put(async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -420,7 +420,7 @@ router.route("hr/updateCourse").put(async (req, res) => {
 	}
 });
 
-router.route("hr/deleteCourse").delete(async (req, res) => {
+router.route("/hr/deleteCourse").delete(async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -472,7 +472,7 @@ router.route("hr/deleteCourse").delete(async (req, res) => {
 	}
 });
 
-router.route("hr/updateStaffMember").put(async (req, res) => {
+router.route("/hr/updateStaffMember").put(async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -558,7 +558,7 @@ router.route("hr/updateStaffMember").put(async (req, res) => {
 	}
 });
 
-router.route("hr/deleteStaffMember").put(async (req, res) => {
+router.route("/hr/deleteStaffMember").put(async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -634,7 +634,7 @@ router.route("hr/deleteStaffMember").put(async (req, res) => {
 
 /////////////////////////////////////////////////////////////////////
 
-router.post("hr/addSignInOut", auth, async (req, res) => {
+router.post("/hr/addSignInOut", auth, async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -698,7 +698,7 @@ router.post("hr/addSignInOut", auth, async (req, res) => {
 	}
 });
 
-router.post("hr/viewAttendanceRecords", auth, async (req, res) => {
+router.post("/hr/viewAttendanceRecords", auth, async (req, res) => {
 	try {
 		const input = req.body;
 		const doc = await Academic.findOne({
@@ -717,7 +717,7 @@ router.post("hr/viewAttendanceRecords", auth, async (req, res) => {
 	}
 });
 
-router.get("hr/viewMissingHoursMembers", auth, async (req, res) => {
+router.get("/hr/viewMissingHoursMembers", auth, async (req, res) => {
 	try {
 		let ac = await Academic.find({
 			missingHours: { $gt: 0 },
@@ -733,7 +733,7 @@ router.get("hr/viewMissingHoursMembers", auth, async (req, res) => {
 	}
 });
 
-router.get("hr/viewMissingDaysMembers", auth, async (req, res) => {
+router.get("/hr/viewMissingDaysMembers", auth, async (req, res) => {
 	try {
 		let ac = await Academic.find({
 			missingDays: { $gt: 0 },
