@@ -124,13 +124,14 @@ const auth= async (req,res,next)=>{
     .post(auth,async (req, res) => {
         let response = []
         if(req.body.input==="department"){
-            
             const output = await academic.find(
                 {
                     departmentId:ac.departmentId
                 })
                 if(output)
                  response.push({departmentId:ac.departmentId , Staff:output})
+
+
         }
         else if(req.body.input==="course"){
             for (const entry of ac.courses) {
@@ -142,8 +143,9 @@ const auth= async (req,res,next)=>{
                     if(output.length !=0)
                      response.push({courseId:entry.courseId , Staff : output})
         }
-           res.send(response)
     }
+    res.send(response)
+
     })
 
 
@@ -236,7 +238,6 @@ const auth= async (req,res,next)=>{
             entry.weekDay===req.body.weekDay &&
             entry.slot===req.body.slot&&
             entry.type===req.body.type){
-                console.log("here")
                 entry.instructorId = await getAcademicIdById(req.body.academic)
                 await location.save()
                 break
@@ -278,6 +279,8 @@ const auth= async (req,res,next)=>{
         let response = []
         const comparedCourse = await getCourseIdByName(req.body.course)
         const comparedLocation = await getlocationIdByName(req.body.location)
+        const comparedAcademic = await getAcademicIdById(req.body.academic)
+
         let courseId = await getCourseIdByName(req.body.course)
         let course = await courses.findOne(
             {
@@ -360,8 +363,8 @@ const auth= async (req,res,next)=>{
         for(entry of location.schedule){
 
 
-            if ( entry.courseId.equals( await getCourseIdByName(req.body.course))&&
-            entry.instructorId.equals(await getAcademicIdById(req.body.academic))&&
+            if ( entry.courseId.equals( comparedCourse)&&
+            entry.instructorId.equals(comparedAcademic)&&
             entry.weekDay===req.body.weekDay &&
             entry.slot===req.body.slot&&
             entry.type===req.body.type){
