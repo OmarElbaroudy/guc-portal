@@ -9,25 +9,6 @@ const app = express()
 app.use(express.json())
 let ac ="" ;
 
-   /* const insert = async () => {
-
-        let data ={
-            email:"omar@google.com",
-            password: "123456",
-            id: "ac-4",
-        
-            name: "Omar Hany",
-            missingHours : 0,
-            missingDays : 0,
-            attendanceRecords: [],
-        
-            salary: 10000,
-            dayOff: 0,
-            courses: [],
-            }
-            await academic.create(data)    };*/
-
-
 const numOfDefined = (array)  =>{
 let number = 0 
 for(entry of array ){
@@ -195,7 +176,6 @@ const auth= async (req,res,next)=>{
             {
                 "courses.courseId":courseId,
                 "_id":await getAcademicIdById(req.body.academic),
-                "courses.position":"academic"
 
             })
         if(!academicMember){
@@ -323,7 +303,6 @@ const auth= async (req,res,next)=>{
             {
                 "courses.courseId":courseId,
                 "_id":await getAcademicIdById(req.body.academic),
-                "courses.position":"academic"
 
             })
         if(!academicMember){
@@ -453,7 +432,6 @@ const auth= async (req,res,next)=>{
             {
                 "courses.courseId":courseId,
                 "_id":await getAcademicIdById(req.body.academic),
-                "courses.position":"academic"
 
             })
         if(!academicMember){
@@ -464,7 +442,6 @@ const auth= async (req,res,next)=>{
             {
                 "courses.courseId":courseId,
                 "_id":await getAcademicIdById(req.body.academic2),
-                "courses.position":"academic"
 
             })
         if(!academicMember2){
@@ -603,7 +580,6 @@ const auth= async (req,res,next)=>{
             {
                 "courses.courseId":courseId,
                 "_id":await getAcademicIdById(req.body.academic),
-                "courses.position":"academic"
 
             })
         if(!academicMember){
@@ -618,16 +594,21 @@ const auth= async (req,res,next)=>{
         
         for(entry of academicMember.courses){
             if ( entry.courseId.equals(courseId)){
+                if(entry.position!=="coordinator"){
                 entry.position = "coordinator"
                 await academicMember.save()
                 break
+            }
+                else{
+                    res.send("academic is already a coordinator of this course")
+                } 
             }
 
         }
 
         
         
-        res.send("Academic " + req.body.academic +  " assigned to be a coordinator successfully")
+        res.send("Academic " + req.body.academic +  " assigned to be a coordinator of course "+ course.name+" successfully")
 
           
       
