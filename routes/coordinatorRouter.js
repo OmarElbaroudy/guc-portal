@@ -106,9 +106,46 @@ let ac ="" ;
                 {
                     _id:requests.senderId,
                 })
-                
 
-            requests.status = "rejected"
+            let crs = await courses.findOne(
+                {
+                    "coordinatorId":ac._id
+                })
+            let location = await locations.findOne(
+                {
+                    "_id":requests.slotLinking.locationId
+                })
+
+            sender.schedule.push({
+                courseId : requests.slotLinking.courseId,
+                locationId : requests.slotLinking.locationId,
+                weekDay : requests.slotLinking.weekDay,
+                slot : requests.slotLinking.slot,
+            })
+            await sender.save()
+
+            for(entry of location.schedule){
+                if ( entry.courseId.equals(coursId)&&
+                entry.weekDay===requests.slotLinking.weekDay &&
+                entry.slot===requests.slotLinking.slot){
+                    entry.instructorId = sender._id
+                    await location.save()
+                    break
+                }
+    
+            }
+    
+            for(entry of crs.schedule){
+                if ( entry.locationId.equals( requests.slotLinking.locationId)&&
+                entry.weekDay===requests.slotLinking.weekDay &&
+                entry.slot===requests.slotLinking.slot){
+                    entry.instructorId = sender._id
+                    await crs.save()
+                    break
+                }
+    
+            }
+            requests.status = "accepted"
             await requests.save()
             sender.notifications.push(requests._id)
             await sender.save()
