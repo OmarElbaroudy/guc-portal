@@ -225,6 +225,7 @@ class timeCalculations {
 				balance: 6,
 				lastUpdated: this.getCurTime(),
 			};
+			
 			doc.attendanceRecords = [];
 			return;
 		}
