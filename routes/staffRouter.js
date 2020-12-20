@@ -1,9 +1,10 @@
 const express = require("express");
+
 const bcrypt = require("bcryptjs");
 const jwt_decode = require("jwt-decode");
 
-const academic = require("../models/academic");
 const hr = require("../models/hr");
+const academic = require("../models/academic");
 const timeCalculations = require("../components/timeCalculations");
 
 const router = express.Router();

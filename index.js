@@ -6,8 +6,8 @@ const hodRouter = require("./routes/hodRouter");
 const academicRouter = require("./routes/academicRouter");
 const loginRouter = require("./routes/loginRouter");
 const staffRouter = require("./routes/staffRouter");
-const instructorRouter = require("./routes/instructorRouter");
 const hrRouter = require("./routes/hrRouter");
+const instructorRouter = require("./routes/instructorRouter");
 const coordinatorRouter = require("./routes/coordinatorRouter");
 
 const key = "iehfoeihfpwhoqhfiu083028430bvf";
@@ -39,13 +39,12 @@ mongoose
 
 		app.use("", loginRouter);
 		app.use(authenticate);
-		app.use("", instructorRouter);
-		app.use("", hodRouter);
-		app.use("", academicRouter);
-		app.use("", staffRouter);
 		app.use("", hrRouter);
+		app.use("", hodRouter);
+		app.use("", staffRouter);
+		app.use("", academicRouter);
+		app.use("", instructorRouter);
 		app.use("", coordinatorRouter);
-
 
 		app.listen(3000, () => {
 			console.log("connected");
@@ -56,9 +55,4 @@ mongoose
 	});
 
 //TODO:
-//middleware update annual leave balance and accidental leave balance
-//sign in and sign out also hr sign out
-//view my missing hours per month
-//view missing days
-//fix code on new schema
-//send other requests
+//logout
