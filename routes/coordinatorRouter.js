@@ -2,6 +2,7 @@ const express = require("express");
 const academic = require("../models/academic");
 const courses = require("../models/course");
 const department = require("../models/department");
+const request = require("../models/requests");
 const locations =  require("../models/locations");
 const jwt_decode = require('jwt-decode');
 const router = express.Router()
@@ -25,6 +26,7 @@ let ac ="" ;
     const getCourseNameById = async (id) => {
         return await courses.findById(id).name;
     };
+
     
     const getCourseIdByName = async (name) => {
         const ret = await courses.findOne({ name: name });
@@ -67,6 +69,26 @@ let ac ="" ;
     
             next()
     }
+
+    router.route("/coordinator/viewSlotLinking")
+    .get(auth,async(req,res)=>{
+        try{
+            const token = req.header("auth-token");
+			const decoded = jwt_decode(token);
+            const sender = await academic.findById(decoded.id);
+            let reqs=[];
+
+            sender.receivedRequestsId.forEach((reqId)=>{
+                const req = await request.findOne({_id : reqId, type: "slotLinking" });
+                reqs.push(req);
+            });
+
+            res.send(reqs);
+
+        }catch(err){
+            console.log(err);
+        }
+    });
 
     router.route("/coordinator/addCourseSlot")
     .post(auth,async (req, res) => {
