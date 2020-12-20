@@ -97,14 +97,23 @@ let ac ="" ;
             let requests = await request.findOne(
                 {
                     _id:req.body.reqs,
+                    status:"pending"
                 })
             if(!requests){
-                res.send("This request doesn't exist")
+                res.send("This request doesn't exist or is not pending")
                 return
             }
+            let sender = await academic.findOne(
+                {
+                    _id:requests.senderId,
+                })
+          
 
             requests.status = "rejected"
             await requests.save()
+            sender.notifications.push(requests._id)
+            await sender.save()
+            
             res.send("request rejected")
 
         }catch(err){
