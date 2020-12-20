@@ -113,7 +113,7 @@ router.get("/myProfile/signOut", async (req, res) => {
 	doc.missingDays = calc.calculateMissingDays(doc);
 
 	await doc.save();
-	res.send("signed in successfully");
+	res.send("signed out successfully");
 });
 
 router.post("/myProfile/viewAttendanceRecords", async (req, res) => {
