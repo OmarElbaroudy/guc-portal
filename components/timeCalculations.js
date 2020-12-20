@@ -24,7 +24,13 @@ class timeCalculations {
 	}
 
 	getCurTime() {
-		return new Date(Date.UTC()).getTime();
+		return (new Date(Date.UTC(
+			new Date().getFullYear(),
+			new Date().getMonth(),
+			new Date().getDate(),
+			new Date().getHours(),
+			new Date().getMinutes()
+		))).getTime();
 	}
 
 	check(now) {
@@ -216,6 +222,7 @@ class timeCalculations {
 		let updateTime = new Date(Date.UTC(new Date().getFullYear(), 0, 11));
 		if (!lstTime || !this.valid(updateTime, lstTime)) {
 			//first day of the year
+			console.log(this.getCurTime());
 			doc.annualLeaveBalance = {
 				balance: 2.5,
 				lastUpdated: this.getCurTime(),
@@ -225,7 +232,7 @@ class timeCalculations {
 				balance: 6,
 				lastUpdated: this.getCurTime(),
 			};
-			
+
 			doc.attendanceRecords = [];
 			return;
 		}
