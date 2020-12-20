@@ -54,6 +54,10 @@ const hrSchema = new schema({
 		default: false,
 	},
 	name: String,
+	dayOff: {
+		type: Number,
+		enum: [0, 1, 2, 3, 4, 6], //0 for sunday
+	},
 	attendanceRecords: [attendanceRecord],
 	accidentalLeaveBalance: accidentalLeaveBalance,
 	annualLeaveBalance: annualLeaveBalance,
