@@ -62,6 +62,7 @@ request body:{
 
 
 #course instructor
+
 Functionality: View the coverage of course(s) he/she is assigned to.
 Route: /instructor/viewCoursesCoverage
 Request type: get
@@ -218,8 +219,104 @@ Request type: Put
 Request body: 
 {
   "course":"CSEN202",
-  "academic":"ac-6",
+  "academic":"ac-6"
 }
 Response : Wheather the operation succeeded or no
 
+
+Functionality: Assign an academic member in each of his/her course(s) to be a course coordinator.
+Route: /instructor/assignCourseCoordinator
+Request type: Post
+Request body: 
+{
+  "course":"CSEN202",
+  "academic":"ac-6"
+}
+Response : Wheather the operation succeeded or no
+
+#course coordinator
+Functionality: View "slot linking" request(s) from academic members linked to his/her course.
+Route: /coordinator/viewSlotLinking
+Request type: get
+Response: Array of Course coverage objects example :
+{
+    "Requests": [
+        {
+            "compensated": false,
+            "_id": "5fde555e8d8d994214a1a763",
+            "status": "rejected",
+            "type": "slotLinking",
+            "senderId": "5fdcf7fc1277bae5c0d18aa9",
+            "receiverId": "5fde34ae47cab3a4343f1ef1",
+            "issueDate": "2020-12-19T00:00:00.000Z",
+            "departmentId": "5fdd1451365a1c6ddcb28863",
+            "slotLinking": {
+                "_id": "5fde555e8d8d994214a1a764",
+                "courseId": "5fdce1e668b7bc7b14e4c861",
+                "slot": 1,
+                "weekDay": 3,
+                "locationId: "5fddfd9218f5841dc7f1cc46"
+            },
+            "__v": 0
+        }
+    ]
+}
+
+Functionality: Accept "slot linking" requests from academic members linked to his/her course.
+Route: /coordinator/acceptSlotLinking
+Request type: Post
+Request body: 
+{
+    	"reqs":"5fde555e8d8d994214a1a763"   // where reqs is the request objectId
+}
+Response : Wheather the operation succeeded or no
+
+Functionality: Reject "slot linking" requests from academic members linked to his/her course.
+Route: /coordinator/acceptSlotLinking
+Request type: Post
+Request body: 
+{
+    	"reqs":"5fde555e8d8d994214a1a763"   // where reqs is the request objectId
+}
+Response : Wheather the operation succeeded or no
+
+Functionality: Add slot(s) in his/her course.
+Route: /coordinator/addCourseSlot
+Request type: Post
+Request body: 
+{
+  "location":"c7-218",
+  "weekDay":1,
+  "slot":4,
+  "type":"tutorial"
+}
+Response : Wheather the operation succeeded or no
+
+Functionality: update course slot(s) in his/her course.
+Route: /coordinator/updateSlot
+Request type: Post
+Request body: 
+{
+  "location":"c7-218",
+  "weekDay":1,
+  "slot":4,
+  "type":"tutorial",
+  "newLocation":"c7-220",
+  "newweekDay":0,
+  "newslot":2,
+  "newtype":"tutorial"
+}
+Response : Wheather the operation succeeded or no
+
+Functionality: delete course slot(s) in his/her course.
+Route: /coordinator/deleteSlot
+Request type: Post
+Request body: 
+{
+  "location":"c7-218",
+  "weekDay":1,
+  "slot":4,
+  "type":"tutorial"
+}
+Response : Wheather the operation succeeded or no
 

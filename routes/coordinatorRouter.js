@@ -38,7 +38,6 @@ let ac ="" ;
             let requests = await request.find(
                 {
                     "receiverId":ac._id,
-                    "status": "pending",
                     "type":"slotLinking"
                 })
             if(requests.length===0){
@@ -78,16 +77,10 @@ let ac ="" ;
                     "_id":requests.slotLinking.locationId
                 })
 
-            sender.schedule.push({
-                courseId : requests.slotLinking.courseId,
-                locationId : requests.slotLinking.locationId,
-                weekDay : requests.slotLinking.weekDay,
-                slot : requests.slotLinking.slot,
-            })
-            await sender.save()
+           
 
             for(entry of location.schedule){
-                if ( entry.courseId.equals(coursId)&&
+                if ( entry.courseId.equals(crs._id)&&
                 entry.weekDay===requests.slotLinking.weekDay &&
                 entry.slot===requests.slotLinking.slot){
                     entry.instructorId = sender._id
@@ -107,6 +100,15 @@ let ac ="" ;
                 }
     
             }
+
+
+            sender.schedule.push({
+                courseId : requests.slotLinking.courseId,
+                locationId : requests.slotLinking.locationId,
+                weekDay : requests.slotLinking.weekDay,
+                slot : requests.slotLinking.slot,
+            })
+            await sender.save()
             requests.status = "accepted"
             await requests.save()
             sender.notifications.push(requests._id)
@@ -226,84 +228,7 @@ let ac ="" ;
     })
 
 
-    router.route("/coordinator/deleteSlot")
-    .post(auth,async (req, res) => {
-        let response = []
-
-        let course = await courses.findOne(
-            {
-                "coordinatorId":ac._id
-            })
-        let location = await locations.findOne(
-            {
-                "name":req.body.location
-            })
-        if(!location){
-             res.send("this location is incorrect")
-             return
-        }
-        if(req.body.weekDay>6 || req.body.weekDay<0 || req.body.slot > 5 || req.body.slot<1 ){
-            res.send("check your slot or weekDay input")
-            return
-        }
-        if(req.body.type!="tutorial" && req.body.type!="lecture" && req.body.type!="practical"){
-            res.send("slot type is incorrect")
-            return
-        }
-        let slot = await courses.findOne(
-            {
-                "_id":course._id,
-                "schedule.locationId":location._id,
-                "schedule.weekDay":req.body.weekDay,
-                "schedule.slot":req.body.slot,
-                "schedule.type":req.body.type
-
-            })
-        if(!slot){
-             res.send("This slot doesn't exist")
-             return
-        }
-
-        let slotAssigned = await courses.findOne(
-            {
-                "_id":course._id,
-                 "schedule.instructorId":{ $ne: null },
-                "schedule.locationId":await getlocationIdByName(req.body.location),
-                "schedule.weekDay":req.body.weekDay,
-                "schedule.slot":req.body.slot,
-                "schedule.type":req.body.type
-
-            })
-         
-        if(slotAssigned){
-             res.send("This slot is already assgined to an academic")
-             return
-        }
-
-
-        location.schedule = await location.schedule.filter( function(value){
-            return  !value.courseId.equals( course._id)&&
-             value.weekDay!==req.body.weekDay&&
-             value.slot!==req.body.slot&&
-             value.type!==req.body.type
-
-        })
-        await location.save()      
-        
-        course.schedule = await course.schedule.filter( function(value){
-            return  !value.locationId.equals( location._id)&&
-             value.weekDay!==req.body.weekDay&&
-             value.slot!==req.body.slot&&
-             value.type!==req.body.type
-
-        })
-        await course.save()      
-       
-        
-        res.send("SLot deleted successfully")
-      
-    })
-
+    
 
     router.route("/coordinator/updateSlot")
     .post(auth,async (req, res) => {
@@ -410,6 +335,85 @@ let ac ="" ;
         res.send("SLot updated successfully")
       
     })
+
+    router.route("/coordinator/deleteSlot")
+    .post(auth,async (req, res) => {
+        let response = []
+
+        let course = await courses.findOne(
+            {
+                "coordinatorId":ac._id
+            })
+        let location = await locations.findOne(
+            {
+                "name":req.body.location
+            })
+        if(!location){
+             res.send("this location is incorrect")
+             return
+        }
+        if(req.body.weekDay>6 || req.body.weekDay<0 || req.body.slot > 5 || req.body.slot<1 ){
+            res.send("check your slot or weekDay input")
+            return
+        }
+        if(req.body.type!="tutorial" && req.body.type!="lecture" && req.body.type!="practical"){
+            res.send("slot type is incorrect")
+            return
+        }
+        let slot = await courses.findOne(
+            {
+                "_id":course._id,
+                "schedule.locationId":location._id,
+                "schedule.weekDay":req.body.weekDay,
+                "schedule.slot":req.body.slot,
+                "schedule.type":req.body.type
+
+            })
+        if(!slot){
+             res.send("This slot doesn't exist")
+             return
+        }
+
+        let slotAssigned = await courses.findOne(
+            {
+                "_id":course._id,
+                 "schedule.instructorId":{ $ne: null },
+                "schedule.locationId":await getlocationIdByName(req.body.location),
+                "schedule.weekDay":req.body.weekDay,
+                "schedule.slot":req.body.slot,
+                "schedule.type":req.body.type
+
+            })
+         
+        if(slotAssigned){
+             res.send("This slot is already assgined to an academic")
+             return
+        }
+
+
+        location.schedule = await location.schedule.filter( function(value){
+            return  !value.courseId.equals( course._id)&&
+             value.weekDay!==req.body.weekDay&&
+             value.slot!==req.body.slot&&
+             value.type!==req.body.type
+
+        })
+        await location.save()      
+        
+        course.schedule = await course.schedule.filter( function(value){
+            return  !value.locationId.equals( location._id)&&
+             value.weekDay!==req.body.weekDay&&
+             value.slot!==req.body.slot&&
+             value.type!==req.body.type
+
+        })
+        await course.save()      
+       
+        
+        res.send("SLot deleted successfully")
+      
+    })
+
 
 
 
