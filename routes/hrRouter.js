@@ -232,7 +232,7 @@ router.route("hr/updateFaculty").put(auth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
 		const x = await Faculty.findOne({
-			name: req.body.oldName,
+			name: req.body.name,
 		});
 		if (x) {
 			await Faculty.findOneAndUpdate(
@@ -488,9 +488,9 @@ router.route("hr/updateStaffMember").put(async (req, res) => {
 						a.email = req.body.email;
 					}
 				}
-				if (req.body.id) {
-					const temp = await Academic.findOne({ id: req.body.id });
-				}
+				// if (req.body.id) {
+				// 	const temp = await Academic.findOne({ id: req.body.id });
+				// }
 				if (req.body.officeLocation) {
 					const temp = Location.findOne({ name: req.body.officeLocation });
 					if (!temp) {
