@@ -47,7 +47,7 @@ router.route("/HOD/assign_course_instructor")
         const decoded = jwt_decode(token);
 
         const cur = await academic.findById(decoded.id);
-
+        try{
             if (cur) {
                 const x = await academic.findOne({
                     id: req.body.id
@@ -65,7 +65,7 @@ router.route("/HOD/assign_course_instructor")
                  }
                 if(x){
                         x.courses.push({courseId:c._id,
-                            position:"instructor"})
+                            position:req.body.type})
                await x.save()
                 res.send("Instructor added to the course successfully")
                         
@@ -75,6 +75,10 @@ router.route("/HOD/assign_course_instructor")
                     res.send("not found")
                 }
             }
+        }
+        catch{
+            res.send("err")
+        }
 })
 .post(async(req,res)=>{
     res.send("tmam ya basha")
@@ -83,7 +87,7 @@ router.route("/HOD/delete_course_instructor")
     .put(auth,courseAuth,async (req,res)=>{
             const token = req.header('auth-token')
             const decoded = jwt_decode(token);
-
+        try{
             const cur =  await academic.findById(decoded.id);
             const l =[]
             const locs=[]
@@ -150,6 +154,10 @@ router.route("/HOD/delete_course_instructor")
             }
             res.send("instructor removed successfully")
             }
+        } 
+        catch{
+            res.send("err")
+        }
 })
  router.route("/HOD/view_staff")
     .post(auth,async(req,res)=>{
@@ -157,7 +165,7 @@ router.route("/HOD/delete_course_instructor")
            const decoded = jwt_decode(token);
       
            const cur =  await academic.findById(decoded.id);
-
+        try{
             if(cur){
                 const c= await course.findOne({
                     name: req.body.courseName
@@ -184,6 +192,10 @@ router.route("/HOD/delete_course_instructor")
                     }) 
            }
       }
+    }
+    catch{
+        res.send("err")
+    }
 })
  router.route("/HOD/update_course_instructor")
      .put(auth,courseAuth,async(req,res)=>{
@@ -191,7 +203,7 @@ router.route("/HOD/delete_course_instructor")
         const decoded = jwt_decode(token);
    
         const cur =  await academic.findById(decoded.id);
-
+        try{
          if(cur){
             const x = await academic.findOne({
                 id: req.body.orgId
@@ -268,12 +280,16 @@ router.route("/HOD/delete_course_instructor")
         }
            
    }
+}
+catch{
+    res.send("err")
+}
 })
 router.route("/HOD/view_day_off")  
     .post(auth,async(req,res)=>{
     const token = req.header('auth-token')
     const decoded = jwt_decode(token);
-    
+    try{
     const cur =  await academic.findById(decoded.id);
 
      if(cur){
@@ -291,6 +307,10 @@ router.route("/HOD/view_day_off")
             }) 
    }
    }
+}
+catch{
+    res.send("err")
+}
      
 }) 
 router.route("/HOD/view_requests")
@@ -299,7 +319,7 @@ router.route("/HOD/view_requests")
         const decoded = jwt_decode(token);
         
         const cur =  await academic.findById(decoded.id);
-
+try{
          if(cur){
             requests.find({ departmentId:cur.departmentId}).then(doc => {
                 res.send(doc)
@@ -307,6 +327,10 @@ router.route("/HOD/view_requests")
                     console.error(err)
                     }) 
            }
+        }
+        catch{
+            res.send("err")
+        }
 })
 const numOfNotUndefined = (array)  =>{
     let number = 0 
@@ -322,7 +346,7 @@ router.route("/HOD/view_course_coverage")
         const decoded = jwt_decode(token);
    
         const cur =  await academic.findById(decoded.id);
-
+        try{
          if(cur){
 
             let response = [] ;
@@ -343,6 +367,10 @@ router.route("/HOD/view_course_coverage")
    
               res.send(response)
          }
+        }
+        catch{
+            res.send("err")
+        }
 })
 router.route("/HOD/view_course_schedule")
     .post(auth,async(req,res)=>{
@@ -350,7 +378,7 @@ router.route("/HOD/view_course_schedule")
         const decoded = jwt_decode(token);
    
         const cur =  await academic.findById(decoded.id);
-
+        try{
          if(cur){
             const c= await course.findOne({
                 name: req.body.courseName
@@ -360,6 +388,10 @@ router.route("/HOD/view_course_schedule")
        res.send(c.schedule)
        }
          }
+        }
+        catch{
+            res.send("err")
+        }
 })
 router.route("/HOD/accept_requests")
     .put(auth,async (req,res,next)=>{
@@ -367,7 +399,7 @@ router.route("/HOD/accept_requests")
         const decoded = jwt_decode(token);
    
         const cur =  await academic.findById(decoded.id);
-
+        try{
          if(cur){
              const request=await requests.findById(mongoose.Types.ObjectId(req.body._id))
              if(request.status ==="pending"){
@@ -441,6 +473,10 @@ router.route("/HOD/accept_requests")
         res.send("this request is already accepted/rejected")
     }
   }
+}
+catch{
+    res.send("err")
+}
  })
  router.route("/HOD/reject_requests")
     .put(auth,async(req,res,next)=>{
@@ -448,7 +484,7 @@ router.route("/HOD/accept_requests")
         const decoded = jwt_decode(token);
    
         const cur =  await academic.findById(decoded.id);
-
+        try{
         if(cur){
             const request=await requests.findById(mongoose.Types.ObjectId(req.body._id))
             if(request.status==="pending"){
@@ -464,5 +500,9 @@ router.route("/HOD/accept_requests")
             res.send("this request is already accepted/rejected")
         }
     }
+}
+catch{
+    res.send("err")
+}
 })
 module.exports = router

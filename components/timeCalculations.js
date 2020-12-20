@@ -24,14 +24,30 @@ class timeCalculations {
 	}
 
 	getCurTime() {
-		return new Date(Date.UTC()).getTime();
+		return new Date(
+			Date.UTC(
+				new Date().getFullYear(),
+				new Date().getMonth(),
+				new Date().getDate(),
+				new Date().getHours(),
+				new Date().getMinutes()
+			)
+		).getTime();
+	}
+
+	check(now) {
+		let cur = new Date(now);
+		let mins = cur.getUTCHours() * 60 + cur.getUTCMinutes();
+		let le = 7 * 60,
+			ri = 19 * 60;
+		return mins >= le && mins <= ri;
 	}
 
 	calculateTotalTime(a, b) {
 		let sum = 0;
 		for (let i = 0, j = 0; i < a.length && j < b.length; j++) {
 			while (i + 1 < a.length && a[i + 1] < b[j]) i++;
-			if (a[i] < b[j]) {
+			if (a[i] < b[j] && this.check(a[i]) && this.check(b[i])) {
 				sum += b[j] - a[i];
 				i++;
 			}
@@ -50,17 +66,15 @@ class timeCalculations {
 
 		month = month === 0 ? 11 : month - 1;
 		year -= month === 11 ? 1 : 0;
-
 		return new Date(Date.UTC(year, month, 11));
 	}
 
 	getEndDate(startDate) {
-		let day = 10;
 		let month = startDate.getMonth() === 11 ? 0 : startDate.getMonth() + 1;
 		let year =
 			month === 0 ? startDate.getFullYear() + 1 : startDate.getFullYear();
 
-		return new Date(Date.UTC(year, month, day));
+		return new Date(Date.UTC(year, month, 10));
 	}
 
 	calculateTotalInMonth(startDate, endDate, dayOff, flag) {
@@ -91,7 +105,7 @@ class timeCalculations {
 			true
 		);
 
-		return (sum - totalTimeInMonth) / 60;
+		return (totalTimeInMonth - sum) / 60;
 	}
 
 	calculateMissingDays(doc) {
@@ -120,8 +134,8 @@ class timeCalculations {
 
 	async updateAttendance(doc, idx, curDate) {
 		doc.attendanceRecords[idx].totalTime = this.calculateTotalTime(
-			doc.attendanceRecords.signIn,
-			doc.attendanceRecords.signOut
+			doc.attendanceRecords[idx].signIn,
+			doc.attendanceRecords[idx].signOut
 		);
 
 		if (
@@ -151,40 +165,45 @@ class timeCalculations {
 
 	async signIn(doc, curDate = this.getCurDate(), curTime = this.getCurTime()) {
 		let idx = this.idxOfRecord(curDate, doc);
-		if (idx > -1) {
+
+		if (idx === -1) {
 			doc.attendanceRecords.push({
 				day: curDate,
 				weekDay: curDate.getDay(),
 			});
-			idx = doc.attendanceRecords.length - 1;
+
+			let len = doc.attendanceRecords.length;
+			idx = len - 1;
 		}
 
 		doc.attendanceRecords[idx].signIn.push(curTime);
-		await this.updateAttendance(doc, idx, curDate);
+		await doc.attendanceRecords[idx].signIn.sort();
 
-		return doc;
+		await this.updateAttendance(doc, idx, curDate);
 	}
 
 	async signOut(doc, curDate = this.getCurDate(), curTime = this.getCurTime()) {
 		let idx = this.idxOfRecord(curDate, doc);
-		if (idx > -1) {
+		if (idx === -1) {
 			doc.attendanceRecords.push({
 				day: curDate,
 				weekDay: curDate.getDay(),
 			});
-			idx = doc.attendanceRecords.length - 1;
+			let len = doc.attendanceRecords.length;
+			idx = len - 1;
 		}
 
 		doc.attendanceRecords[idx].signOut.push(curTime);
-		await this.updateAttendance(doc, idx, curDate);
+		await doc.attendanceRecords[idx].signOut.sort();
 
-		return doc;
+		await this.updateAttendance(doc, idx, curDate);
 	}
 
 	viewAttendanceRecords(month, doc) {
 		let arr = [];
 		let startDate = new Date(Date.UTC(new Date().getFullYear(), 0, 11));
-		let endDate = new Date(Date.UTC());
+		let endDate = this.getCurDate();
+
 		if (month > -1) {
 			startDate = new Date(Date.UTC(new Date().getFullYear(), month, 11));
 			endDate = this.getEndDate(startDate);
@@ -200,31 +219,36 @@ class timeCalculations {
 
 	update(doc) {
 		//update accidental leave balance
-		let lstTime = doc.accidentalLeaveBalance.lastUpdated;
-		let updateTime = new Date(Date.UTC(new Date().getFullYear(), 0, 11));
 
+		let lstTime = doc.accidentalLeaveBalance
+			? doc.accidentalLeaveBalance.lastUpdated
+			: undefined;
+
+		let updateTime = new Date(Date.UTC(new Date().getFullYear(), 0, 11));
 		if (!lstTime || !this.valid(updateTime, lstTime)) {
 			//first day of the year
-			doc.annualLeaveBalance.balance = 2.5;
-			doc.annualLeaveBalance.lastUpdated = this.getCurTime();
-			doc.accidentalLeaveBalance.balance = 6;
-			doc.accidentalLeaveBalance.lastUpdated = this.getCurTime();
+			doc.annualLeaveBalance = {
+				balance: 2.5,
+				lastUpdated: this.getCurTime(),
+			};
+
+			doc.accidentalLeaveBalance = {
+				balance: 6,
+				lastUpdated: this.getCurTime(),
+			};
+
 			doc.attendanceRecords = [];
-			return doc;
+			return;
 		}
 
 		//update annual leave balance
 		lstTime = doc.accidentalLeaveBalance.lastUpdated;
-		updateTime = new Date(
-			Date.UTC(new Date().getFullYear(), new Date().getMonth(), 11)
-		);
+		updateTime = this.getStartDate(this.getCurDate());
 
-		if (!this.valid(updateTime, lstTime)) {
+		if (!lstTime || !this.valid(updateTime, lstTime)) {
 			doc.annualLeaveBalance.balance += 2.5;
 			doc.annualLeaveBalance.lastUpdated = this.getCurTime();
 		}
-
-		return doc;
 	}
 }
 

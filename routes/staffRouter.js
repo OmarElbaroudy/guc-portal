@@ -92,7 +92,7 @@ router.get("/myProfile/signIn", async (req, res) => {
 		doc = await academic.findById(decoded.id);
 	}
 
-	doc = await calc.signIn(doc);
+	await calc.signIn(doc);
 	await doc.save();
 	res.send("signed in successfully");
 });
@@ -108,12 +108,12 @@ router.get("/myProfile/signOut", async (req, res) => {
 		doc = await academic.findById(decoded.id);
 	}
 
-	doc = await calc.signOut(doc);
+	await calc.signOut(doc);
 	doc.missingHours = calc.calculateMissingHours(doc);
 	doc.missingDays = calc.calculateMissingDays(doc);
 
 	await doc.save();
-	res.send("signed in successfully");
+	res.send("signed out successfully");
 });
 
 router.post("/myProfile/viewAttendanceRecords", async (req, res) => {
