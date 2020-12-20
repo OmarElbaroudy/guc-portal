@@ -294,7 +294,7 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 		if (!course) res.status(411).send("invalid course");
 		if (!flag) return res.send("you don't teach this course");
 
-		/*flag = false;
+		flag = false;
 		for (const session of course.schedule) {
 			flag |=
 				!session.instructorId &&
@@ -302,7 +302,7 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 				session.slot === input.slot;
 		}
 
-		if (!flag) res.status(417).send("slot is not available for linkage");*/
+		if (!flag) res.status(417).send("slot is not available for linkage");
 
 		const coordinatorId = course.coordinatorId;
 		const coordinator = await academics.findById(coordinatorId);
