@@ -17,14 +17,7 @@ for(entry of array ){
 }
 return number
 }          
-const instructorUndefined =  (object) => {
-    return object.instructorId != null
-};
 
-
-const getCourseNameById = async (id) => {
-	return await courses.findById(id).name;
-};
 
 const getCourseIdByName = async (name) => {
 	const ret = await courses.findOne({ name: name });
@@ -39,19 +32,7 @@ const getlocationIdByName = async (name) => {
 	return ret ? ret._id : undefined;
 };
 
-const getDepartmentIdByName = async (name) => {
-	const ret = await department.findOne({ name: name });
-	return ret ? ret._id : undefined;
-};
 
-const getLocationNameById = async (id) => {
-	return await locations.findById(id).name;
-};
-
-const getLocationIdByName = async (name) => {
-	const ret = await locations.findOne({ name: name });
-	return ret ? ret._id : undefined;
-};
 const auth= async (req,res,next)=>{
   
     const token = req.header('auth-token')
@@ -118,8 +99,89 @@ const auth= async (req,res,next)=>{
            res.send(response)
     })
 
-   
+   router.route("/instructor/deleteAcademic")
+    .put(auth,async (req,res)=>{
 
+        const token = req.header('auth-token')
+        const decoded = jwt_decode(token);
+        const courseId = await getCourseIdByName(req.body.course)
+        let cur = await academic.findOne(
+            {
+                "courses.courseId":courseId,
+                "_id":ac._id,
+                "courses.position":"instructor"
+            })
+
+        const l =[]
+        const locs=[]
+
+        if (cur) {
+            const x = await academic.findOne({
+                id: req.body.id
+            })
+             const c= await course.findOne({
+                 name: req.body.course
+        })
+
+
+        if(c){
+            c.schedule=c.schedule.filter(function(value){
+                if(value.instructorId)
+                if(value.instructorId.equals(x._id)){
+                    value.instructorId=undefined
+                    l.push(value.locationId)
+                }
+                return true
+            })
+            c.academicId= c.academicId.filter(function(value){
+                return !(value.equals(x._id))
+            })
+            await c.save()
+
+
+            for(var i=0;i<l.length;i++){
+                var obj=await locations.findById(l[i])
+                locs.push(obj)
+            }
+
+
+            for(var i=0;i<locs.length;i++){
+                locs[i].schedule=locs[i].schedule.filter(function(value){
+                    if(value.instructorId)
+                    if(value.instructorId.equals(x._id) && value.courseId.equals(c._id))
+                        value.instructorId=undefined
+                        return true
+                })
+
+             const filter = { name: locs[i].name };
+             const update = { schedule:  locs[i].schedule};
+             await locations.findOneAndUpdate(filter, update,{
+                new:true
+          });
+            }
+
+        }
+        else{
+            console.log("not found")
+            res.send("not found")
+        }
+            if(x){
+            x.schedule=x.schedule.filter(function(value){
+                return(!(value.courseId.equals(c._id)))
+            })
+            x.courses= x.courses.filter(function(value){
+                    return (!(value.courseId.equals(c._id)) && value.position ==="academic")
+            })
+            await x.save()
+        }
+        else{
+            console.log("not found")
+            res.send("not found")
+        }
+        res.send("academic removed successfully")
+        }
+
+    })
     router.route("/instructor/viewCoursOrDepartmentStaff")
     .post(auth,async (req, res) => {
         let response = []

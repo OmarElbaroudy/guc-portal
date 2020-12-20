@@ -26,7 +26,7 @@ const locationSchema = new schema({
 	maxCapacity: Number,
 	type: {
 		type: String,
-		enum: ["hall", "lab", "room"],
+		enum: ["hall", "lab", "room","office"],
 	},
 	currCapacity: { type: Number, default: 0 },
 });

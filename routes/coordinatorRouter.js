@@ -10,17 +10,7 @@ const app = express()
 app.use(express.json())
 let ac ="" ;
 
-    const numOfDefined = (array)  =>{
-        let number = 0 
-        for(entry of array ){
-            if(entry.instructorId!==undefined)
-                number++
-    }
-    return number
-    }          
-    const instructorUndefined =  (object) => {
-        return object.instructorId != null
-    };
+
     
     
     const getCourseNameById = async (id) => {
@@ -106,14 +96,51 @@ let ac ="" ;
                 {
                     _id:requests.senderId,
                 })
-                
 
-            requests.status = "rejected"
+            let crs = await courses.findOne(
+                {
+                    "coordinatorId":ac._id
+                })
+            let location = await locations.findOne(
+                {
+                    "_id":requests.slotLinking.locationId
+                })
+
+            sender.schedule.push({
+                courseId : requests.slotLinking.courseId,
+                locationId : requests.slotLinking.locationId,
+                weekDay : requests.slotLinking.weekDay,
+                slot : requests.slotLinking.slot,
+            })
+            await sender.save()
+
+            for(entry of location.schedule){
+                if ( entry.courseId.equals(coursId)&&
+                entry.weekDay===requests.slotLinking.weekDay &&
+                entry.slot===requests.slotLinking.slot){
+                    entry.instructorId = sender._id
+                    await location.save()
+                    break
+                }
+    
+            }
+    
+            for(entry of crs.schedule){
+                if ( entry.locationId.equals( requests.slotLinking.locationId)&&
+                entry.weekDay===requests.slotLinking.weekDay &&
+                entry.slot===requests.slotLinking.slot){
+                    entry.instructorId = sender._id
+                    await crs.save()
+                    break
+                }
+    
+            }
+            requests.status = "accepted"
             await requests.save()
             sender.notifications.push(requests._id)
             await sender.save()
             
-            res.send("request rejected")
+            res.send("request accepted")
 
         }catch(err){
             console.log(err);
@@ -153,7 +180,6 @@ let ac ="" ;
     router.route("/coordinator/addCourseSlot")
     .post(auth,async (req, res) => {
         let response = []
-        let courseId = await getCourseIdByName(req.body.course)
         let course = await courses.findOne(
             {
                 "coordinatorId":ac._id
