@@ -96,6 +96,7 @@ router.route("/HOD/delete_course_instructor")
             })
             if(c){
                 c.schedule=c.schedule.filter(function(value){
+                    if(value.instructorId)
                     if(value.instructorId.equals(x._id)){
                         value.instructorId=undefined
                         l.push(value.locationId)
@@ -116,6 +117,7 @@ router.route("/HOD/delete_course_instructor")
 
                 for(var i=0;i<locs.length;i++){
                     locs[i].schedule=locs[i].schedule.filter(function(value){
+                        if(value.instructorId)
                         if(value.instructorId.equals(x._id) && value.courseId.equals(c._id))
                             value.instructorId=undefined
                             return true
