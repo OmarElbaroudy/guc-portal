@@ -28,6 +28,7 @@ const slotLinking = new schema({
 		min: 0, //sunday
 		max: 6, //saturday
 	},
+	locationId: schema.Types.ObjectId
 });
 
 const requestSchema = new schema({

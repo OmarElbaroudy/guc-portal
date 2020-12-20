@@ -73,6 +73,7 @@ let ac ="" ;
     router.route("/coordinator/viewSlotLinking")
     .get(auth,async(req,res)=>{
         try{
+            
             let requests = await request.find(
                 {
                     "receiverId":ac._id,

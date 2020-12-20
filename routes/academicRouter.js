@@ -276,9 +276,11 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
 		const input = req.body; //slot, weekday and courseName in req.body
-
 		const sender = await academics.findById(decoded.id);
+		const loc = await locations.findOne({name:req.body.location});
+
 		if (!sender) res.status(410).send("invalid id");
+		if (!loc) res.status(411).send("invalid location");
 
 		let flag = false;
 		for (const course of sender.courses) {
@@ -294,15 +296,16 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 		if (!course) res.status(411).send("invalid course");
 		if (!flag) return res.send("you don't teach this course");
 
-		/*flag = false;
+		flag = false;
 		for (const session of course.schedule) {
 			flag |=
 				!session.instructorId &&
 				session.weekDay === input.weekDay &&
-				session.slot === input.slot;
+				session.slot === input.slot &&
+				session.locationId.equals(loc._id);
 		}
 
-		if (!flag) res.status(417).send("slot is not available for linkage");*/
+		if (!flag) res.status(417).send("slot is not available for linkage");
 
 		const coordinatorId = course.coordinatorId;
 		const coordinator = await academics.findById(coordinatorId);
@@ -320,6 +323,7 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 				courseId: course._id,
 				slot: input.slot,
 				weekDay: input.weekDay,
+				locationId: loc._id
 			},
 		};
 
