@@ -17,14 +17,7 @@ for(entry of array ){
 }
 return number
 }          
-const instructorUndefined =  (object) => {
-    return object.instructorId != null
-};
 
-
-const getCourseNameById = async (id) => {
-	return await courses.findById(id).name;
-};
 
 const getCourseIdByName = async (name) => {
 	const ret = await courses.findOne({ name: name });
@@ -39,19 +32,7 @@ const getlocationIdByName = async (name) => {
 	return ret ? ret._id : undefined;
 };
 
-const getDepartmentIdByName = async (name) => {
-	const ret = await department.findOne({ name: name });
-	return ret ? ret._id : undefined;
-};
 
-const getLocationNameById = async (id) => {
-	return await locations.findById(id).name;
-};
-
-const getLocationIdByName = async (name) => {
-	const ret = await locations.findOne({ name: name });
-	return ret ? ret._id : undefined;
-};
 const auth= async (req,res,next)=>{
   
     const token = req.header('auth-token')
