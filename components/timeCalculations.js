@@ -216,12 +216,17 @@ class timeCalculations {
 		let updateTime = new Date(Date.UTC(new Date().getFullYear(), 0, 11));
 		if (!lstTime || !this.valid(updateTime, lstTime)) {
 			//first day of the year
-			doc.annualLeaveBalance.balance = 2.5;
-			doc.annualLeaveBalance.lastUpdated = this.getCurTime();
-			doc.accidentalLeaveBalance.balance = 6;
-			doc.accidentalLeaveBalance.lastUpdated = this.getCurTime();
+			doc.annualLeaveBalance = {
+				balance: 2.5,
+				lastUpdated: this.getCurTime(),
+			};
+
+			doc.accidentalLeaveBalance = {
+				balance: 6,
+				lastUpdated: this.getCurTime(),
+			};
 			doc.attendanceRecords = [];
-			return doc;
+			return;
 		}
 
 		//update annual leave balance
