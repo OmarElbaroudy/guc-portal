@@ -551,13 +551,13 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 				h.name = req.body.name;
 			}
 			if (req.body.email) {
-				const temp = await Hr.findOne({ email: req.body.email });
+				const temp = await HR.findOne({ email: req.body.email });
 				if (!temp) {
 					h.email = req.body.email;
 				}
 			}
 			if (req.body.id) {
-				const temp = await Hr.findOne({ id: req.body.id });
+				const temp = await HR.findOne({ id: req.body.id });
 			}
 			if (req.body.officeLocation) {
 				const temp = Location.findOne({ name: req.body.officeLocation });
@@ -577,7 +577,7 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 				h.salary = req.body.salary;
 			}
 
-			const t = await Hr.findOneAndUpdate({ id: req.body.id }, a, { new: true });
+			const t = await HR.findOneAndUpdate({ id: req.body.id }, h, { new: true });
 			res.send("hr updated successfully")
 		}
 	} catch (err) {
