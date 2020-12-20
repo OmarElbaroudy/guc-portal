@@ -2,6 +2,7 @@ const express = require("express");
 const jwt_decode = require("jwt-decode");
 const Academic = require("../models/academic");
 const HR = require("../models/hr");
+const Faculty=require("../models/Faculty")
 const Location = require("../models/locations");
 const Department = require("../models/department");
 const Course = require("../models/course");
@@ -43,12 +44,13 @@ router
 					name: req.body.name,
 				});
 				if (!x) {
-					let loc = {
+					let loc = new Location({
 						name: req.body.name,
-						capacity: req.body.capacity,
+						maxCapacity: req.body.capacity,
 						type: req.body.type,
-					};
-					await Location.insertOne(loc);
+					});
+					await loc.save();
+					res.send("inserted successfully")
 				} else {
 					res.status(403).send("Cannot use This location name as it already exists");
 				}
@@ -73,15 +75,15 @@ router
 			});
 			if (x) {
 				let loc = {};
-				if (vals.capacity) {
-					if (vals.capacity < x.currCapacity) {
+				if (vals.maxCapacity) {
+					if (vals.maxCapacity < x.currCapacity) {
 						return res
 							.status(403)
 							.send(
 								"Cannot update because the new capacity is less than the current capacity"
 							);
 					} else {
-						loc.capacity = vals.capacity;
+						loc.maxCapacity = vals.maxCapacity;
 					}
 				}
 				if (vals.newName) {
@@ -98,6 +100,7 @@ router
 					new: true,
 				});
 				await temp.save();
+				res.send("location updated successfully")
 
 				// do{
 				// const u=await academic.findOneAndUpdate({office_location : name}, {office_location: newName},{new:true})
@@ -156,6 +159,7 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
 		const vals = req.body;
+		//should remove id as it should be done automatically
 		if (
 			!req.body.id ||
 			!req.body.name ||
@@ -169,61 +173,64 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
 					"each member should have name, salary, email, office location and id"
 				);
 		} else {
-			const temp = Location.findOne({ name: req.body.officeLocation });
+			const temp = await Location.findOne({ name: req.body.officeLocation });
 			if (!temp) {
 				return res.status(403).send("this location does not exist");
 			}
 			if (temp.type !== "office") {
 				return res.status(403).send("this location is not an office");
 			}
-			if (temp.capacity == temp.currCapacity) {
+			if (temp.maxCapacity == temp.currCapacity) {
 				return res.status(403).send("this location is full");
 			}
 			const loc = await Location.findOne({ name: req.body.officeLocation });
 			if (req.body.type === "hr") {
-				const x = await HR.insertOne({
+				const x = new HR({
 					name: req.body.name,
-					id: req.body.id,
+					id: "hr-"+HR.count(),
 					officeLocation: loc._id,
 					email: req.body.email,
 					salary: req.body.salary,
-					dayOff: "Saturday",
+					dayOff: 6,
 					personalInfo: req.body.personalInfo,
 				});
 				await x.save();
 			}
 			if (req.body.type === "academic") {
-				const x = await Academic.insertOne({
+				const x = new Academic({
 					name: req.body.name,
-					id: req.body.id,
+					id: "ac-"+Academic.count(),
 					office_location: loc._id,
 					email: req.body.email,
 					salary: req.body.salary,
-					dayOff: "Saturday",
+					dayOff: 6,
 					personalInfo: req.body.personalInfo,
 				});
 				await x.save();
 			}
+			res.send("Member Registered successfully")
 		}
 	} catch (err) {
 		console.log(err);
 	}
 });
 
-router.route("hr/addFaculty").post(auth, async (req, res) => {
+router.route("/hr/addFaculty").post(auth, async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
 		const x = await Faculty.findOne({
-			name: req.body.name,
+			name: req.body.name
 		});
 		if (!x) {
-			await Faculty.insertOne({ name: req.body.name });
+			const f= new Faculty({ name: req.body.name });
+			await f.save()
+			res.send(f)
 		} else {
 			res.status(403).send("this faculty already exist");
 		}
 	} catch (err) {
-		console.log(err);
+		console.log(err)
 	}
 });
 
