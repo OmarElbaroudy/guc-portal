@@ -78,7 +78,7 @@ let ac ="" ;
             const sender = await academic.findById(decoded.id);
             let reqs=[];
 
-            sender.receivedRequestsId.forEach((reqId)=>{
+            sender.receivedRequestsId.forEach(async(reqId)=>{
                 const req = await request.findOne({_id : reqId, type: "slotLinking" });
                 reqs.push(req);
             });
