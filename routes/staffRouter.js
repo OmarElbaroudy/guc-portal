@@ -116,7 +116,7 @@ router.get("/myProfile/signOut", async (req, res) => {
 	res.send("signed out successfully");
 });
 
-router.post("/myProfile/viewAttendanceRecords", async (req, res) => {
+router.get("/myProfile/viewAttendanceRecords", async (req, res) => {
 	//month number or 0 for all
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
@@ -133,7 +133,7 @@ router.post("/myProfile/viewAttendanceRecords", async (req, res) => {
 	res.send(arr);
 });
 
-router.post("/myProfile/viewMissingDays", async (req, res) => {
+router.get("/myProfile/viewMissingDays", async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -150,7 +150,7 @@ router.post("/myProfile/viewMissingDays", async (req, res) => {
 	res.send(`number of missing days for this month => ${doc.missingDays}`);
 });
 
-router.post("/myProfile/viewMissingHours", async (req, res) => {
+router.get("/myProfile/viewMissingHours", async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 

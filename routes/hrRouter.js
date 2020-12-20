@@ -2,7 +2,7 @@ const express = require("express");
 const jwt_decode = require("jwt-decode");
 const Academic = require("../models/academic");
 const HR = require("../models/hr");
-const Faculty=require("../models/faculty")
+const Faculty = require("../models/faculty");
 const Location = require("../models/locations");
 const Department = require("../models/department");
 const Course = require("../models/course");
@@ -50,7 +50,7 @@ router
 						type: req.body.type,
 					});
 					await loc.save();
-					res.send("inserted successfully")
+					res.send("inserted successfully");
 				} else {
 					res.status(403).send("Cannot use This location name as it already exists");
 				}
@@ -100,7 +100,7 @@ router
 					new: true,
 				});
 				await temp.save();
-				res.send("location updated successfully")
+				res.send("location updated successfully");
 
 				// do{
 				// const u=await academic.findOneAndUpdate({office_location : name}, {office_location: newName},{new:true})
@@ -187,7 +187,7 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
 			if (req.body.type === "hr") {
 				const x = new HR({
 					name: req.body.name,
-					id: "hr-"+HR.count(),
+					id: "hr-" + HR.count(),
 					officeLocation: loc._id,
 					email: req.body.email,
 					salary: req.body.salary,
@@ -199,7 +199,7 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
 			if (req.body.type === "academic") {
 				const x = new Academic({
 					name: req.body.name,
-					id: "ac-"+Academic.count(),
+					id: "ac-" + Academic.count(),
 					office_location: loc._id,
 					email: req.body.email,
 					salary: req.body.salary,
@@ -208,7 +208,7 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
 				});
 				await x.save();
 			}
-			res.send("Member Registered successfully")
+			res.send("Member Registered successfully");
 		}
 	} catch (err) {
 		console.log(err);
@@ -220,17 +220,17 @@ router.route("/hr/addFaculty").post(auth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
 		const x = await Faculty.findOne({
-			name: req.body.name
+			name: req.body.name,
 		});
 		if (!x) {
-			const f= new Faculty({ name: req.body.name });
-			await f.save()
-			res.send(f)
+			const f = new Faculty({ name: req.body.name });
+			await f.save();
+			res.send(f);
 		} else {
 			res.status(403).send("this faculty already exist");
 		}
 	} catch (err) {
-		console.log(err)
+		console.log(err);
 	}
 });
 
@@ -646,6 +646,11 @@ router.post("/hr/addSignInOut", auth, async (req, res) => {
 			id: input.id,
 		});
 
+		if (!doc)
+			doc = await HR.findOne({
+				id: input.id,
+			});
+
 		if (!doc) {
 			return res.status(430).send("not a valid id");
 		}
@@ -668,7 +673,7 @@ router.post("/hr/addSignInOut", auth, async (req, res) => {
 				)
 			);
 
-			doc = await calc.signIn(doc, signInDate, signInTime);
+			await calc.signIn(doc, signInDate, signInTime);
 		}
 
 		if (input.signOut) {
@@ -685,7 +690,7 @@ router.post("/hr/addSignInOut", auth, async (req, res) => {
 				)
 			);
 
-			doc = await calc.signOut(doc, signOutDate, signOutTime);
+			await calc.signOut(doc, signOutDate, signOutTime);
 		}
 
 		doc.missingHours = calc.calculateMissingHours(doc);

@@ -15,7 +15,8 @@ class timeCalculations {
 	}
 
 	idxOfRecord(curDate, doc) {
-		for (let i = 0; i < doc.attendanceRecords.length; i++) {
+		let len = doc.attendanceRecords.length;
+		for (let i = 0; i < len; i++) {
 			if (doc.attendanceRecords[i].day.getTime() === curDate.getTime()) {
 				return i;
 			}
@@ -165,7 +166,6 @@ class timeCalculations {
 
 	async signIn(doc, curDate = this.getCurDate(), curTime = this.getCurTime()) {
 		let idx = this.idxOfRecord(curDate, doc);
-
 		if (idx === -1) {
 			doc.attendanceRecords.push({
 				day: curDate,
@@ -189,6 +189,7 @@ class timeCalculations {
 				day: curDate,
 				weekDay: curDate.getDay(),
 			});
+
 			let len = doc.attendanceRecords.length;
 			idx = len - 1;
 		}
