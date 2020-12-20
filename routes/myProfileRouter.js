@@ -14,14 +14,10 @@ router
 		const decoded = jwt_decode(token);
 		try {
 			if (decoded.type === "hr") {
-				const h = await hr.findOne({
-					id: decoded.id,
-				});
+				const h = await hr.findById(decoded._id)
 				return res.send(h);
 			}
-			const a = await academic.findOne({
-				id: decoded.id,
-			});
+			const a = await academic.findById(decoded._id);
 			return res.send(a);
 		} catch (err) {
 			console.log(err);
