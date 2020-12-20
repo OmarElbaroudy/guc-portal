@@ -10,40 +10,12 @@ const app = express()
 app.use(express.json())
 let ac ="" ;
 
-
-    
-    
-    const getCourseNameById = async (id) => {
-        return await courses.findById(id).name;
-    };
-
-    
-    const getCourseIdByName = async (name) => {
-        const ret = await courses.findOne({ name: name });
-        return ret ? ret._id : undefined;
-    };
-    const getAcademicIdById = async (id) => {
-        const ret = await academic.findOne({ id: id });
-        return ret ? ret._id : undefined;
-    };
     const getlocationIdByName = async (name) => {
         const ret = await locations.findOne({ name: name });
         return ret ? ret._id : undefined;
     };
     
-    const getDepartmentIdByName = async (name) => {
-        const ret = await department.findOne({ name: name });
-        return ret ? ret._id : undefined;
-    };
-    
-    const getLocationNameById = async (id) => {
-        return await locations.findById(id).name;
-    };
-    
-    const getLocationIdByName = async (name) => {
-        const ret = await locations.findOne({ name: name });
-        return ret ? ret._id : undefined;
-    };
+
     const auth= async (req,res,next)=>{
       
         const token = req.header('auth-token')
