@@ -123,7 +123,7 @@ const auth= async (req,res,next)=>{
 
         const token = req.header('auth-token')
         const decoded = jwt_decode(token);
-
+        const courseId = await getCourseIdByName(req.body.course)
         let cur = await academic.findOne(
             {
                 "courses.courseId":courseId,
@@ -139,7 +139,7 @@ const auth= async (req,res,next)=>{
                 id: req.body.id
             })
              const c= await course.findOne({
-                 name: req.body.courseName
+                 name: req.body.course
         })
 
 
