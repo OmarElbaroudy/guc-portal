@@ -84,14 +84,7 @@ let ac ="" ;
                 return
             }
 
-<<<<<<< HEAD
             res.send({Requests: requests});
-=======
-            sender.receivedRequestsId.forEach(async(reqId)=>{
-                const req = await request.findOne({_id : reqId, type: "slotLinking" });
-                reqs.push(req);
-            });
->>>>>>> 71de2b969c6a22b759be7159b6dec49e7f7f217c
 
         }catch(err){
             console.log(err);
