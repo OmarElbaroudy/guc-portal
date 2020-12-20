@@ -35,6 +35,8 @@ router.post("/login", async (req, res) => {
 	});
 
 	user = calc.update(user);
+	user.missingHours = calc.calculateMissingHours(user);
+	user.missingDays = calc.calculateMissingDays(user);
 	user.notifications = [];
 	await user.save();
 

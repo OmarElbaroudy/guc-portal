@@ -36,7 +36,7 @@ class timeCalculations {
 				i++;
 			}
 		}
-		return sum;
+		return sum / (1000 * 60 * 60); //in hours
 	}
 
 	getStartDate(now) {
@@ -118,31 +118,7 @@ class timeCalculations {
 		return totalDaysInMonth - sum;
 	}
 
-	async signIn(doc, curDate = this.getCurDate(), curTime = this.getCurTime()) {
-		let idx = this.idxOfRecord(curDate, doc);
-		if (idx > -1) {
-			doc.attendanceRecords.push({
-				day: curDate,
-				weekDay: curDate.getDay(),
-			});
-			idx = doc.attendanceRecords.length - 1;
-		}
-
-		doc.attendanceRecords[idx].signIn.push(curTime);
-		return doc;
-	}
-
-	async signOut(doc, curDate = this.getCurDate(), curTime = this.getCurTime()) {
-		let idx = this.idxOfRecord(curDate, doc);
-		if (idx > -1) {
-			doc.attendanceRecords.push({
-				day: curDate,
-				weekDay: curDate.getDay(),
-			});
-			idx = doc.attendanceRecords.length - 1;
-		}
-
-		doc.attendanceRecords[idx].signOut.push(curTime);
+	async updateAttendance(doc, idx, curDate) {
 		doc.attendanceRecords[idx].totalTime = this.calculateTotalTime(
 			doc.attendanceRecords.signIn,
 			doc.attendanceRecords.signOut
@@ -171,6 +147,38 @@ class timeCalculations {
 				}
 			}
 		}
+	}
+
+	async signIn(doc, curDate = this.getCurDate(), curTime = this.getCurTime()) {
+		let idx = this.idxOfRecord(curDate, doc);
+		if (idx > -1) {
+			doc.attendanceRecords.push({
+				day: curDate,
+				weekDay: curDate.getDay(),
+			});
+			idx = doc.attendanceRecords.length - 1;
+		}
+
+		doc.attendanceRecords[idx].signIn.push(curTime);
+		await this.updateAttendance(doc, idx, curDate);
+
+		return doc;
+	}
+
+	async signOut(doc, curDate = this.getCurDate(), curTime = this.getCurTime()) {
+		let idx = this.idxOfRecord(curDate, doc);
+		if (idx > -1) {
+			doc.attendanceRecords.push({
+				day: curDate,
+				weekDay: curDate.getDay(),
+			});
+			idx = doc.attendanceRecords.length - 1;
+		}
+
+		doc.attendanceRecords[idx].signOut.push(curTime);
+		await this.updateAttendance(doc, idx, curDate);
+
+		return doc;
 	}
 
 	viewAttendanceRecords(month, doc) {
