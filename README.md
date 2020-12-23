@@ -272,7 +272,7 @@ Request body:
 Response : Wheather the operation succeeded or no
 
 Functionality: Reject "slot linking" requests from academic members linked to his/her course.
-Route: /coordinator/acceptSlotLinking
+Route: /coordinator/rejectSlotLinking
 Request type: Post
 Request body: 
 {
