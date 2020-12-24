@@ -589,12 +589,12 @@ router.route("/hr/deleteStaffMember").put(async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
-		const x = await HR.findOne({
+		let x = await HR.findOne({
 			id: req.body.id,
 		});
 		let t = "hr";
 		if (!x) {
-			const x = await Academic.findOne({
+			let x = await Academic.findOne({
 				id: req.body.id,
 			});
 			if (!x) {
@@ -604,8 +604,28 @@ router.route("/hr/deleteStaffMember").put(async (req, res) => {
 		}
 		//delete request sent/received by this staff member
 
-		do {
-			const temp = await Requests.findOneAndDelete({ senderId: x._id });
+		// do {
+		// 	const temp = await Requests.findOneAndDelete({ senderId: x._id });
+		// 	if (temp.type === "replacememnt") {
+		// 		const departmentId = temp.departmentId;
+		// 		const hodId = (await departments.findById(departmentId)).hodId;
+		// 		const hod = await academics.findById(hodId);
+		// 		hod.receivedRequestsId = hod.receivedRequestsId.filter(function (value) {
+		// 			return !value.equals(temp._id);
+		// 		});
+		// 		hod.save();
+		// 	}
+		// 	const rcvr = await Academic.findOneById(temp.receiverId);
+		// 	if (rcvr) {
+		// 		rcvr.receivedRequestsId = rcvr.receivedRequestsId.filter(function (value) {
+		// 			return !value.equals(temp._id);
+		// 		});
+		// 	}
+		// } while (temp);
+
+		const r=await Requests.find({senderId:x._id})
+		for(let i=0;i<r.length;i++){
+			const temp = await Requests.findOneAndDelete({ senderId:r[i]._id });
 			if (temp.type === "replacememnt") {
 				const departmentId = temp.departmentId;
 				const hodId = (await departments.findById(departmentId)).hodId;
@@ -621,19 +641,55 @@ router.route("/hr/deleteStaffMember").put(async (req, res) => {
 					return !value.equals(temp._id);
 				});
 			}
-		} while (temp);
 
-		do {
-			const temp = await Requests.findOneAndDelete({ receiverId: x._id });
+		}
+
+		// do {
+		// 	const temp = await Requests.findOneAndDelete({ receiverId: x._id });
+		// 	const sndr = await Academic.findOneById(temp.senderId);
+		// 	sndr.sentRequestsId = sndr.receivedRequestsId.filter(function (value) {
+		// 		return !value.equals(temp._id);
+		// 	});
+		// } while (temp);
+
+		const r1=await Requests.find({receiverId:x._id})
+		for(let i=0;i<r1.length;i++){
+			const temp = await Requests.findOneAndDelete({ receiverId: r1[i]._id });
 			const sndr = await Academic.findOneById(temp.senderId);
 			sndr.sentRequestsId = sndr.receivedRequestsId.filter(function (value) {
 				return !value.equals(temp._id);
 			});
-		} while (temp);
+
+
+		}
 
 		//delete staff member from any course and department
 
 		if (type === "academic") {
+
+			let loc = await Locations.find(
+				{
+					"schedule.InstructorId":x._id
+				})
+
+			for(let i=0;i<loc.length;i++){
+				loc[i].schedule=loc[i].schedule.filter(function (value) {
+					return !value.InstructorId.equals(x._id)})
+					loc[i].save()
+
+			}
+
+			let cour=await Course.find({
+				"schedule.InstructorId":x._id
+			})
+
+			for(let i=0;i<cour.length;i++){
+				loc[i].schedule=loc[i].schedule.filter(function (value) {
+					return !value.InstructorId.equals(x._id)})
+				loc[i].save()
+
+			}
+
 			for (let i = 0; i < x.course; i++) {
 				const z = await Course.findById(x.course[i].courseId);
 				z.instructorId = z.InstructorId.filter(function (value) {
@@ -650,13 +706,14 @@ router.route("/hr/deleteStaffMember").put(async (req, res) => {
 				}
 				await z.save();
 			}
+
+
 		}
 
 		//todo
 		//delete instructorId from loc and course schedules
-
-
-	} catch (err) {
+	}
+		catch (err) {
 		console.log(err);
 	}
 });
