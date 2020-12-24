@@ -176,6 +176,3 @@ router.get("/myProfile/viewMissingHours", async (req, res) => {
 });
 
 module.exports = router;
-
-//TODO:
-//other fields that hr or academic can update

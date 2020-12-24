@@ -193,6 +193,7 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
 					salary: req.body.salary,
 					dayOff: 6,
 					personalInfo: req.body.personalInfo,
+					password: await bcrypt.hash("123456", await bcrypt.genSalt(10)),
 				});
 				await x.save();
 			}
@@ -837,7 +838,7 @@ router.post("/hr/assignHod", auth, async (req, res) => {
 		return res.status(452).send("invalid department name");
 	}
 
-	if (!hod.departmentId.equals(department._id)) {
+	if (!hod.departmentId || !hod.departmentId.equals(department._id)) {
 		return res.status(453).send("this staff member is not in this department");
 	}
 
@@ -846,7 +847,17 @@ router.post("/hr/assignHod", auth, async (req, res) => {
 	}
 
 	department.hodId = hod._id;
+	const arr = await Course.find({departmentId : department._id});
+	for(const cur of arr){
+		cur.hodId = hod._id;
+		hod.courses.push({courseId : cur._id, position : "hod"});
+		await cur.save();
+	}
+
+	await hod.save();
 	await department.save();
+
+	res.send("assigned academic as hod successfully");
 });
 
 router.post("/hr/assignDepartment", auth, async (req, res) => {
@@ -869,6 +880,8 @@ router.post("/hr/assignDepartment", auth, async (req, res) => {
 
 	await department.save();
 	await doc.save();
+
+	res.send("assigned department to academic successfully");
 });
 
 module.exports = router;
