@@ -31,8 +31,6 @@ router
 	.route("/hr/location")
 	.post(auth, async (req, res) => {
 		try {
-			const token = req.header("auth-token");
-			const decoded = jwt_decode(token);
 			let t = req.body.type;
 			if (
 				t == "lab" ||
@@ -44,11 +42,13 @@ router
 					name: req.body.name,
 				});
 				if (!x) {
-					if(req.body.maxCapacity){
-						const u=parseInt(req.body.maxCapacity)
-					}
-					else{
-						res.status.send("please enter maxCapacity")
+					if (req.body.maxCapacity) {
+						const u = parseInt(req.body.maxCapacity);
+						if (isNaN(u)) {
+							return res.status(454).send("not a valid number");
+						}
+					} else {
+						res.status.send("please enter maxCapacity");
 					}
 					let loc = new Location({
 						name: req.body.name,
@@ -73,8 +73,6 @@ router
 	//update location
 	.put(auth, async (req, res) => {
 		try {
-			const token = req.header("auth-token");
-			const decoded = jwt_decode(token);
 			const vals = req.body;
 			const x = await Location.findOne({
 				name: req.body.name,
@@ -82,7 +80,10 @@ router
 			if (x) {
 				let loc = {};
 				if (vals.maxCapacity) {
-					const u=parseInt(req.body.maxCapacity)
+					const u = parseInt(req.body.maxCapacity);
+					if (isNaN(u)) {
+						return res.status(455).send("not a valid number");
+					}
 					if (vals.maxCapacity < x.currCapacity) {
 						return res
 							.status(403)
@@ -108,7 +109,6 @@ router
 				});
 				await temp.save();
 				res.send("location updated successfully");
-
 			} else {
 				res.status(403).send("this location does not exist");
 			}
@@ -119,9 +119,6 @@ router
 
 router.route("/hr/deleteLocation").delete(auth, async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
-		const vals = req.body;
 		const x = await Location.findOne({
 			name: req.body.name,
 		});
@@ -143,10 +140,6 @@ router.route("/hr/deleteLocation").delete(auth, async (req, res) => {
 
 router.route("/hr/registerMember").post(auth, async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
-		const vals = req.body;
-		
 		//should remove id as it should be done automatically
 		if (
 			!req.body.id ||
@@ -161,7 +154,10 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
 					"each member should have name, salary, email, office location and id"
 				);
 		} else {
-			const u=parseInt(req.body.salary)
+			const u = parseInt(req.body.salary);
+			if (isNaN(u)) {
+				return res.status(456).send("not a valid number");
+			}
 			const temp = await Location.findOne({ name: req.body.officeLocation });
 			if (!temp) {
 				return res.status(403).send("this location does not exist");
@@ -206,8 +202,6 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
 
 router.route("/hr/addFaculty").post(auth, async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
 		const x = await Faculty.findOne({
 			name: req.body.name,
 		});
@@ -225,8 +219,6 @@ router.route("/hr/addFaculty").post(auth, async (req, res) => {
 
 router.route("/hr/updateFaculty").put(auth, async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
 		const x = await Faculty.findOne({
 			name: req.body.name,
 		});
@@ -236,7 +228,7 @@ router.route("/hr/updateFaculty").put(auth, async (req, res) => {
 				{ name: req.body.newName },
 				{ new: true }
 			);
-			res.send("name changed successfully")
+			res.send("name changed successfully");
 		} else {
 			res.status(403).send("this faculty does not exist");
 		}
@@ -247,8 +239,6 @@ router.route("/hr/updateFaculty").put(auth, async (req, res) => {
 
 router.route("/hr/deleteFaculty").delete(auth, async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
 		const x = await Faculty.findOne({
 			name: req.body.name,
 		});
@@ -257,7 +247,7 @@ router.route("/hr/deleteFaculty").delete(auth, async (req, res) => {
 			const dep = await Department.findOne({
 				facultyId: x._id,
 			});
-			res.send("deleted successfully")
+			res.send("deleted successfully");
 			while (dep) {
 				const dep = await Department.findOneAndUpdate(
 					{ facultyId: x._id },
@@ -276,21 +266,20 @@ router.route("/hr/deleteFaculty").delete(auth, async (req, res) => {
 
 router.route("/hr/addDepartment").post(auth, async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
 		const x = await Department.findOne({
 			name: req.body.name,
 		});
+
 		if (!x) {
 			if (!req.body.faculty) {
-				const d=new Department({ name: req.body.name });
-				await d.save()
-				res.send("inserted successfully")
+				const d = new Department({ name: req.body.name });
+				await d.save();
+				res.send("inserted successfully");
 			} else {
 				const f = await Faculty.findOne({ name: req.body.faculty });
-				const d=new Department({ name: req.body.name ,facultyId:f._id});
-				await d.save()
-				res.send("inserted successfully")
+				const d = new Department({ name: req.body.name, facultyId: f._id });
+				await d.save();
+				res.send("inserted successfully");
 			}
 		} else {
 			res.status(403).send("this department already exist");
@@ -302,22 +291,22 @@ router.route("/hr/addDepartment").post(auth, async (req, res) => {
 
 router.route("/hr/updateDepartment").put(auth, async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
 		const x = await Department.findOne({
 			name: req.body.name,
 		});
+
 		if (x) {
 			if (req.body.newName) {
 				x.name = req.body.newName;
 			}
 			if (req.body.newFaculty) {
 				const f = await Faculty.findOne({ name: req.body.newFaculty });
-				if(f){
-				x.facultyId=f._id;
+				if (f) {
+					x.facultyId = f._id;
 				}
 			}
-			const d = await Department.findOneAndUpdate({ name: req.body.name }, x, {
+
+			await Department.findOneAndUpdate({ name: req.body.name }, x, {
 				new: true,
 			});
 
@@ -336,27 +325,24 @@ router.route("/hr/updateDepartment").put(auth, async (req, res) => {
 router.route("/hr/deleteDepartment").delete(auth, async (req, res) => {
 	//delete in course and academic
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
 		const x = await Department.findOne({
 			name: req.body.name,
 		});
 		if (x) {
 			const temp = await Course.find({ departmentId: x._id });
-			for(const entry of temp){
-				entry.departmentId=undefined
-				await entry.save()
+			for (const entry of temp) {
+				entry.departmentId = undefined;
+				await entry.save();
 			}
 			const temp1 = await Academic.find({ departmentId: x._id });
-			for(const entry of temp1){
-				entry.departmentId=undefined
-				await entry.save()
+			for (const entry of temp1) {
+				entry.departmentId = undefined;
+				await entry.save();
 			}
 			await Department.findByIdAndDelete(x._id);
-			res.send("deleted successfully")
-		}
-		else{
-			res.send("not found")
+			res.send("deleted successfully");
+		} else {
+			res.send("not found");
 		}
 	} catch (err) {
 		console.log(err);
@@ -365,8 +351,6 @@ router.route("/hr/deleteDepartment").delete(auth, async (req, res) => {
 
 router.route("/hr/addCourse").post(async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
 		const x = await Course.findOne({
 			name: req.body.name,
 		});
@@ -377,9 +361,8 @@ router.route("/hr/addCourse").post(async (req, res) => {
 				return res.status(403).send("please enter a department");
 			} else {
 				const d = await Department.findOne({ name: req.body.department });
-				if(!d){
+				if (!d) {
 					return res.status(403).send("please enter a correct department");
-
 				}
 				const c = new Course({
 					name: req.body.name,
@@ -387,7 +370,7 @@ router.route("/hr/addCourse").post(async (req, res) => {
 					facultyId: d.facultyId,
 				});
 				await c.save();
-				res.send("course added")
+				res.send("course added");
 			}
 		}
 	} catch (err) {
@@ -397,8 +380,6 @@ router.route("/hr/addCourse").post(async (req, res) => {
 
 router.route("/hr/updateCourse").put(async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
 		const x = await Course.findOne({
 			name: req.body.name,
 		});
@@ -407,18 +388,20 @@ router.route("/hr/updateCourse").put(async (req, res) => {
 		} else {
 			if (req.body.department) {
 				const d = await Department.findOne({ name: req.body.department });
-				if(d){
+				if (d) {
 					x.departmentId = d._id;
-					x.facultyId=d.facultyId;
+					x.facultyId = d.facultyId;
 				}
 			}
+
 			if (req.body.newName) {
 				x.name = req.body.newName;
 			}
-			const c = await Course.findOneAndUpdate({ name: req.body.name }, x, {
+
+			await Course.findOneAndUpdate({ name: req.body.name }, x, {
 				new: true,
 			});
-			res.send("updated successfully")
+			res.send("updated successfully");
 		}
 	} catch (err) {
 		console.log(err);
@@ -427,8 +410,6 @@ router.route("/hr/updateCourse").put(async (req, res) => {
 
 router.route("/hr/deleteCourse").delete(async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
 		const x = await Course.findOne({
 			name: req.body.name,
 		});
@@ -437,10 +418,10 @@ router.route("/hr/deleteCourse").delete(async (req, res) => {
 		} else {
 			//delete replacement requests for this course
 			const r = await Requests.find({ type: "replacement" });
-			for(const entry of r){
-				if(entry.replacement.courseId){
-					if(entry.replacement.courseId.equals(x._id)){
-						const z=await Requests.findByIdAndDelete(entry._id)
+			for (const entry of r) {
+				if (entry.replacement.courseId) {
+					if (entry.replacement.courseId.equals(x._id)) {
+						await Requests.findByIdAndDelete(entry._id);
 					}
 				}
 			}
@@ -448,17 +429,17 @@ router.route("/hr/deleteCourse").delete(async (req, res) => {
 			// 	entry.departmentId=undefined
 			// 	await entry.save()
 			// }
-				// const temp = r[i].filter(function (value) {
-				// 	return value.replacement.courseId.equals(x._id);
-				// });
+			// const temp = r[i].filter(function (value) {
+			// 	return value.replacement.courseId.equals(x._id);
+			// });
 
 			//delete slotLinking requests for this course
 
 			const r1 = await Requests.find({ type: "slotLinking" });
-			for(const entry of r1){
-				if(entry.slotLinking.courseId){
-					if(entry.slotLinking.courseId.equals(x._id)){
-						const z=await Requests.findByIdAndDelete(entry._id)
+			for (const entry of r1) {
+				if (entry.slotLinking.courseId) {
+					if (entry.slotLinking.courseId.equals(x._id)) {
+						await Requests.findByIdAndDelete(entry._id);
 					}
 				}
 			}
@@ -488,8 +469,8 @@ router.route("/hr/deleteCourse").delete(async (req, res) => {
 					await inst.save();
 				}
 			}
-			const e=await Course.findByIdAndDelete(x._id)
-			res.send("deleted successfully")
+			await Course.findByIdAndDelete(x._id);
+			res.send("deleted successfully");
 		}
 	} catch (err) {
 		console.log(err);
@@ -498,8 +479,6 @@ router.route("/hr/deleteCourse").delete(async (req, res) => {
 
 router.route("/hr/updateStaffMember").put(async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
 		const h = await HR.findOne({
 			id: req.body.id,
 		});
@@ -537,14 +516,17 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 					a.officeLocationId = loc._id;
 				}
 				if (req.body.salary) {
-					const z=parseInt(req.body.salary)
+					const z = parseInt(req.body.salary);
+					if (isNaN(z)) {
+						return res.status(457).send("not a valid number");
+					}
 					a.salary = req.body.salary;
 				}
 
-				const t = await Academic.findOneAndUpdate({ id: req.body.id }, a, {
+				await Academic.findOneAndUpdate({ id: req.body.id }, a, {
 					new: true,
 				});
-				res.send("academic updated successfully")
+				res.send("academic updated successfully");
 			}
 		} else {
 			if (req.body.name) {
@@ -556,9 +538,7 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 					h.email = req.body.email;
 				}
 			}
-			if (req.body.id) {
-				const temp = await HR.findOne({ id: req.body.id });
-			}
+
 			if (req.body.officeLocation) {
 				const temp = Location.findOne({ name: req.body.officeLocation });
 				if (!temp) {
@@ -577,8 +557,8 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 				h.salary = req.body.salary;
 			}
 
-			const t = await HR.findOneAndUpdate({ id: req.body.id }, h, { new: true });
-			res.send("hr updated successfully")
+			await HR.findOneAndUpdate({ id: req.body.id }, h, { new: true });
+			res.send("hr updated successfully");
 		}
 	} catch (err) {
 		console.log(err);
@@ -587,20 +567,18 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 
 router.route("/hr/deleteStaffMember").put(async (req, res) => {
 	try {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
 		let x = await HR.findOne({
 			id: req.body.id,
 		});
-		let t = "hr";
+
 		if (!x) {
 			let x = await Academic.findOne({
 				id: req.body.id,
 			});
+
 			if (!x) {
 				res.status(403).return("this staff member does not exist");
 			}
-			let t = "academic";
 		}
 		//delete request sent/received by this staff member
 
@@ -623,25 +601,28 @@ router.route("/hr/deleteStaffMember").put(async (req, res) => {
 		// 	}
 		// } while (temp);
 
-		const r=await Requests.find({senderId:x._id})
-		for(let i=0;i<r.length;i++){
-			const temp = await Requests.findOneAndDelete({ senderId:r[i]._id });
-			if (temp.type === "replacememnt") {
+		const r = await Requests.find({ senderId: x._id });
+
+		for (let i = 0; i < r.length; i++) {
+			const temp = await Requests.findOneAndDelete({ senderId: r[i]._id });
+			if (temp.type === "replacement") {
 				const departmentId = temp.departmentId;
-				const hodId = (await departments.findById(departmentId)).hodId;
-				const hod = await academics.findById(hodId);
+				const hodId = (await Department.findOne({ _id: departmentId })).hodId;
+				const hod = await Academic.findOne({ _id: hodId });
 				hod.receivedRequestsId = hod.receivedRequestsId.filter(function (value) {
 					return !value.equals(temp._id);
 				});
-				hod.save();
+
+				await hod.save();
 			}
-			const rcvr = await Academic.findOneById(temp.receiverId);
+			const rcvr = await Academic.findOne({ _id: temp.receiverId });
 			if (rcvr) {
 				rcvr.receivedRequestsId = rcvr.receivedRequestsId.filter(function (value) {
 					return !value.equals(temp._id);
 				});
 			}
 
+			await rcvr.save();
 		}
 
 		// do {
@@ -652,68 +633,65 @@ router.route("/hr/deleteStaffMember").put(async (req, res) => {
 		// 	});
 		// } while (temp);
 
-		const r1=await Requests.find({receiverId:x._id})
-		for(let i=0;i<r1.length;i++){
+		const r1 = await Requests.find({ receiverId: x._id });
+		for (let i = 0; i < r1.length; i++) {
 			const temp = await Requests.findOneAndDelete({ receiverId: r1[i]._id });
-			const sndr = await Academic.findOneById(temp.senderId);
-			sndr.sentRequestsId = sndr.receivedRequestsId.filter(function (value) {
+			const sndr = await Academic.findOne({ _id: temp.senderId });
+			sndr.sentRequestsId = sndr.sentRequestsId.filter(function (value) {
 				return !value.equals(temp._id);
 			});
-
-
 		}
 
 		//delete staff member from any course and department
 
-		if (type === "academic") {
+		if (x.type === "academic") {
+			let loc = await Location.find({
+				"schedule.InstructorId": x._id,
+			});
 
-			let loc = await Locations.find(
-				{
-					"schedule.InstructorId":x._id
-				})
+			for (let i = 0; i < loc.length; i++) {
+				loc[i].schedule = loc[i].schedule.filter(function (value) {
+					return !value.InstructorId.equals(x._id);
+				});
 
-			for(let i=0;i<loc.length;i++){
-				loc[i].schedule=loc[i].schedule.filter(function (value) {
-					return !value.InstructorId.equals(x._id)})
-					loc[i].save()
-
+				await loc[i].save();
 			}
 
-			let cour=await Course.find({
-				"schedule.InstructorId":x._id
-			})
+			let cour = await Course.find({
+				"schedule.InstructorId": x._id,
+			});
 
-			for(let i=0;i<cour.length;i++){
-				loc[i].schedule=loc[i].schedule.filter(function (value) {
-					return !value.InstructorId.equals(x._id)})
-				loc[i].save()
+			for (let i = 0; i < cour.length; i++) {
+				loc[i].schedule = loc[i].schedule.filter(function (value) {
+					return !value.InstructorId.equals(x._id);
+				});
 
+				await loc[i].save();
 			}
 
 			for (let i = 0; i < x.course; i++) {
-				const z = await Course.findById(x.course[i].courseId);
+				const z = await Course.findOne({ _id: x.course[i].courseId });
+
 				z.instructorId = z.InstructorId.filter(function (value) {
 					return !value.equals(x._id);
 				});
+
 				z.academicId = z.academicId.filter(function (value) {
 					return !value.equals(x._id);
 				});
+
 				z.coordinatorId = z.coordinatorId.filter(function (value) {
 					return !value.equals(x._id);
 				});
-				if (z.hod.equals(x._id)) {
-					z.hod = undefined;
+
+				if (z.hodId.equals(x._id)) {
+					z.hodId = undefined;
 				}
+
 				await z.save();
 			}
-
-
 		}
-
-		//todo
-		//delete instructorId from loc and course schedules
-	}
-		catch (err) {
+	} catch (err) {
 		console.log(err);
 	}
 });
@@ -838,6 +816,57 @@ router.get("/hr/viewMissingDaysMembers", auth, async (req, res) => {
 	} catch (err) {
 		console.log(err);
 	}
+});
+///////////////////////////////////////////////////////////////
+//extras
+
+router.post("/hr/assignHod", auth, async (req, res) => {
+	const hodId = req.body.hodId;
+	const dep = req.body.department;
+
+	const hod = await Academic.findOne({ id: hodId });
+	const department = await Department.findOne({ name: dep });
+
+	if (!hod) {
+		return res.status(451).send("invalid hod id");
+	}
+
+	if (!department) {
+		return res.status(452).send("invalid department name");
+	}
+
+	if (!hod.departmentId.equals(department._id)) {
+		return res.status(453).send("this staff member is not in this department");
+	}
+
+	if (department.hodId) {
+		return res.status(454).send("this department already has hod");
+	}
+
+	department.hodId = hod._id;
+	await department.save();
+});
+
+router.post("/hr/assignDepartment", auth, async (req, res) => {
+	const id = req.body.id;
+	const dep = req.body.department;
+
+	const doc = await Academic.findOne({ id: id });
+	const department = await Department.findOne({ name: dep });
+
+	if (!doc) {
+		return res.status(453).send("invalid academic id");
+	}
+
+	if (!department) {
+		return res.status(454).send("invalid department name");
+	}
+
+	doc.departmentId = department._id;
+	department.staffMemberId.push(doc._id);
+
+	await department.save();
+	await doc.save();
 });
 
 module.exports = router;

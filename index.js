@@ -12,6 +12,8 @@ const hrRouter = require("./routes/hrRouter");
 const instructorRouter = require("./routes/instructorRouter");
 const coordinatorRouter = require("./routes/coordinatorRouter");
 
+const hrs = require("./models/hr");
+
 const key = "iehfoeihfpwhoqhfiu083028430bvf";
 
 const app = express();
@@ -57,6 +59,21 @@ mongoose
 				res.status(401).send("invalid token");
 			}
 		}
+
+		app.get("createHr", async () => {
+			const hr = new hrs({
+				name: "Ashry",
+				email: "ashry@gmail.com",
+				password: "123456",
+				id: "hr-1",
+				gender: "male",
+				salary: "5000",
+				dayOff: 6,
+			});
+
+			await hr.save();
+		});
+
 
 		app.use("", loginRouter);
 		app.use(authenticate);

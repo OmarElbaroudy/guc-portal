@@ -33,7 +33,6 @@ const accidentalLeaveBalance = new schema({
 	lastUpdated: Date,
 });
 
-
 const hrSchema = new schema({
 	email: {
 		type: String,
@@ -56,7 +55,7 @@ const hrSchema = new schema({
 	name: String,
 	dayOff: {
 		type: Number,
-		enum: [0, 1, 2, 3, 4, 6], //0 for sunday
+		enum: [6], //0 for sunday
 	},
 	attendanceRecords: [attendanceRecord],
 	accidentalLeaveBalance: accidentalLeaveBalance,

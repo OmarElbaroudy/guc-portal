@@ -35,6 +35,10 @@ router
 		try {
 			const doc = await academic.findById(decoded.id);
 
+			if (input.name) {
+				doc.name = input.name;
+			}
+
 			if (input.gender === "male" || input.gender === "female") {
 				doc.gender = input.gender;
 			}
@@ -46,12 +50,6 @@ router
 
 			if (input.personalInfo) {
 				doc.personalInfo = input.personalInfo;
-			}
-
-			if (decoded.type === "hr") {
-				if (input.salary) {
-					doc.salary = input.salary;
-				}
 			}
 
 			await doc.save();
