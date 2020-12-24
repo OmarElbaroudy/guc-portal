@@ -41,7 +41,10 @@ router.post("/login", async (req, res) => {
 	await user.save();
 
 	res.header("auth-token", token);
-	res.send(`login successful\n you have ${arr.length} notifications\n ${arr}`);
+	res.send(
+		`login successful\n you have ${arr.length} notifications\n ${arr}` +
+			(user.altered ? "" : "please change your password!")
+	);
 });
 
 module.exports = router;
