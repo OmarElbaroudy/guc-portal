@@ -21,7 +21,6 @@ router.post("/login", async (req, res) => {
 
 	let user = h !== null ? h : a;
 	const verified = await bcrypt.compare(req.body.password, user.password);
-
 	if (!verified) {
 		return res.status(403).send("wrong password");
 	}

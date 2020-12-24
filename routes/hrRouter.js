@@ -1,5 +1,7 @@
 const express = require("express");
 const jwt_decode = require("jwt-decode");
+const bcrypt = require("bcryptjs");
+
 const Academic = require("../models/academic");
 const HR = require("../models/hr");
 const Faculty = require("../models/faculty");
@@ -142,7 +144,6 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
 	try {
 		//should remove id as it should be done automatically
 		if (
-			!req.body.id ||
 			!req.body.name ||
 			!req.body.salary ||
 			!req.body.officeLocation ||
@@ -172,19 +173,21 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
 			if (req.body.type === "hr") {
 				const x = new HR({
 					name: req.body.name,
-					id: "hr-" + HR.count(),
+					id: "hr-" + (parseInt(await HR.count()) + 1),
 					officeLocation: loc._id,
 					email: req.body.email,
 					salary: req.body.salary,
 					dayOff: 6,
 					personalInfo: req.body.personalInfo,
+					password: await bcrypt.hash("123456", await bcrypt.genSalt(10)),
 				});
+
 				await x.save();
 			}
 			if (req.body.type === "academic") {
 				const x = new Academic({
 					name: req.body.name,
-					id: "ac-" + Academic.count(),
+					id: "ac-" + (parseInt(await Academic.count()) + 1),
 					office_location: loc._id,
 					email: req.body.email,
 					salary: req.body.salary,
@@ -310,10 +313,7 @@ router.route("/hr/updateDepartment").put(auth, async (req, res) => {
 				new: true,
 			});
 
-			// else{
-			//     const f=await Faculty.findOne({name:req.body.faculty})
-			//     const d=await Department.insertOne({name:req.body.name},{name:req.body.newName,name:},{new:true})
-			// }
+			res.send("department updated successfully");
 		} else {
 			res.status(403).send("this faculty does not exist");
 		}
@@ -498,14 +498,13 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 						a.email = req.body.email;
 					}
 				}
-				// if (req.body.id) {
-				// 	const temp = await Academic.findOne({ id: req.body.id });
-				// }
+
 				if (req.body.officeLocation) {
-					const temp = Location.findOne({ name: req.body.officeLocation });
+					const temp = await Location.findOne({ name: req.body.officeLocation });
 					if (!temp) {
 						return res.status(403).send("this location does not exist");
 					}
+
 					if (temp.type !== "office") {
 						return res.status(403).send("this location is not an office");
 					}
@@ -515,6 +514,7 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 					const loc = await Location.findOne({ name: req.body.officeLocation });
 					a.officeLocationId = loc._id;
 				}
+
 				if (req.body.salary) {
 					const z = parseInt(req.body.salary);
 					if (isNaN(z)) {
@@ -526,6 +526,7 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 				await Academic.findOneAndUpdate({ id: req.body.id }, a, {
 					new: true,
 				});
+
 				res.send("academic updated successfully");
 			}
 		} else {
@@ -540,7 +541,7 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 			}
 
 			if (req.body.officeLocation) {
-				const temp = Location.findOne({ name: req.body.officeLocation });
+				const temp = await Location.findOne({ name: req.body.officeLocation });
 				if (!temp) {
 					return res.status(403).send("this location does not exist");
 				}
@@ -550,6 +551,7 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 				if (temp.capacity == temp.currCapacity) {
 					return res.status(403).send("this location is full");
 				}
+
 				const loc = await Location.findOne({ name: req.body.officeLocation });
 				h.officeLocationId = loc._id;
 			}

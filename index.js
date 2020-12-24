@@ -2,6 +2,8 @@ const fs = require("fs");
 const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+
 
 const hodRouter = require("./routes/hodRouter");
 const academicRouter = require("./routes/academicRouter");
@@ -60,11 +62,11 @@ mongoose
 			}
 		}
 
-		app.get("createHr", async () => {
+		app.get("/createHr", async (req, res) => {
 			const hr = new hrs({
 				name: "Ashry",
 				email: "ashry@gmail.com",
-				password: "123456",
+				password: await bcrypt.hash("123456", await bcrypt.genSalt(10)),
 				id: "hr-1",
 				gender: "male",
 				salary: "5000",
@@ -72,8 +74,8 @@ mongoose
 			});
 
 			await hr.save();
+			res.send("hr added successfully");
 		});
-
 
 		app.use("", loginRouter);
 		app.use(authenticate);

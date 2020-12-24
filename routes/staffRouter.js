@@ -33,10 +33,10 @@ router
 		const salt = await bcrypt.genSalt(10);
 		const input = req.body;
 		try {
-			const doc = await academic.findById(decoded.id);
+			let doc = await academic.findById(decoded.id);
 
-			if (input.name) {
-				doc.name = input.name;
+			if (!doc) {
+				doc = await hr.findById(decoded.id);
 			}
 
 			if (input.gender === "male" || input.gender === "female") {

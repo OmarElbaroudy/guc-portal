@@ -95,7 +95,9 @@ class timeCalculations {
 		for (let d = this.getStartDate(now); d <= now; d.setDate(d.getDate() + 1)) {
 			let idx = this.idxOfRecord(d, doc);
 			if (idx > -1) {
-				sum += doc.attendanceRecords[idx].totalTime;
+				sum += doc.attendanceRecords[idx].totalTime
+					? doc.attendanceRecords[idx].totalTime
+					: 0;
 			}
 		}
 
@@ -105,8 +107,7 @@ class timeCalculations {
 			doc.dayOff,
 			true
 		);
-
-		return (totalTimeInMonth - sum) / 60;
+		return totalTimeInMonth /60 - sum;
 	}
 
 	calculateMissingDays(doc) {
@@ -116,6 +117,7 @@ class timeCalculations {
 			let idx = this.idxOfRecord(d, doc);
 			if (
 				idx > -1 &&
+				doc.attendanceRecords[idx].totalTime &&
 				doc.attendanceRecords[idx].totalTime > 0 &&
 				(doc.attendanceRecords[idx].compensation ||
 					doc.attendanceRecords[idx].weekDay !== doc.dayOff)
