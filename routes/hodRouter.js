@@ -56,7 +56,10 @@ router.route("/HOD/assign_course_instructor")
                          name: req.body.courseName
                  })
                  if(c){
+                     if(req.body.type==="instructor")
                      c.instructorId.push(x._id)
+                     else
+                     c.academicId.push(x._id)
                      await c.save()
                  }
                  else{
@@ -172,10 +175,14 @@ router.route("/HOD/delete_course_instructor")
            })
            if(c){
                console.log("if")
-               const ress=c.instructorId.filter(function(){
+               const res1=c.instructorId.filter(function(){
                    return c.departmentId.equals(cur.departmentId)
                })
-               console.log(typeof ress)
+               const res2=c.academicId.filter(function(value){
+                return c.departmentId.equals(cur.departmentId)
+               })
+               const ress=res1.concat(res2)
+
               academic.find({_id: {$in: ress} }).then(doc => {
                 res.send(doc)
                 }).catch((err) => {
@@ -228,7 +235,6 @@ router.route("/HOD/delete_course_instructor")
             })
             for(var i=0;i<c.schedule.length;i++){
                 if(c.schedule[i].instructorId.equals(x._id)){
-                    console.log("jsdbfbsdbafbsaludbfubasdkfyasbgkyf")
                     loc.push(c.schedule[i].locationId)
                     c.schedule[i].instructorId=y._id
                 }
