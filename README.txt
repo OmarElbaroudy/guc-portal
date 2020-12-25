@@ -6,8 +6,6 @@ the first route is used to insert HR member to begin testing with
 email:ashry@gmail.com
 password:123456
 
-**please run all tests in the order of the readme file for easier testing :)
-
 1)
 Functionality: add HR member -(not required) to begin testing-   
 route: /createHr 
@@ -1258,6 +1256,7 @@ request body:
 expected response:logged out successfully
 //output when using the same token after being destroyed due to loging out
 "this token is blackListed please login again"
+
 
 
 
