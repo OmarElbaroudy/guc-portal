@@ -132,8 +132,8 @@ router.route("/hr/deleteLocation").delete(auth, async (req, res) => {
 					"cannot delete this location as it is occupied by an instructor/session"
 				);
 		} else {
-			const result = await Location.deleteOne({ name: req.body.name });
-			res.send(result);
+			await Location.deleteOne({ name: req.body.name });
+			res.send("deleted successfully");
 		}
 	} catch (err) {
 		console.log(err);
@@ -365,10 +365,13 @@ router.route("/hr/addCourse").post(async (req, res) => {
 				if (!d) {
 					return res.status(403).send("please enter a correct department");
 				}
+
+				const hodId = d.hodId ? d.hodId : undefined;
 				const c = new Course({
 					name: req.body.name,
 					departmentId: d._id,
 					facultyId: d.facultyId,
+					hodId: hodId,
 				});
 				await c.save();
 				res.send("course added");
@@ -426,13 +429,6 @@ router.route("/hr/deleteCourse").delete(async (req, res) => {
 					}
 				}
 			}
-			// for(const entry of temp1){
-			// 	entry.departmentId=undefined
-			// 	await entry.save()
-			// }
-			// const temp = r[i].filter(function (value) {
-			// 	return value.replacement.courseId.equals(x._id);
-			// });
 
 			//delete slotLinking requests for this course
 
@@ -444,33 +440,40 @@ router.route("/hr/deleteCourse").delete(async (req, res) => {
 					}
 				}
 			}
-			// r = await Requests.find({ type: "slotLinking" });
-			// temp = r.filter(function (value) {
-			// 	return value.slotLinking.courseId.equals(x._id);
-			// });
-			// for (let i = 0; i < temp.length; i++) {
-			// 	await Requests.findByIdAndDelete(temp[i]._id);
-			// }
 
 			//delete this course from instructor and location schedules
 
 			for (let i = 0; i < x.schedule.length; i++) {
-				const loc = Location.findById(x.schedule[i].locationId);
+				const loc = await Location.findById(x.schedule[i].locationId);
 				for (let j = 0; j < loc.schedule.length; j++) {
-					loc.schedule = loc.schedule.filter(function (value) {
+					loc.schedule = await loc.schedule.filter(function (value) {
 						return !value.courseId.equals(x._id);
 					});
 					await loc.save();
 				}
-				const inst = Academic.findById(x.schedule[i].instructorId);
+
+				const inst = await Academic.findById(x.schedule[i].instructorId);
 				for (let j = 0; j < inst.schedule.length; j++) {
-					inst.schedule = inst.schedule.filter(function (value) {
+					inst.schedule = await inst.schedule.filter(function (value) {
 						return !value.courseId.equals(x._id);
 					});
 					await inst.save();
 				}
 			}
-			await Course.findByIdAndDelete(x._id);
+
+			let arr = await Academic.find({
+				"courses.courseId": x._id,
+			});
+
+			for (const entry of arr) {
+				entry.courses = await entry.courses.filter((value) => {
+					return !value.courseId.equals(x._id);
+				});
+
+				await entry.save();
+			}
+
+			await Course.findOneAndDelete({ _id: x._id });
 			res.send("deleted successfully");
 		}
 	} catch (err) {
@@ -570,57 +573,47 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
 
 router.route("/hr/deleteStaffMember").put(async (req, res) => {
 	try {
+		let acad = false;
 		let x = await HR.findOne({
 			id: req.body.id,
 		});
 
 		if (!x) {
-			let x = await Academic.findOne({
+			x = await Academic.findOne({
 				id: req.body.id,
 			});
 
 			if (!x) {
-				res.status(403).return("this staff member does not exist");
+				return res.status(403).return("this staff member does not exist");
 			}
-		}
-		//delete request sent/received by this staff member
 
-		// do {
-		// 	const temp = await Requests.findOneAndDelete({ senderId: x._id });
-		// 	if (temp.type === "replacememnt") {
-		// 		const departmentId = temp.departmentId;
-		// 		const hodId = (await departments.findById(departmentId)).hodId;
-		// 		const hod = await academics.findById(hodId);
-		// 		hod.receivedRequestsId = hod.receivedRequestsId.filter(function (value) {
-		// 			return !value.equals(temp._id);
-		// 		});
-		// 		hod.save();
-		// 	}
-		// 	const rcvr = await Academic.findOneById(temp.receiverId);
-		// 	if (rcvr) {
-		// 		rcvr.receivedRequestsId = rcvr.receivedRequestsId.filter(function (value) {
-		// 			return !value.equals(temp._id);
-		// 		});
-		// 	}
-		// } while (temp);
+			acad = true;
+		}
 
 		const r = await Requests.find({ senderId: x._id });
 
 		for (let i = 0; i < r.length; i++) {
-			const temp = await Requests.findOneAndDelete({ senderId: r[i]._id });
+			const temp = await Requests.findOneAndDelete({ _id: r[i]._id });
 			if (temp.type === "replacement") {
 				const departmentId = temp.departmentId;
 				const hodId = (await Department.findOne({ _id: departmentId })).hodId;
 				const hod = await Academic.findOne({ _id: hodId });
-				hod.receivedRequestsId = hod.receivedRequestsId.filter(function (value) {
+
+				hod.receivedRequestsId = await hod.receivedRequestsId.filter(function (
+					value
+				) {
 					return !value.equals(temp._id);
 				});
 
 				await hod.save();
 			}
+
 			const rcvr = await Academic.findOne({ _id: temp.receiverId });
+
 			if (rcvr) {
-				rcvr.receivedRequestsId = rcvr.receivedRequestsId.filter(function (value) {
+				rcvr.receivedRequestsId = await rcvr.receivedRequestsId.filter(function (
+					value
+				) {
 					return !value.equals(temp._id);
 				});
 			}
@@ -628,64 +621,54 @@ router.route("/hr/deleteStaffMember").put(async (req, res) => {
 			await rcvr.save();
 		}
 
-		// do {
-		// 	const temp = await Requests.findOneAndDelete({ receiverId: x._id });
-		// 	const sndr = await Academic.findOneById(temp.senderId);
-		// 	sndr.sentRequestsId = sndr.receivedRequestsId.filter(function (value) {
-		// 		return !value.equals(temp._id);
-		// 	});
-		// } while (temp);
-
 		const r1 = await Requests.find({ receiverId: x._id });
 		for (let i = 0; i < r1.length; i++) {
-			const temp = await Requests.findOneAndDelete({ receiverId: r1[i]._id });
+			const temp = await Requests.findOneAndDelete({ _id: r1[i]._id });
 			const sndr = await Academic.findOne({ _id: temp.senderId });
-			sndr.sentRequestsId = sndr.sentRequestsId.filter(function (value) {
+			sndr.sentRequestsId = await sndr.sentRequestsId.filter(function (value) {
 				return !value.equals(temp._id);
 			});
 		}
 
-		//delete staff member from any course and department
-
-		if (x.type === "academic") {
+		if (acad) {
 			let loc = await Location.find({
-				"schedule.InstructorId": x._id,
+				"schedule.instructorId": { $in: [x._id] },
 			});
 
 			for (let i = 0; i < loc.length; i++) {
-				loc[i].schedule = loc[i].schedule.filter(function (value) {
-					return !value.InstructorId.equals(x._id);
+				loc[i].schedule = await loc[i].schedule.filter(function (value) {
+					return !value.instructorId || !value.instructorId.equals(x._id);
 				});
 
 				await loc[i].save();
 			}
 
 			let cour = await Course.find({
-				"schedule.InstructorId": x._id,
+				"schedule.instructorId": { $in: [x._id] },
 			});
 
 			for (let i = 0; i < cour.length; i++) {
-				loc[i].schedule = loc[i].schedule.filter(function (value) {
-					return !value.InstructorId.equals(x._id);
+				cour[i].schedule = await cour[i].schedule.filter(function (value) {
+					return !value.instructorId || !value.instructorId.equals(x._id);
 				});
 
-				await loc[i].save();
+				await cour[i].save();
 			}
 
-			for (let i = 0; i < x.course; i++) {
-				const z = await Course.findOne({ _id: x.course[i].courseId });
+			for (let i = 0; i < x.courses; i++) {
+				const z = await Course.findOne({ _id: x.courses[i].courseId });
 
-				z.instructorId = z.InstructorId.filter(function (value) {
+				z.instructorId = await z.instructorId.filter(function (value) {
 					return !value.equals(x._id);
 				});
 
-				z.academicId = z.academicId.filter(function (value) {
+				z.academicId = await z.academicId.filter(function (value) {
 					return !value.equals(x._id);
 				});
 
-				z.coordinatorId = z.coordinatorId.filter(function (value) {
-					return !value.equals(x._id);
-				});
+				if (z.coordinatorId.equals(x._id)) {
+					z.coordinatorId = undefined;
+				}
 
 				if (z.hodId.equals(x._id)) {
 					z.hodId = undefined;
@@ -693,6 +676,12 @@ router.route("/hr/deleteStaffMember").put(async (req, res) => {
 
 				await z.save();
 			}
+
+			await Academic.findOneAndDelete({ _id: x._id });
+			res.send("deleted successfully");
+		} else {
+			await HR.findOneAndDelete({ _id: x._id });
+			res.send("deleted successfully");
 		}
 	} catch (err) {
 		console.log(err);
@@ -847,10 +836,10 @@ router.post("/hr/assignHod", auth, async (req, res) => {
 	}
 
 	department.hodId = hod._id;
-	const arr = await Course.find({departmentId : department._id});
-	for(const cur of arr){
+	const arr = await Course.find({ departmentId: department._id });
+	for (const cur of arr) {
 		cur.hodId = hod._id;
-		hod.courses.push({courseId : cur._id, position : "hod"});
+		hod.courses.push({ courseId: cur._id, position: "hod" });
 		await cur.save();
 	}
 
