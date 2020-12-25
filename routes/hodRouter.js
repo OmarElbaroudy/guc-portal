@@ -106,6 +106,10 @@ router
 					c.instructorId = c.instructorId.filter(function (value) {
 						return !value.equals(x._id);
 					});
+					c.academicId = c.academicId.filter(function (value) {
+						return !value.equals(x._id);
+					});
+
 					await c.save();
 
 					for (let i = 0; i < l.length; i++) {
@@ -128,8 +132,8 @@ router
 						});
 					}
 				} else {
-					console.log("not found");
-					res.send("not found");
+					console.log("course not found");
+					res.send("course not found");
 				}
 				if (x) {
 					x.schedule = x.schedule.filter(function (value) {
@@ -140,8 +144,8 @@ router
 					});
 					await x.save();
 				} else {
-					console.log("not found");
-					res.send("not found");
+					console.log("user not found");
+					res.send("user not found");
 				}
 				res.send("instructor removed successfully");
 			}
@@ -195,7 +199,8 @@ router
 	.put(auth, courseAuth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
-
+		
+		const inst=false
 		const cur = await academic.findById(decoded.id);
 		try {
 			if (cur) {
@@ -210,10 +215,19 @@ router
 				});
 				if (c) {
 					c.instructorId = c.instructorId.filter(function (value) {
+						if(value.equals(x._id))
+						inst=true
 						return !value.equals(x._id);
 					});
+					if(inst)
 					c.instructorId.push(y._id);
+					else{
+					c.academicId = c.academicId.filter(function (value) {
+						return !value.equals(x._id);
+					});
+					c.academicId.push(y._id);
 				}
+			}
 				const loc = new Array();
 				x.schedule = x.schedule.filter(function (value) {
 					if (value.courseId.equals(c._id)) y.schedule.push(value);
