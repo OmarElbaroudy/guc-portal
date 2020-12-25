@@ -296,7 +296,7 @@ router.route("/HOD/view_day_off").post(auth, async (req, res) => {
 		res.send("err");
 	}
 });
-router.route("/HOD/view_requests").post(auth, async (req, res) => {
+router.route("/HOD/view_requests").get(auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -323,36 +323,34 @@ const numOfNotUndefined = (array) => {
 	}
 	return number;
 };
-router
-	.route("/HOD/view_course_coverage")
-	.post(auth, courseAuth, async (req, res) => {
-		const token = req.header("auth-token");
-		const decoded = jwt_decode(token);
+router.route("/HOD/view_course_coverage").get(auth, async (req, res) => {
+	const token = req.header("auth-token");
+	const decoded = jwt_decode(token);
 
-		const cur = await academic.findById(decoded.id);
-		try {
-			if (cur) {
-				let response = [];
-				for (const entry of cur.courses) {
-					const output = await course.findOne({
-						_id: entry.courseId,
-					});
-					if (output) {
-						let courseCoverage;
-						if (output.schedule.length !== 0)
-							courseCoverage =
-								(numOfNotUndefined(output.schedule) / output.schedule.length) * 100;
-						else courseCoverage = 0;
-						response.push({ course: output.name, coverage: courseCoverage + " %" });
-					}
+	const cur = await academic.findById(decoded.id);
+	try {
+		if (cur) {
+			let response = [];
+			for (const entry of cur.courses) {
+				const output = await course.findOne({
+					_id: entry.courseId,
+				});
+				if (output) {
+					let courseCoverage;
+					if (output.schedule.length !== 0)
+						courseCoverage =
+							(numOfNotUndefined(output.schedule) / output.schedule.length) * 100;
+					else courseCoverage = 0;
+					response.push({ course: output.name, coverage: courseCoverage + " %" });
 				}
-
-				res.send(response);
 			}
-		} catch {
-			res.send("err");
+
+			res.send(response);
 		}
-	});
+	} catch {
+		res.send("err");
+	}
+});
 router.route("/HOD/view_course_schedule").post(auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
@@ -471,7 +469,6 @@ router.route("/HOD/reject_requests").put(auth, async (req, res) => {
 				mongoose.Types.ObjectId(req.body._id)
 			);
 			if (request.status === "pending") {
-				console.log(request);
 				request.status = "rejected";
 				const sender = await academic.findById(request.senderId);
 				sender.notifications.push(request._id);

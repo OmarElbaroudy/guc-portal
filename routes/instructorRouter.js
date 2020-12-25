@@ -164,20 +164,21 @@ router
 			}
 			let slot = await courses.findOne({
 				_id: courseId,
-				instructorId: [ac._id],
+				instructorId: { $in: [ac._id] },
 				"schedule.locationId": await getLocationIdByName(req.body.location),
 				"schedule.weekDay": req.body.weekDay,
 				"schedule.slot": req.body.slot,
 				"schedule.type": req.body.type,
 			});
 			if (!slot) {
+				console.log("here");
 				res.send("This slot doesn't exist");
 				return;
 			}
 
 			let slotAssigned = await courses.findOne({
 				_id: courseId,
-				instructorId: [ac._id],
+				instructorId: { $in: [ac._id] },
 				"schedule.instructorId": { $ne: null },
 				"schedule.locationId": await getLocationIdByName(req.body.location),
 				"schedule.weekDay": req.body.weekDay,
@@ -186,7 +187,7 @@ router
 			});
 
 			if (slotAssigned) {
-				res.send("This slot is already assgined");
+				res.send("This slot is already assigned");
 				return;
 			}
 
@@ -607,15 +608,20 @@ router
 				_id: ac._id,
 				"courses.position": "instructor",
 			});
+
 			if (!instructor) {
 				res.send("You are not the instructor of this course");
 				return;
 			}
+
+			const curId = await getAcademicIdById(req.body.id);
 			let academicMember = await academic.findOne({
 				"courses.courseId": courseId,
-				_id: await getAcademicIdById(req.body.academic),
+				_id: curId,
 			});
+
 			if (!academicMember) {
+				console.log("here");
 				res.send("This academic either doesn't exist or doesn't teach this course");
 				return;
 			}
@@ -637,7 +643,7 @@ router
 
 			res.send(
 				"Academic " +
-					req.body.academic +
+					req.body.id +
 					" assigned to be a coordinator of course " +
 					course.name +
 					" successfully"

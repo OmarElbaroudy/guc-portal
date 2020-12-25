@@ -268,9 +268,6 @@ router
 		}
 	});
 
-//TODO:
-//check for valid inputs, CI must assign a free slot for the course requested with corresponding slot
-
 router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 	try {
 		const token = req.header("auth-token");

@@ -139,6 +139,7 @@ router.route("/coordinator/addCourseSlot").post(auth, async (req, res) => {
 	let location = await locations.findOne({
 		name: req.body.location,
 	});
+
 	if (!location) {
 		res.send("this location is incorrect");
 		return;
@@ -231,17 +232,17 @@ router.route("/coordinator/updateSlot").post(auth, async (req, res) => {
 		req.body.slot > 5 ||
 		req.body.slot < 1
 	) {
-		res.send("check your slot or weekDay input");
-		return;
+		return res.send("check your slot or weekDay input");
 	}
+
 	if (
 		req.body.type != "tutorial" &&
 		req.body.type != "lecture" &&
 		req.body.type != "practical"
 	) {
-		res.send("slot type is incorrect");
-		return;
+		return res.send("slot type is incorrect");
 	}
+
 	if (
 		req.body.newweekDay > 6 ||
 		req.body.newweekDay < 0 ||
@@ -251,6 +252,7 @@ router.route("/coordinator/updateSlot").post(auth, async (req, res) => {
 		res.send("check your slot or weekDay input");
 		return;
 	}
+
 	if (
 		req.body.newtype != "tutorial" &&
 		req.body.newtype != "lecture" &&
@@ -266,6 +268,7 @@ router.route("/coordinator/updateSlot").post(auth, async (req, res) => {
 		"schedule.slot": req.body.slot,
 		"schedule.type": req.body.type,
 	});
+
 	if (!slot) {
 		res.send("This slot doesn't exist");
 		return;
@@ -293,6 +296,7 @@ router.route("/coordinator/updateSlot").post(auth, async (req, res) => {
 			value.type !== req.body.type
 		);
 	});
+
 	await location.save();
 	newLocation.schedule.push({
 		weekDay: req.body.newweekDay,
@@ -300,7 +304,9 @@ router.route("/coordinator/updateSlot").post(auth, async (req, res) => {
 		type: req.body.newtype,
 		courseId: course._id,
 	});
+
 	await newLocation.save();
+
 	for (const entry of course.schedule) {
 		if (
 			entry.locationId.equals(location._id) &&
