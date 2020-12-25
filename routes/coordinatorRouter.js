@@ -290,9 +290,9 @@ router.route("/coordinator/updateSlot").post(auth, async (req, res) => {
 
 	location.schedule = await location.schedule.filter(function (value) {
 		return (
-			!value.courseId.equals(course._id) &&
-			value.weekDay !== req.body.weekDay &&
-			value.slot !== req.body.slot &&
+			!value.courseId.equals(course._id) ||
+			value.weekDay !== req.body.weekDay ||
+			value.slot !== req.body.slot ||
 			value.type !== req.body.type
 		);
 	});
@@ -377,28 +377,30 @@ router.route("/coordinator/deleteSlot").post(auth, async (req, res) => {
 	});
 
 	if (slotAssigned) {
-		res.send("This slot is already assgined to an academic");
+		res.send("This slot is already assigned to an academic");
 		return;
 	}
 
 	location.schedule = await location.schedule.filter(function (value) {
 		return (
-			!value.courseId.equals(course._id) &&
-			value.weekDay !== req.body.weekDay &&
-			value.slot !== req.body.slot &&
+			!value.courseId.equals(course._id) ||
+			value.weekDay !== req.body.weekDay ||
+			value.slot !== req.body.slot ||
 			value.type !== req.body.type
 		);
 	});
+
 	await location.save();
 
 	course.schedule = await course.schedule.filter(function (value) {
 		return (
-			!value.locationId.equals(location._id) &&
-			value.weekDay !== req.body.weekDay &&
-			value.slot !== req.body.slot &&
+			!value.locationId.equals(location._id) ||
+			value.weekDay !== req.body.weekDay ||
+			value.slot !== req.body.slot ||
 			value.type !== req.body.type
 		);
 	});
+
 	await course.save();
 
 	res.send("SLot deleted successfully");

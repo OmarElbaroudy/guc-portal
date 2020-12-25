@@ -199,8 +199,8 @@ router
 	.put(auth, courseAuth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
-		
-		const inst=false
+
+		let inst = false;
 		const cur = await academic.findById(decoded.id);
 		try {
 			if (cur) {
@@ -213,28 +213,48 @@ router
 				const c = await course.findOne({
 					name: req.body.courseName,
 				});
-				if (c) {
-					c.instructorId = c.instructorId.filter(function (value) {
-						if(value.equals(x._id))
-						inst=true
-						return !value.equals(x._id);
-					});
-					if(inst)
-					c.instructorId.push(y._id);
-					else{
-					c.academicId = c.academicId.filter(function (value) {
-						return !value.equals(x._id);
-					});
-					c.academicId.push(y._id);
+
+				if (!x || !y) {
+					return res.status(460).send("invalid instructor id");
 				}
-			}
-				const loc = new Array();
+
+				if (!c) {
+					return res.status(460).send("invalid course name");
+				}
+
+				if (c) {
+					if (
+						c.hodId.equals(x._id) ||
+						(c.coordinatorId && c.coordinatorId.equals(x._id))
+					) {
+						return res
+							.status(460)
+							.send("you can't update the hod or coordinator of the course");
+					}
+
+					c.instructorId = c.instructorId.filter(function (value) {
+						if (value.equals(x._id)) inst = true;
+						return !value.equals(x._id);
+					});
+					if (inst) c.instructorId.push(y._id);
+					else {
+						c.academicId = c.academicId.filter(function (value) {
+							return !value.equals(x._id);
+						});
+						c.academicId.push(y._id);
+					}
+				}
+				const loc = [];
 				x.schedule = x.schedule.filter(function (value) {
 					if (value.courseId.equals(c._id)) y.schedule.push(value);
 					return !value.courseId.equals(c._id);
 				});
+
 				for (var i = 0; i < c.schedule.length; i++) {
-					if (c.schedule[i].instructorId.equals(x._id)) {
+					if (
+						c.schedule[i].instructorId &&
+						c.schedule[i].instructorId.equals(x._id)
+					) {
 						loc.push(c.schedule[i].locationId);
 						c.schedule[i].instructorId = y._id;
 					}
@@ -244,43 +264,54 @@ router
 				const locs = [];
 
 				for (let i = 0; i < loc.length; i++) {
-					var obj = await locations.findById(loc[i]);
+					var obj = await locations.findOne({ _id: loc[i] });
 					locs.push(obj);
 				}
 
 				for (let i = 0; i < locs.length; i++) {
+					let flag = false;
 					locs[i].schedule = locs[i].schedule.filter(function (value) {
-						if (value.instructorId.equals(x._id) && value.courseId.equals(c._id))
+						if (
+							value.instructorId &&
+							value.instructorId.equals(x._id) &&
+							value.courseId.equals(c._id)
+						) {
 							value.instructorId = y._id;
+							flag = true;
+						}
 						return true;
 					});
-
-					const filter = { name: locs[i].name };
-					const update = { schedule: locs[i].schedule };
-
-					await locations.findOneAndUpdate(filter, update, {
-						new: true,
-					});
+					if (flag) {
+						await locs[i].save();
+					}
 				}
+
+				let pos;
 
 				if (x) {
 					x.courses = x.courses.filter(function (value) {
-						return !(value.courseId.equals(c._id) && value.position === "instructor");
+						if (value.courseId.equals(c._id)) {
+							pos = value.position;
+							return false;
+						}
+						return true;
 					});
+
 					await x.save();
 				} else {
 					res.send("old user not found");
 				}
+
 				if (y) {
-					y.courses.push({ courseId: c._id, position: "instructor" });
+					y.courses.push({ courseId: c._id, position: pos });
 					await y.save();
 					res.send("update is successful");
 				} else {
 					res.send("new user not found");
 				}
 			}
-		} catch {
-			res.send("err");
+		} catch (err) {
+			console.log(err);
 		}
 	});
 router.route("/HOD/view_day_off").post(auth, async (req, res) => {
