@@ -16,10 +16,10 @@ function App() {
 <body class="st">
 <div class="container">
      <div class="row justify-content-center">
-     <img src="https://www.guc.edu.eg/img/guc_logo_og.png" class="img-circle"/>
-    </div>
-     <div class="row justify-content-center">
-      <div class="col-xl-6 col-lg-6 col-md-8 col-sm-12 col-md-xs-12">
+       <div class="col col-xl-7 col-lg-7 col-md-8 col-sm-11 col-md-xs-10 offset-xl-2 offset-lg-1 offset-xs-2">
+         <img src="https://www.guc.edu.eg/img/guc_logo_og.png" class="img-circle"/>
+       </div>
+      <div class="col col-xl-5 col-lg-6 col-md-8 col-sm-12 col-md-xs-12">
         <div class="form-container">
           <Form>
             <Form.Group controlId="formBasicEmail">
@@ -34,13 +34,11 @@ function App() {
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" placeholder="Password" />
             </Form.Group>
-            <Button class="btn btn-dark" type="submit">
-              Submit
-            </Button>
+            <button type="button" class="btn btn-dark">login</button>
           </Form>
+         </div>
         </div>
-      </div>
-    </div> 
+      </div> 
   </div>
 </body>
   
