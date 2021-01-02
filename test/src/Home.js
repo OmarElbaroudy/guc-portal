@@ -1,6 +1,7 @@
 import React, { component, useState } from "react";
 import "./Home.css";
 import "bootstrap/dist/css/bootstrap.css";
+import { Link, Redirect } from "react-router-dom";
 
 let x = 0;
 function Home() {
@@ -20,6 +21,10 @@ function Home() {
 
   let classes = "badge m-5 ";
   classes += x === 0 ? "badge-warning" : "badge-primary";
+
+  const [redirect, setRedirect] = useState(null);
+
+  if (redirect) return <Redirect to={redirect} />;
 
   return (
     <body>
@@ -130,28 +135,50 @@ function Home() {
         <div class="container">
           <div class="row center">
             <div class="col-md-3 containerIntro">
-              <span class="fas fa-book fa-3x" href="#"></span>
+              <button type="button" href="#" onClick={openNav} class="btn">
+                <span class="fas fa-book fa-3x" href="#"></span>
+              </button>
               <p>Courses</p>
               <br />
               <span class="border-left border-dark icons">description</span>
             </div>
 
             <div class="col-md-3 containerIntro">
-              <span class="far fa-user fa-3x"> </span>
+              <button
+                type="button"
+                href="#"
+                onClick={() => {
+                  setRedirect("/profile");
+                }}
+                class="btn"
+              >
+                <span class="far fa-user fa-3x"> </span>
+              </button>
               <p>Profile</p>
               <br />
               <span class="border-left border-dark icons">description</span>
             </div>
 
             <div class="col-md-3 containerIntro">
-              <span class="fa fa-industry fa-3x"> </span>
+              <button type="button" href="#" onClick={openNav} class="btn">
+                <span class="fa fa-industry fa-3x"> </span>
+              </button>
               <p>Inventory control</p>
               <br />
               <span class="border-left border-dark icons">description</span>
             </div>
 
             <div class="col-md-3 containerIntro">
-              <span class="fa fa-users fa-3x"> </span>
+              <button
+                type="button"
+                href="#"
+                onClick={() => {
+                  setRedirect("/homePage/staffMembers");
+                }}
+                class="btn"
+              >
+                <span class="fa fa-users fa-3x"> </span>
+              </button>
               <p>Staff members</p>
               <br />
               <span class="border-left border-dark icons">description</span>

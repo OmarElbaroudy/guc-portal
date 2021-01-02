@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { GetUser } from "../GlobalState";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Form from "react-bootstrap/Form";
+import { Link, Redirect } from "react-router-dom";
 
 const Login = () => {
   const { user, setUser } = GetUser();
   const [email, SetEmail] = useState("");
   const [password, SetPassword] = useState("");
+  const [redirect, setRedirect] = useState("");
 
   const login = async () => {
     try {
-      console.log(user);
       const params = { email: email, password: password };
       console.log(params);
       const res = await fetch("http://localhost:3000/login", {
@@ -29,10 +30,14 @@ const Login = () => {
         email: email,
       });
       console.log(user);
+      setRedirect("/homePage");
     } catch (error) {
       console.log(error);
     }
   };
+
+  if (redirect) return <Redirect to="/homePage" />;
+
   return (
     <div>
       <body class="st">
@@ -60,7 +65,6 @@ const Login = () => {
                       enter your @guc mail.
                     </Form.Text>
                   </Form.Group>
-
                   <Form.Group controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control

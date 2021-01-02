@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import Home from "./Home";
+import StaffMember from "./components/StaffMember";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
