@@ -153,6 +153,7 @@ router
 			res.send("err");
 		}
 	});
+
 router.route("/HOD/view_staff").post(auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
@@ -166,7 +167,7 @@ router.route("/HOD/view_staff").post(auth, async (req, res) => {
 
 			if (c) {
 				if (!c.hodId.equals(cur._id)) {
-					res.status(458).send("you are not the hod of this course");
+					res.status(458).json("you are not the hod of this course");
 				}
 
 				let arr = c.instructorId;
@@ -174,7 +175,7 @@ router.route("/HOD/view_staff").post(auth, async (req, res) => {
 				academic
 					.find({ _id: { $in: arr } })
 					.then((doc) => {
-						res.send(doc);
+						res.json(doc);
 					})
 					.catch((err) => {
 						console.error(err);
@@ -183,7 +184,7 @@ router.route("/HOD/view_staff").post(auth, async (req, res) => {
 				academic
 					.find({ departmentId: cur.departmentId })
 					.then((doc) => {
-						res.send(doc);
+						res.json(doc);
 					})
 					.catch((err) => {
 						console.error(err);
@@ -194,6 +195,7 @@ router.route("/HOD/view_staff").post(auth, async (req, res) => {
 		console.log(e);
 	}
 });
+
 router
 	.route("/HOD/update_course_instructor")
 	.put(auth, courseAuth, async (req, res) => {

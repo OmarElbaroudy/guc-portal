@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { GetUser } from "../GlobalState";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";

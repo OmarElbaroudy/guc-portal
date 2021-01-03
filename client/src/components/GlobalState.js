@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from "react";
-import saveToLocalStorage from "./saveToLocalStorage";
+import saveToLocalStorage from "../saveToLocalStorage";
 
 const UserContext = createContext();
 
