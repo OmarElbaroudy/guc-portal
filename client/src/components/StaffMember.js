@@ -4,12 +4,13 @@ import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Dropdown from "react-bootstrap/Dropdown";
+import Form from "react-bootstrap/Form";
 
 const ViewStaff = (props) => {
   const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [course, setCourse] = useState("");
+  const [type, setType] = useState("");
 
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
@@ -17,39 +18,66 @@ const ViewStaff = (props) => {
   const handleClose2 = () => setShowDelete(false);
   const handleShow2 = () => setShowDelete(true);
 
+  const disCourses = (course, position) => {
+    if (props.courses.length === 0) return <span>no courses </span>;
+    else
+      return (
+        <ul class="list-group list-group-horizontal">
+          <li class="list-group-item">{course}</li>
+          <li class="list-group-item">{position}</li>{" "}
+        </ul>
+      );
+  };
+
+  const getDay = (num) => {
+    switch (num) {
+      case 0:
+        return "Sunday";
+      case 1:
+        return "Monday";
+      case 2:
+        return "Tuesday";
+      case 3:
+        return "Wednesday";
+      case 4:
+        return "Thursday";
+      case 5:
+        return "Friday";
+      case 6:
+        return "Saturday";
+    }
+  };
   return (
     <div>
       <div style={{ marginTop: 15 }} className="container row">
         <div className="col-xl-10 offset-3">
-          <Accordion defaultActiveKey="0">
+          <Accordion defaultActiveKey="1">
             <Card>
               <Accordion.Toggle as={Card.Header} eventKey="0">
-                <span>props.name</span>
-                <span style={{ paddingInline: 300 }}>props.Id</span>
+                <span>{props.name}</span>
+                <span style={{ paddingInline: 300 }}>{props.id}</span>
                 <span style={{ paddingInline: 0 }}>props.type</span>
               </Accordion.Toggle>
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
                   <dl class="row">
                     <dt class="col-sm-3">e-mail</dt>
-                    <dd class="col-sm-9">props.email</dd>
+                    <dd class="col-sm-9">{props.email}</dd>
 
                     <dt class="col-sm-3">salary</dt>
-                    <dd class="col-sm-9">props salary will be sent here</dd>
+                    <dd class="col-sm-9">{props.salary}</dd>
 
                     <dt class="col-sm-3">Courses</dt>
                     <dd class="col-sm-9">
-                      {/* {props.courses.map((course) => {
-                      <ul class="list-group list-group-horizontal">
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                      </ul>;
-                    })} */}
-                      props courses array will be mapped here
+                      {props.courses.map((item) => {
+                        return props.courses.length === 0
+                          ? "no courses assigned"
+                          : disCourses(item.courseId, item.position);
+                      })}
                     </dd>
 
                     <dt class="col-sm-3 text-truncate">dayOff</dt>
-                    <dd class="col-sm-9">props.dayOff</dd>
+                    <dd class="col-sm-9">{getDay(props.dayOff)}</dd>
                   </dl>
                   <Button variant="light" onClick={handleShow1}>
                     Add course
@@ -77,17 +105,37 @@ const ViewStaff = (props) => {
           <Modal.Title>add Course</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <DropdownButton variant="outline-secondary" title="choose course">
-            <Dropdown.Item>Action</Dropdown.Item>
-            <Dropdown.Item>Another action</Dropdown.Item>
-            <Dropdown.Item>Something else</Dropdown.Item>
-          </DropdownButton>
+          <Form.Control
+            onClick={(event) => {
+              setCourse(event.target.value);
+            }}
+            type="course"
+            placeholder="Enter course"
+          />
+          <Form.Text className="text-muted">
+            Enter the exact course name.
+          </Form.Text>
+          <Form.Control
+            onClick={(event) => {
+              setType(event.target.value);
+            }}
+            type="type"
+            placeholder="Enter type"
+          />
+          <Form.Text className="text-muted">
+            enter "instructor" or "academic"
+          </Form.Text>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose1}>
             Close
           </Button>
-          <Button variant="primary">Add</Button>
+          <Button
+            onClick={() => props.handleAdd(course, props.id, type)}
+            variant="primary"
+          >
+            Add
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -101,17 +149,30 @@ const ViewStaff = (props) => {
           <Modal.Title>Delete Course</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <DropdownButton variant="outline-secondary" title="choose course">
-            <Dropdown.Item>Action</Dropdown.Item>
-            <Dropdown.Item>Another action</Dropdown.Item>
-            <Dropdown.Item>Something else</Dropdown.Item>
-          </DropdownButton>
+          <Form.Control
+            onClick={(event) => {
+              setCourse(event.target.value);
+            }}
+            type="course"
+            placeholder="Enter course"
+          />
+          <Form.Text className="text-muted">
+            Enter the exact course name.
+          </Form.Text>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose2}>
             Close
           </Button>
-          <Button variant="primary">Delete</Button>
+          <Button
+            onClick={() => {
+              props.handleDelete(course, props.id);
+              setCourse("");
+            }}
+            variant="primary"
+          >
+            Delete
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
