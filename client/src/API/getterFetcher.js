@@ -1,4 +1,4 @@
-export class getterFetcher {
+export default class getterFetcher {
 	static async getCourseNameById(id, token) {
 		const params = { id: id };
 		const res = await fetch("http://localhost:3000/getCourseNameById", {

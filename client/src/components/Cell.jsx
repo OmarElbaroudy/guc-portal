@@ -4,25 +4,26 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import getterFetcher from "../API/getterFetcher";
 
 const Cell = (props) => {
+	const session = props.session;
 	const [courseName, setCourseName] = useState("");
 	const [locationName, setLocationName] = useState("");
 	const [type, setType] = useState("");
 	const [updated, setUpdated] = useState(false);
 
-	if (props && props.courseId) {
-		const name = getterFetcher.getCourseNameById(props.courseId);
+	if (session && session.courseId) {
+		const name = getterFetcher.getCourseNameById(session.courseId);
 		setCourseName(name);
 		setUpdated(true);
 	}
 
-	if (props && props.locationId) {
-		const name = getterFetcher.getLocationNameById(props.locationId);
+	if (session && session.locationId) {
+		const name = getterFetcher.getLocationNameById(session.locationId);
 		setLocationName(name);
 		setUpdated(true);
 	}
 
-	if (props && props.type) {
-		setType(props.type);
+	if (session && session.type) {
+		setType(session.type);
 		setUpdated(true);
 	}
 
