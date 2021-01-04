@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { getterFetcher } from "../API/getterFetcher";
+import { GetUser } from "./GlobalState";
 
 const ViewStaff = (props) => {
+  const { user } = GetUser();
   const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [course, setCourse] = useState("");
   const [type, setType] = useState("");
+  const [courses, setCourses] = useState([]);
+
+  console.log(props.courses);
 
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
@@ -28,6 +34,25 @@ const ViewStaff = (props) => {
         </ul>
       );
   };
+
+  useEffect(() => {
+    const courseName = async (arr) => {
+      let coursesNames = [];
+      for (var j = 0; j < props.courses.length; j++) {
+        const c = await getterFetcher.getCourseNameById(
+          props.courses[j].courseId,
+          user.token
+        );
+        coursesNames.push({
+          course: c,
+          position: props.courses[j].position,
+        });
+      }
+      setCourses(coursesNames);
+      return coursesNames;
+    };
+    courseName();
+  });
 
   const getDay = (num) => {
     switch (num) {
@@ -47,6 +72,7 @@ const ViewStaff = (props) => {
         return "Saturday";
     }
   };
+
   return (
     <div>
       <div style={{ marginTop: 15 }} className="container row">
@@ -69,11 +95,11 @@ const ViewStaff = (props) => {
 
                     <dt class="col-sm-3">Courses</dt>
                     <dd class="col-sm-9">
-                      {props.courses.map((item) => {
-                        return props.courses.length === 0
-                          ? "no courses assigned"
-                          : disCourses(item.courseId, item.position);
-                      })}
+                      {courses && Array.isArray(courses)
+                        ? courses.map((item) => {
+                            return disCourses(item.course, item.position);
+                          })
+                        : []}
                     </dd>
 
                     <dt class="col-sm-3 text-truncate">dayOff</dt>

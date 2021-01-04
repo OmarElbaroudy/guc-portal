@@ -4,12 +4,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import StaffMember from "./StaffMember";
 import NavBar from "./NavBar";
 import { hodFetcher } from "../API/hodFetcher";
+import { getterFetcher } from "../API/getterFetcher";
 
 const ViewStaff = () => {
   const { user } = GetUser();
   const [staff, setStaff] = useState([]);
+  //const [courses, setCourses] = useState([]);
 
   useEffect(() => {
+    console.log("here");
     const data = async () => {
       try {
         const res = await hodFetcher.view("", user.token);
@@ -20,6 +23,21 @@ const ViewStaff = () => {
     };
     data();
   }, []);
+
+  // const courseName = async (arr) => {
+  //   let coursesNames = [];
+  //   for (var j = 0; j < arr.length; j++) {
+  //     const c = await getterFetcher.getCourseNameById(
+  //       arr[j].courseId,
+  //       user.token
+  //     );
+  //     coursesNames.push({
+  //       course: c,
+  //       position: arr[j].position,
+  //     });
+  //   }
+  //   return coursesNames;
+  // };
 
   const addCourse = async (course, staffMem, type) => {
     console.log("course " + course + " staff " + staffMem + " type " + type);
@@ -54,6 +72,7 @@ const ViewStaff = () => {
             email={obj.email}
             salary={obj.salary}
             courses={obj.courses}
+            // coursesfunc={courseName}
             dayOff={obj.dayOff}
             handleAdd={addCourse}
             handleDelete={deleteCourse}
