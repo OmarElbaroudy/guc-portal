@@ -89,10 +89,10 @@ const Request = (props) => {
       return (
         <ul class="list-group">
           <li class="list-group-item">{course}</li>
-          <li class="list-group-item">props.replacment.slotDate</li>
-          <li class="list-group-item">props.replacment.slot</li>
+          <li class="list-group-item">{props.replacment.slotDate}</li>
+          <li class="list-group-item">{props.replacment.slot}</li>
           <li class="list-group-item">{location}</li>
-          <li class="list-group-item">props.replacment.academicResponse</li>
+          <li class="list-group-item">{props.replacment.academicResponse}</li>
         </ul>
       );
     if (props.type === "slotLinking")
@@ -100,7 +100,7 @@ const Request = (props) => {
         <ul class="list-group">
           <li class="list-group-item">{course}</li>
           <li class="list-group-item">{getDay(props.replacment.weekDay)}</li>
-          <li class="list-group-item">props.replacment.slot</li>
+          <li class="list-group-item">{props.replacment.slot}</li>
           <li class="list-group-item">{location}</li>
         </ul>
       );
@@ -145,7 +145,7 @@ const Request = (props) => {
                     {props.type === "replacement" ||
                       (props.type === "slotLinking" && (
                         <React.Fragment>
-                          <dt class="col-sm-3">props.type</dt>
+                          <dt class="col-sm-3">{props.type}</dt>
                           <dd class="col-sm-9">{renderReplacment()}</dd>
                         </React.Fragment>
                       ))}
