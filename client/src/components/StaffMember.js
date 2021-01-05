@@ -160,6 +160,7 @@ const ViewStaff = (props) => {
                     update course
                   </Button>
                   <OverlayTrigger
+                    rootClose={true}
                     trigger="click"
                     placement="right"
                     overlay={popover}

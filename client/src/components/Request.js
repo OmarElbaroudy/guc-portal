@@ -209,6 +209,7 @@ const Request = (props) => {
           </Button>
           <Button
             onClick={() => {
+              setShowAccept(false);
               props.handleAccept(props._id, comment);
             }}
             variant="primary"
@@ -246,6 +247,7 @@ const Request = (props) => {
           </Button>
           <Button
             onClick={() => {
+              setShowReject(false);
               props.handleReject(props._id, comment);
             }}
             variant="primary"
