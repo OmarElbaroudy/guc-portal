@@ -16,6 +16,23 @@ export class getterFetcher {
     return data;
   }
 
+  static async getStaffById(id, token) {
+    const params = { id: id };
+    const res = await fetch("http://localhost:3000/getStaffNameById", {
+      method: "POST",
+      body: JSON.stringify(params),
+      headers: {
+        Authorization: "",
+        "auth-token": token,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    const data = await res.json();
+    return data;
+  }
+
   static async getCourseIdByName(name, token) {
     const params = { name: name };
     const res = await fetch("http://localhost:3000/getCourseIdByName", {
@@ -65,6 +82,7 @@ export class getterFetcher {
   }
 
   static async getLocationNameById(id, token) {
+    console.log("getterfetcher");
     const params = { id: id };
     const res = await fetch("http://localhost:3000/getLocationNameById", {
       method: "POST",
@@ -75,8 +93,8 @@ export class getterFetcher {
         Accept: "application/json",
       },
     });
-
     const data = await res.json();
+    console.log("data " + data);
     return data;
   }
 

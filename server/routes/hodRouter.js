@@ -314,7 +314,7 @@ router
         if (y) {
           y.courses.push({ courseId: c._id, position: pos });
           await y.save();
-          res.send("update is successful");
+          res.json({ old: x, new: y });
         } else {
           res.send("new user not found");
         }
@@ -342,7 +342,7 @@ router.route("/HOD/view_day_off").post(auth, async (req, res) => {
             { dayOff: 1, name: 1, _id: 1 }
           )
           .then((doc) => {
-            res.send(doc);
+            res.json(doc);
           })
           .catch((err) => {
             console.error(err);
@@ -363,7 +363,7 @@ router.route("/HOD/view_requests").get(auth, async (req, res) => {
       requests
         .find({ departmentId: cur.departmentId })
         .then((doc) => {
-          res.send(doc);
+          res.json(doc);
         })
         .catch((err) => {
           console.error(err);
@@ -442,6 +442,7 @@ router.route("/HOD/accept_requests").put(auth, async (req, res) => {
       );
       if (request.status === "pending") {
         request.status = "accepted";
+        request.receiverComment = req.body.comment;
         const sender = await academic.findById(request.senderId);
         sender.notifications.push(request._id);
         await request.save();
@@ -509,7 +510,7 @@ router.route("/HOD/accept_requests").put(auth, async (req, res) => {
           request.status = "accepted";
           request.save();
           sender.save();
-          res.send("changed successfully");
+          res.json(request);
         }
       } else {
         res.send("this request is already accepted/rejected");
@@ -533,9 +534,10 @@ router.route("/HOD/reject_requests").put(auth, async (req, res) => {
         request.status = "rejected";
         const sender = await academic.findById(request.senderId);
         sender.notifications.push(request._id);
+        request.receiverComment = req.body.comment;
         await request.save();
         await sender.save();
-        res.send("request is rejected");
+        res.json(request);
       } else {
         res.send("this request is already accepted/rejected");
       }
