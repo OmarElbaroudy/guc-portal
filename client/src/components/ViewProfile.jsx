@@ -67,9 +67,11 @@ const ViewProfile = () => {
 					)}
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="secondary" onClick={handleClose}>
-						Close
-					</Button>
+					{true ? (
+						<Button variant="secondary" onClick={handleClose}>
+							Close
+						</Button>
+					) : null}
 				</Modal.Footer>
 			</Modal>
 		</>
