@@ -8,10 +8,6 @@ const locations = require("../models/locations");
 
 const router = express.Router();
 
-//TODO:
-//academic member can still direct a replacement request to
-//hod regardless of it's state
-
 const dateDiff = (slotDate, curDate) => {
 	return (slotDate.getTime() - curDate.getTime()) / (1000 * 3600 * 24);
 };
@@ -86,6 +82,7 @@ router.get("/ac/viewSchedule", auth, async (req, res) => {
 					weekDay: request.replacement.slotDate.getDay(),
 					location: await getLocationNameById(request.replacement.locationId),
 					course: await getCourseNameById(request.replacement.courseId),
+					type: "replacement",
 				};
 
 				sessions.push(session);
@@ -98,10 +95,10 @@ router.get("/ac/viewSchedule", auth, async (req, res) => {
 				weekDay: session.weekDay,
 				location: await getLocationNameById(session.locationId),
 				course: await getCourseNameById(session.courseId),
+				type: session.type,
 			});
 		}
-
-		res.send(sessions);
+		res.json(sessions);
 	} catch (err) {
 		console.log(err);
 	}
@@ -274,7 +271,7 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 		const decoded = jwt_decode(token);
 		const input = req.body; //slot, weekday and courseName in req.body
 		const sender = await academics.findById(decoded.id);
-		const loc = await locations.findOne({name:req.body.location});
+		const loc = await locations.findOne({ name: req.body.location });
 
 		if (!sender) res.status(410).send("invalid id");
 		if (!loc) res.status(411).send("invalid location");
@@ -320,7 +317,7 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 				courseId: course._id,
 				slot: input.slot,
 				weekDay: input.weekDay,
-				locationId: loc._id
+				locationId: loc._id,
 			},
 		};
 

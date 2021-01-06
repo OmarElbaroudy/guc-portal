@@ -148,7 +148,7 @@ function Home() {
                 type="button"
                 href="#"
                 onClick={() => {
-                  setRedirect("/profile");
+                  setRedirect("/homePage/viewProfile");
                 }}
                 class="btn"
               >
