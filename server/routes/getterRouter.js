@@ -53,7 +53,7 @@ router.post("/getLocationIdByName", async (req, res) => {
 });
 
 router.post("/getId", async (req, res) => {
-	const id = await getter.getCourseNameById(req.body.id);
+	const id = await getter.getId(req.body.id);
 	return res.json(id);
 });
 
