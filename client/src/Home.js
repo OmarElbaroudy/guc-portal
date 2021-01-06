@@ -190,7 +190,7 @@ function Home() {
             <div class="col-md-4 containerIntro">
               <div class="card text-white bg-dark ">
                 <div class="card-header">
-                  Notifications
+                  requests
                   <span className={classes}>{notificationNum}</span>
                 </div>
                 <div class="card-body">
@@ -199,8 +199,14 @@ function Home() {
                     With supporting text below as a natural lead-in to
                     additional content.
                   </p>
-                  <a href="#" class="btn btn-primary" onClick={handleChange}>
-                    Go somewhere
+                  <a
+                    href="#"
+                    class="btn btn-primary"
+                    onClick={() => {
+                      setRedirect("/homePage/requests");
+                    }}
+                  >
+                    Go requests
                   </a>
                 </div>
               </div>

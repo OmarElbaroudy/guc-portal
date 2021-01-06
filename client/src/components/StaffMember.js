@@ -5,6 +5,8 @@ import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Popover from "react-bootstrap/Popover";
 import { getterFetcher } from "../API/getterFetcher";
 import { GetUser } from "./GlobalState";
 
@@ -12,17 +14,22 @@ const ViewStaff = (props) => {
   const { user } = GetUser();
   const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [showUpdate, setShowUpdate] = useState(false);
   const [course, setCourse] = useState("");
   const [type, setType] = useState("");
   const [courses, setCourses] = useState([]);
-
-  console.log(props.courses);
+  const [newStaff, setNewStaff] = useState("");
+  const [office, setOffice] = useState("");
+  const [dayOff, setDayOff] = useState("");
 
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
 
   const handleClose2 = () => setShowDelete(false);
   const handleShow2 = () => setShowDelete(true);
+
+  const handleClose3 = () => setShowUpdate(false);
+  const handleShow3 = () => setShowUpdate(true);
 
   const disCourses = (course, position) => {
     if (props.courses.length === 0) return <span>no courses </span>;
@@ -51,8 +58,25 @@ const ViewStaff = (props) => {
       setCourses(coursesNames);
       return coursesNames;
     };
+
+    const officeName = async () => {
+      console.log("office  " + props.office);
+      const l = await getterFetcher.getLocationNameById(
+        props.office,
+        user.token
+      );
+      console.log(l);
+      setOffice(l);
+    };
+
+    const dayOffFun = async () => {
+      const d = await props.handleDayOff(props.id);
+      setDayOff(d);
+    };
+    dayOffFun();
     courseName();
-  });
+    officeName();
+  }, [props.courses]);
 
   const getDay = (num) => {
     switch (num) {
@@ -72,6 +96,15 @@ const ViewStaff = (props) => {
         return "Saturday";
     }
   };
+
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3">Day Off</Popover.Title>
+      <Popover.Content>
+        this Staff member days off are Friday and {getDay(dayOff)}
+      </Popover.Content>
+    </Popover>
+  );
 
   return (
     <div>
@@ -102,19 +135,40 @@ const ViewStaff = (props) => {
                         : []}
                     </dd>
 
-                    <dt class="col-sm-3 text-truncate">dayOff</dt>
-                    <dd class="col-sm-9">{getDay(props.dayOff)}</dd>
+                    <dt class="col-sm-3 text-truncate">Office location</dt>
+                    <dd class="col-sm-9">{office.name}</dd>
                   </dl>
-                  <Button variant="light" onClick={handleShow1}>
+                  <Button
+                    className="col col-3"
+                    variant="light"
+                    onClick={handleShow1}
+                  >
                     Add course
                   </Button>
                   <Button
-                    style={{ marginLeft: 50 }}
+                    className="col col-3"
                     variant="light"
                     onClick={handleShow2}
                   >
                     Delete course
                   </Button>
+                  <Button
+                    className="col col-3"
+                    variant="light"
+                    onClick={handleShow3}
+                  >
+                    update course
+                  </Button>
+                  <OverlayTrigger
+                    rootClose={true}
+                    trigger="click"
+                    placement="right"
+                    overlay={popover}
+                  >
+                    <Button className="col col-3" variant="success">
+                      Click me to see day off
+                    </Button>
+                  </OverlayTrigger>
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
@@ -132,7 +186,7 @@ const ViewStaff = (props) => {
         </Modal.Header>
         <Modal.Body>
           <Form.Control
-            onClick={(event) => {
+            onChange={(event) => {
               setCourse(event.target.value);
             }}
             type="course"
@@ -142,7 +196,7 @@ const ViewStaff = (props) => {
             Enter the exact course name.
           </Form.Text>
           <Form.Control
-            onClick={(event) => {
+            onChange={(event) => {
               setType(event.target.value);
             }}
             type="type"
@@ -176,7 +230,7 @@ const ViewStaff = (props) => {
         </Modal.Header>
         <Modal.Body>
           <Form.Control
-            onClick={(event) => {
+            onChange={(event) => {
               setCourse(event.target.value);
             }}
             type="course"
@@ -198,6 +252,52 @@ const ViewStaff = (props) => {
             variant="primary"
           >
             Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={showUpdate}
+        onHide={handleClose3}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>update Course</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Control
+            onChange={(event) => {
+              setCourse(event.target.value);
+            }}
+            type="course"
+            placeholder="Enter course"
+          />
+          <Form.Text className="text-muted">
+            Enter the exact course name.
+          </Form.Text>
+          <Form.Control
+            onChange={(event) => {
+              setNewStaff(event.target.value);
+            }}
+            type="course"
+            placeholder="Enter new staff member"
+          />
+          <Form.Text className="text-muted">
+            Enter the new staff member to swap courses.
+          </Form.Text>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose3}>
+            Close
+          </Button>
+          <Button
+            onClick={() => {
+              props.handleUpdate(course, props.id, newStaff);
+              setCourse("");
+            }}
+            variant="primary"
+          >
+            update
           </Button>
         </Modal.Footer>
       </Modal>
