@@ -1,23 +1,29 @@
+import { academicFetcher } from "../API/academicFetcher";
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
-import Schedule from "./Schedule";
 import Modal from "react-bootstrap/Modal";
+import RequestForm from "./RequestForm";
 import { GetUser } from "./GlobalState";
-import { academicFetcher } from "../API/academicFetcher";
+import Schedule from "./Schedule";
 
 const ViewProfile = () => {
 	const { user } = GetUser();
 	const [show, setShow] = useState(false);
 	const [sessions, setSessions] = useState([]);
+	const [comp, setComp] = useState("");
 
 	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
+
+	const handleShow = (comp) => {
+		setComp(comp);
+		setShow(true);
+	};
 
 	useEffect(() => {
 		const data = async () => {
 			try {
-        const res = await academicFetcher.viewSchedule(user.token);
+				const res = await academicFetcher.viewSchedule(user.token);
 				setSessions(res);
 			} catch (err) {
 				console.log(err);
@@ -29,16 +35,36 @@ const ViewProfile = () => {
 
 	return (
 		<>
-			<Button variant="primary" onClick={handleShow}>
+			<Button
+				variant="primary"
+				onClick={() => {
+					handleShow("schedule");
+				}}
+			>
 				view schedule
+			</Button>
+
+			<Button
+				variant="secondary"
+				onClick={() => {
+					handleShow("request");
+				}}
+			>
+				send request
 			</Button>
 
 			<Modal size="lg" show={show} onHide={handleClose}>
 				<Modal.Header closeButton>
-					<Modal.Title>Schedule</Modal.Title>
+					<Modal.Title>
+						{comp === "schedule" ? "Schedule" : "Request Form"}
+					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Schedule sessions={sessions}></Schedule>
+					{comp === "schedule" ? (
+						<Schedule sessions={sessions}></Schedule>
+					) : (
+						<RequestForm></RequestForm>
+					)}
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="secondary" onClick={handleClose}>
