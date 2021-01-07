@@ -18,11 +18,11 @@ function App() {
         <Switch>
           <Route exact path="/" component={Login} />
           <Route exact path="/hodHome" component={HodHome} />
+          <Route exact path="/staffHome" component={StaffHome} />
+          <Route exact path="/hrHome" component={HrHome} />
+          <Route exact path="/homePage/requests" component={ViewRequest} />
           <Route exact path="/homePage/staffMembers" component={ViewStaff} />
           <Route exact path="/staffHome/viewProfile" component={viewProfile} />
-          <Route exact path="/homePage/requests" component={ViewRequest} />
-          <Route exact path="/hrHomepage" component={HrHome} />
-          <Route exact path="/staffHome" component={StaffHome} />
           <Route
             exact
             path="/homePage/coursesCoverage"
