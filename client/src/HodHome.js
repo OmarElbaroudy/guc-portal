@@ -1,12 +1,12 @@
 import React, { component, useState } from "react";
-import "./Home.css";
+import "./hodHome.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { Link, Redirect } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import RequestsHome from "./components/requestsHomePage";
 
 let x = 0;
-function Home() {
+function HodHome() {
   const openNav = () => {
     document.getElementById("mySidenav").style.width = "250px";
     document.getElementById("main").style.marginLeft = "250px";
@@ -129,4 +129,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HodHome;

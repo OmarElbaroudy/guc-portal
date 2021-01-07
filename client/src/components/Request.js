@@ -98,8 +98,8 @@ const Request = (props) => {
       return (
         <ul class="list-group">
           <li class="list-group-item">{course}</li>
-          <li class="list-group-item">{getDay(props.replacment.weekDay)}</li>
-          <li class="list-group-item">{props.replacment.slot}</li>
+          <li class="list-group-item">{getDay(props.replacement.weekDay)}</li>
+          <li class="list-group-item">{props.replacement.slot}</li>
           <li class="list-group-item">{location}</li>
         </ul>
       );
