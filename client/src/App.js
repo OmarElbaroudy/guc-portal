@@ -1,12 +1,14 @@
 import "./App.css";
 import React from "react";
-import Home from "./Home";
+import HodHome from "./HodHome";
+import HrHome from "./HrHome";
 import { UserProvider } from "./components/GlobalState";
 import Login from "./components/Login";
 import ViewStaff from "./components/ViewStaff";
 import ViewRequest from "./components/ViewRequests";
 import CourseCoverage from "./components/CourseCoverage";
 import viewProfile from "./components/ViewProfile";
+import StaffHome from "./StaffHome";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -15,10 +17,12 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Login} />
-          <Route exact path="/homePage" component={Home} />
+          <Route exact path="/hodHome" component={HodHome} />
           <Route exact path="/homePage/staffMembers" component={ViewStaff} />
           <Route exact path="/homePage/viewProfile" component={viewProfile} />
           <Route exact path="/homePage/requests" component={ViewRequest} />
+          <Route exact path="/hrHomepage" component={HrHome} />
+          <Route exact path="/staffHome" component={StaffHome} />
           <Route
             exact
             path="/homePage/coursesCoverage"

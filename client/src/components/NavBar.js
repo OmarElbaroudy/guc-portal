@@ -1,5 +1,5 @@
 import React, { component, useState } from "react";
-import "../Home";
+import "../HodHome";
 import "bootstrap/dist/css/bootstrap.css";
 import { NavDropdown } from "react-bootstrap";
 import { logoutFetcher } from "../API/logoutFetcher";
@@ -81,14 +81,9 @@ function NavBar() {
                 <a
                   class="nav-link active"
                   aria-current="page"
-                  href="http://localhost:3001/homePage/"
+                  href="http://localhost:3001/staffHome/"
                 >
                   Home
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Link
                 </a>
               </li>
               <NavDropdown title="privacy" id="basic-nav-dropdown">
@@ -102,16 +97,33 @@ function NavBar() {
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.4">not yet</NavDropdown.Item>
               </NavDropdown>
-              <li class="nav-item">
-                <a
-                  class="nav-link disabled"
-                  href="#"
-                  tabindex="-1"
-                  aria-disabled="true"
-                >
-                  Disabled
-                </a>
-              </li>
+
+              {user.type === "academic" && (
+                <NavDropdown title="home pages" id="basic-nav-dropdown">
+                  {user.hod && (
+                    <NavDropdown.Item href="/hodHome">
+                      Hod homepage
+                    </NavDropdown.Item>
+                  )}
+
+                  {user.instructor && (
+                    <NavDropdown.Item href="#action/3.2">
+                      Instructor home
+                    </NavDropdown.Item>
+                  )}
+
+                  {user.academic && (
+                    <NavDropdown.Item href="#action/3.2">
+                      Academic home
+                    </NavDropdown.Item>
+                  )}
+                  {user.coordinator && (
+                    <NavDropdown.Item href="#action/3.2">
+                      coordinator home
+                    </NavDropdown.Item>
+                  )}
+                </NavDropdown>
+              )}
               <li class="nav-item">
                 <a
                   class="nav-link active"
