@@ -9,6 +9,7 @@ import ViewRequest from "./components/ViewRequests";
 import CourseCoverage from "./components/CourseCoverage";
 import viewProfile from "./components/ViewProfile";
 import StaffHome from "./StaffHome";
+import HrStaffMember from "./components/HrStaffMember"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route exact path="/homePage/requests" component={ViewRequest} />
           <Route exact path="/homePage/staffMembers" component={ViewStaff} />
           <Route exact path="/staffHome/viewProfile" component={viewProfile} />
+          <Route exact path="/hr/StaffMembers" component={HrStaffMember} />
           <Route
             exact
             path="/homePage/coursesCoverage"
