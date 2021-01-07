@@ -4,7 +4,6 @@ import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import { getterFetcher } from "../API/getterFetcher";
 import { GetUser } from "./GlobalState";

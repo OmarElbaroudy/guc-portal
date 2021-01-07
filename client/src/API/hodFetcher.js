@@ -167,4 +167,25 @@ export class hodFetcher {
       console.log(error);
     }
   }
+
+  static async viewCourseCoverage(token) {
+    try {
+      const res = await fetch(
+        "http://localhost:3000/HOD/view_course_coverage",
+        {
+          method: "get",
+          headers: {
+            Authorization: "",
+            "auth-token": token,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

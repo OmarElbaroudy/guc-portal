@@ -4,6 +4,7 @@ import { UserProvider } from "./components/GlobalState";
 import Login from "./components/Login";
 import ViewStaff from "./components/ViewStaff";
 import ViewRequest from "./components/ViewRequests";
+import CourseCoverage from "./components/CourseCoverage";
 
 import {
   BrowserRouter as Router,
@@ -23,6 +24,11 @@ function App() {
           <Route exact path="/homePage" component={Home} />
           <Route exact path="/homePage/staffMembers" component={ViewStaff} />
           <Route exact path="/homePage/requests" component={ViewRequest} />
+          <Route
+            exact
+            path="/homePage/coursesCoverage"
+            component={CourseCoverage}
+          />
         </Switch>
       </Router>
     </UserProvider>

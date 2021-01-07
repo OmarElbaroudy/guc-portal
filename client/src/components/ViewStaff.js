@@ -72,7 +72,7 @@ const ViewStaff = () => {
           <Form.Group>
             <Form.Label htmlFor="inputPassword6">course</Form.Label>
             <Form.Control
-              onClick={(event) => {
+              onChange={(event) => {
                 console.log(filter);
                 setFilter(event.target.value);
               }}

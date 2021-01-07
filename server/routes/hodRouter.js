@@ -406,7 +406,7 @@ router.route("/HOD/view_course_coverage").get(auth, async (req, res) => {
         }
       }
 
-      res.send(response);
+      res.json(response);
     }
   } catch {
     res.send("err");
