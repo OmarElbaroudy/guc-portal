@@ -92,7 +92,7 @@ router.get("/myProfile/signIn", async (req, res) => {
 
 	await calc.signIn(doc);
 	await doc.save();
-	res.json({ message: "signed in successfully" });
+	res.json("done");
 });
 
 router.get("/myProfile/signOut", async (req, res) => {
@@ -111,7 +111,7 @@ router.get("/myProfile/signOut", async (req, res) => {
 	doc.missingDays = calc.calculateMissingDays(doc);
 
 	await doc.save();
-	res.json({ message: "signed out successfully" });
+	res.json("done");
 });
 
 router.get("/myProfile/viewAttendanceRecords", async (req, res) => {
@@ -145,7 +145,7 @@ router.get("/myProfile/viewMissingDays", async (req, res) => {
 	doc.missingDays = calc.calculateMissingDays(doc);
 	await doc.save();
 
-	res.json(`number of missing days for this month => ${doc.missingDays}`);
+	res.json(doc.missingDays);
 });
 
 router.get("/myProfile/viewMissingHours", async (req, res) => {
@@ -162,17 +162,7 @@ router.get("/myProfile/viewMissingHours", async (req, res) => {
 	doc.missingHours = calc.calculateMissingHours(doc);
 	await doc.save();
 
-	if (doc.missingHours === 0) {
-		res.json(`you have no missing or extra hours for this month`);
-	}
-
-	if (doc.missingHours > 0) {
-		res.send(`missing hours for this month => ${doc.missingHours}`);
-	}
-
-	if (doc.missingHours < 0) {
-		res.send(`extra hours for this month => ${-doc.missingHours}`);
-	}
+	res.json(doc.missingHours);
 });
 
 module.exports = router;
