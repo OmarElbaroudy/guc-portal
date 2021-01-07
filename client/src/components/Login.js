@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import { Redirect } from "react-router-dom";
 
 const Login = () => {
-	const { user, setUser } = GetUser();
+	const { setUser } = GetUser();
 	const [email, SetEmail] = useState("");
 	const [password, SetPassword] = useState("");
 	const [redirect, setRedirect] = useState("");
@@ -18,7 +18,7 @@ const Login = () => {
       setUser({
         token: data.token,
         email: email,
-      });
+	  });
       setRedirect("/homePage");
     }
 	};

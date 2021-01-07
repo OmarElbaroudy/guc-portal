@@ -14,13 +14,22 @@ export class academicFetcher {
 		return data;
 	}
 
-	static async sendReplacement(id, slot, weekDay, slotDate, course, token) {
+	static async sendReplacement(
+		id,
+		slot,
+		weekDay,
+		slotDate,
+		course,
+		location,
+		token
+	) {
 		const params = {
 			id: id,
 			slot: slot,
 			weekDay: weekDay,
 			slotDate: slotDate,
 			course: course,
+			location: location,
 		};
 
 		const res = await fetch("http://localhost:3000/ac/replacement", {
@@ -161,6 +170,7 @@ export class academicFetcher {
 				p.weekDay,
 				p.date,
 				p.course,
+				p.location,
 				token
 			);
 		} else if (requestType === "slotLinking") {
