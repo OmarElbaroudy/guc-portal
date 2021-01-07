@@ -81,7 +81,7 @@ export class academicFetcher {
 			newDayOff: newDayOff,
 			comment: comment,
 		};
-		
+
 		const res = await fetch("http://localhost:3000/ac/changeDayOff", {
 			method: "POST",
 			body: JSON.stringify(params),
@@ -97,11 +97,12 @@ export class academicFetcher {
 		return data;
 	}
 
-	static async leaveRequest(type, date, token){
+	static async leaveRequest(type, date, comment, token) {
 		const params = {
-			type : type,
-			date : date,
-		}
+			type: type,
+			date: date,
+			comment: comment,
+		};
 
 		const res = await fetch("http://localhost:3000/ac/leaveRequest", {
 			method: "POST",
@@ -118,8 +119,8 @@ export class academicFetcher {
 		return data;
 	}
 
-	static async viewRequests(status, token){
-		const params = {status : status};
+	static async viewRequests(status, token) {
+		const params = { status: status };
 		const res = await fetch("http://localhost:3000/ac/viewSubmittedRequests", {
 			method: "POST",
 			body: JSON.stringify(params),
@@ -135,8 +136,8 @@ export class academicFetcher {
 		return data;
 	}
 
-	static async cancelRequest(reqId, token){
-		const params = {reqId : reqId};
+	static async cancelRequest(reqId, token) {
+		const params = { reqId: reqId };
 		const res = await fetch("http://localhost:3000/ac/cancelRequest", {
 			method: "POST",
 			body: JSON.stringify(params),
@@ -152,6 +153,22 @@ export class academicFetcher {
 		return data;
 	}
 
-	
-
+	static async sendRequest(requestType, p, token) {
+		if (requestType === "replacement") {
+			return await this.sendReplacement(
+				p.id,
+				p.slot,
+				p.weekDay,
+				p.date,
+				p.course,
+				token
+			);
+		} else if (requestType === "slotLinking") {
+			return await this.slotLink(p.course, p.weekDay, p.slot, p.location, token);
+		} else if (requestType === "changeDayOff") {
+			return await this.changeDayOff(p.newDayOff, p.comment, token);
+		} else {
+			return await this.leaveRequest(requestType, p.date, p.comment, token);
+		}
+	}
 }

@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, {useState} from "react";
+import { academicFetcher } from "../API/academicFetcher";
 import { Col, Form, Row } from "react-bootstrap";
-import { getterFetcher } from "../API/getterFetcher";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Spinner from 'react-bootstrap/Spinner'
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 import { GetUser } from "./GlobalState";
 
-const RequestForm = () => {
+const RequestForm = (props) => {
 	const { user } = GetUser();
 
 	const [requestType, setRequestType] = useState("undefined");
@@ -17,16 +19,63 @@ const RequestForm = () => {
 	const [location, setLocation] = useState(null);
 	const [newDayOff, setNewDayOff] = useState(0);
 	const [comment, setComment] = useState("");
+	const [showAlert, setShowAlert] = useState(false);
+	const [message, setMessage] = useState("oops something went wrong");
+	const [spinner, setSpinner] = useState(false);
 
-	// useEffect(() => {
-	// 	const data = async () => {
-	// 		const res = await getterFetcher.getCourseIdByName(user.token);
-	// 	};
-	// 	data();
-	// }, [user.token]);
+	const getDate = () => {
+		const d = new Date(Date.parse(date));
+		if (d) {
+			const ret = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+			return {
+				year: ret.getFullYear(),
+				month: ret.getMonth() + 1,
+				day: ret.getDate(),
+			};
+		}
+		return undefined;
+	};
+
+	const params = () => {
+		return {
+			id: id,
+			slot: slot,
+			weekDay: weekDay,
+			course: courseName,
+			location: location,
+			newDayOff: newDayOff,
+			date: getDate(),
+			comment: comment,
+		};
+	};
+
+	const handleSubmission = async () => {
+		try {
+			setSpinner(true);
+			const p = params();
+			const data = await academicFetcher.sendRequest(requestType, p, user.token);
+			if (data === "done") {
+				props.close();
+			} else {
+				setMessage(data);
+				setShowAlert(true);
+			}
+			setSpinner(false);
+		} catch (e) {
+			console.log(e);
+		}
+	};
 
 	return (
 		<Form>
+			<Alert
+				variant="danger"
+				show={showAlert}
+				onClose={() => setShowAlert(false)}
+				dismissible
+			>
+				{message}
+			</Alert>
 			<Form.Group as={Row}>
 				<Form.Label column="lg" lg={2}>
 					type:
@@ -220,6 +269,7 @@ const RequestForm = () => {
 					</Form.Group>
 				</>
 			) : null}
+
 			{requestType !== "undefined" &&
 			requestType !== "replacement" &&
 			requestType !== "slotLinking" ? (
@@ -240,9 +290,18 @@ const RequestForm = () => {
 				</Form.Group>
 			) : null}
 			{requestType !== "undefined" ? (
-				<Button className="col-5" variant="primary" type="submit">
-					Submit
-				</Button>
+				<>
+					<Button className="col-5" variant="primary" onClick={handleSubmission}>
+						{spinner ? <Spinner
+							as="span"
+							animation="border"
+							size="sm"
+							role="status"
+							aria-hidden="true"
+						/> : null}
+						Submit
+					</Button>
+				</>
 			) : null}
 		</Form>
 	);
