@@ -4,8 +4,10 @@ const course = require("../models/course");
 const jwt_decode = require("jwt-decode");
 const requests = require("../models/requests");
 const locations = require("../models/locations");
+const getterRoutes = require("../components/getterRoutes");
 const mongoose = require("mongoose");
 const router = express.Router();
+const getter = new getterRoutes();
 
 const auth = async (req, res, next) => {
   const token = req.header("auth-token");
@@ -423,7 +425,22 @@ router.route("/HOD/view_course_schedule").post(auth, async (req, res) => {
         name: req.body.courseName,
       });
       if (c) {
-        if (c.departmentId.equals(cur.departmentId)) res.send(c.schedule);
+        if (c.departmentId.equals(cur.departmentId)) {
+          let schedule = [];
+          for (const entry of c.schedule) {
+            const courseInst = await course.findOne({
+              _id: entry.instructorId,
+            });
+            const courseName = courseInst.name + "(" + courseInst.id + ")";
+            let session = {
+              course: courseName,
+              location: await getter.getLocationNameById(entry.locationId),
+              type: entry.type,
+            };
+            schedule.push(session);
+          }
+          res.json(schedule);
+        }
       }
     }
   } catch {

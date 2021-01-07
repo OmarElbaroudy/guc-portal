@@ -18,11 +18,11 @@ router
 		try {
 			if (decoded.type === "hr") {
 				const h = await hr.findById(decoded.id);
-				return res.send(h);
+				return res.json(h);
 			}
 
 			const a = await academic.findById(decoded.id);
-			return res.send(a);
+			return res.json(a);
 		} catch (err) {
 			console.log(err);
 		}
@@ -53,7 +53,7 @@ router
 			}
 
 			await doc.save();
-			res.send(`profile updated successfully\n ${doc}`);
+			res.json({ message: "profile updated successfully", profile: doc });
 		} catch (err) {
 			console.log(err);
 		}
@@ -76,7 +76,7 @@ router.post("/myProfile/resetPassword", async (req, res) => {
 	doc.password = await bcrypt.hash(newPassword, salt);
 
 	await doc.save();
-	res.send("password updated successfully");
+	res.json({ message: "password updated successfully" });
 });
 
 router.get("/myProfile/signIn", async (req, res) => {
@@ -92,7 +92,7 @@ router.get("/myProfile/signIn", async (req, res) => {
 
 	await calc.signIn(doc);
 	await doc.save();
-	res.send("signed in successfully");
+	res.json({ message: "signed in successfully" });
 });
 
 router.get("/myProfile/signOut", async (req, res) => {
@@ -111,7 +111,7 @@ router.get("/myProfile/signOut", async (req, res) => {
 	doc.missingDays = calc.calculateMissingDays(doc);
 
 	await doc.save();
-	res.send("signed out successfully");
+	res.json({ message: "signed out successfully" });
 });
 
 router.get("/myProfile/viewAttendanceRecords", async (req, res) => {
@@ -128,7 +128,7 @@ router.get("/myProfile/viewAttendanceRecords", async (req, res) => {
 	}
 
 	let arr = calc.viewAttendanceRecords(month, doc);
-	res.send(arr);
+	res.json(arr);
 });
 
 router.get("/myProfile/viewMissingDays", async (req, res) => {
@@ -145,7 +145,7 @@ router.get("/myProfile/viewMissingDays", async (req, res) => {
 	doc.missingDays = calc.calculateMissingDays(doc);
 	await doc.save();
 
-	res.send(`number of missing days for this month => ${doc.missingDays}`);
+	res.json(`number of missing days for this month => ${doc.missingDays}`);
 });
 
 router.get("/myProfile/viewMissingHours", async (req, res) => {
@@ -163,7 +163,7 @@ router.get("/myProfile/viewMissingHours", async (req, res) => {
 	await doc.save();
 
 	if (doc.missingHours === 0) {
-		res.send(`you have no missing or extra hours for this month`);
+		res.json(`you have no missing or extra hours for this month`);
 	}
 
 	if (doc.missingHours > 0) {

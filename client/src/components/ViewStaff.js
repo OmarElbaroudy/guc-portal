@@ -21,7 +21,7 @@ const ViewStaff = () => {
       }
     };
     data();
-  }, [filter]);
+  }, [filter, user.token]);
 
   const addCourse = async (course, staffMem, type) => {
     console.log("course " + course + " staff " + staffMem + " type " + type);

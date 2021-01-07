@@ -19,7 +19,7 @@ const ViewRequest = () => {
       }
     };
     data();
-  }, []);
+  }, [user.token]);
 
   const acceptReq = async (id, comment) => {
     const res = await hodFetcher.acceptRequests(id, user.token, comment);

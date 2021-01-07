@@ -162,7 +162,7 @@ const ViewStaff = (props) => {
                   <OverlayTrigger
                     rootClose={true}
                     trigger="click"
-                    placement="right"
+                    placement="top"
                     overlay={popover}
                   >
                     <Button className="col col-3" variant="success">
