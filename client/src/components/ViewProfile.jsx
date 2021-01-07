@@ -63,7 +63,7 @@ const ViewProfile = () => {
 					{comp === "schedule" ? (
 						<Schedule sessions={sessions}></Schedule>
 					) : (
-						<RequestForm></RequestForm>
+						<RequestForm close = {handleClose}></RequestForm>
 					)}
 				</Modal.Body>
 				<Modal.Footer>

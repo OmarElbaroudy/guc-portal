@@ -9,7 +9,7 @@ const locations = require("../models/locations");
 const router = express.Router();
 
 const dateDiff = (slotDate, curDate) => {
-	return (slotDate.getTime() - curDate.getTime()) / (1000 * 3600 * 24);
+	return (slotDate.getTime() - curDate.getTime()) / (1000 * 3600 * 22);
 };
 
 const getCourseNameById = async (id) => {
@@ -43,14 +43,14 @@ const getCurDate = () => {
 	return new Date(Date.UTC(y, m, d));
 };
 
-//4.4 Academic Member
+//2.2 Academic Member
 const auth = async (req, res, next) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
 	if (decoded.type === "academic") {
 		const ac = await academics.findById(decoded.id);
-		if (!ac) return res.status(403).json("unauthorized access");
+		if (!ac) return res.status(203).json("unauthorized access");
 		next();
 	}
 };
@@ -126,19 +126,14 @@ router
 			const hodId = (await departments.findById(sender.departmentId)).hodId;
 			const hod = await academics.findById(hodId);
 
-			if (!courseId) return res.status(416).json("no such course");
+			if (!courseId) return res.status(216).json("no such course");
 
 			let fst = false;
 			sender.courses.forEach((item) => {
-				fst |= item.courseId.equals(courseId) && item.position === "academic";
+				fst |= item.courseId.equals(courseId) && item.position !== "coordinator";
 			});
-			let snd = false;
-			receiver.courses.forEach((item) => {
-				snd |= item.courseId.equals(courseId) && item.position === "academic";
-			});
-			if (receiver) snd = true;
 
-			if (!fst || !snd) return res.status(406).json("invalid course");
+			if (!fst) return res.status(206).json("you don't teach this course");
 			let slotDate = new Date(
 				Date.UTC(input.slotDate.year, input.slotDate.month - 1, input.slotDate.day)
 			);
@@ -153,7 +148,7 @@ router
 					session.slot === parseInt(input.slot);
 			});
 
-			if (!flag) return res.status(408).json("invalid slot");
+			if (!flag) return res.status(208).json("invalid slot");
 			let Request;
 			if (receiver) {
 				Request = {
@@ -200,8 +195,8 @@ router
 				receiver.receivedRequestsId.push(reqID);
 				await receiver.save();
 			}
-
-			res.json("request sent successfully");
+			console.log("here");
+			res.json("done");
 		} catch (err) {
 			console.log(err);
 		}
@@ -215,7 +210,7 @@ router
 			let replacements = [];
 			const sender = await academics.findById(decoded.id);
 
-			if (!sender) return res.status(408).json("no such academic member");
+			if (!sender) return res.status(208).json("no such academic member");
 
 			for (const reqID of sender.sentRequestsId) {
 				const request = await requests.findOne({
@@ -223,7 +218,7 @@ router
 					type: "replacement",
 				});
 
-				if (!request) res.status(409).json("no requests");
+				if (!request) res.status(209).json("no requests");
 
 				let replacementReq = {
 					course: await getCourseNameById(request.replacement.courseId),
@@ -273,8 +268,8 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 		const sender = await academics.findById(decoded.id);
 		const loc = await locations.findOne({ name: req.body.location });
 
-		if (!sender) res.status(410).json("invalid id");
-		if (!loc) res.status(411).json("invalid location");
+		if (!sender) res.status(210).json("invalid id");
+		if (!loc) res.status(211).json("invalid location");
 
 		let flag = false;
 		for (const course of sender.courses) {
@@ -287,7 +282,7 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 			name: input.courseName,
 		});
 
-		if (!course) res.status(411).json("invalid course");
+		if (!course) res.status(211).json("invalid course");
 		if (!flag) return res.json("you don't teach this course");
 
 		flag = false;
@@ -299,12 +294,12 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 				session.locationId.equals(loc._id);
 		}
 
-		if (!flag) res.status(417).json("slot is not available for linkage");
+		if (!flag) res.status(217).json("slot is not available for linkage");
 
 		const coordinatorId = course.coordinatorId;
 		const coordinator = await academics.findById(coordinatorId);
 		if (!coordinator)
-			res.status(417).json("no coordinator available for the course");
+			res.status(217).json("no coordinator available for the course");
 
 		const request = {
 			status: "pending",
@@ -329,7 +324,7 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 
 		await sender.save();
 		await coordinator.save();
-		res.json("slotLinking request sent successfully");
+		res.json("done");
 	} catch (err) {
 		console.log(err);
 	}
@@ -348,7 +343,7 @@ router.post("/ac/changeDayOff", auth, async (req, res) => {
 
 		if (newDayOff < 0 || newDayOff > 6 || newDayOff === 5)
 			return res
-				.status(412)
+				.status(212)
 				.json("invalid day, off day must be between 0 and 6 and not 5");
 
 		if (newDayOff === sender.dayOff)
@@ -376,7 +371,7 @@ router.post("/ac/changeDayOff", auth, async (req, res) => {
 
 		await sender.save();
 		await hod.save();
-		res.json("change day off request sent successfully");
+		res.json("done");
 	} catch (err) {
 		console.log(err);
 	}
@@ -392,7 +387,7 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 		const comment = req.body.comment ? req.body.comment : "";
 
 		const sender = await academics.findById(decoded.id);
-		if (!sender) return res.status(413).json("invalid id");
+		if (!sender) return res.status(213).json("invalid id");
 
 		const departmentId = sender.departmentId;
 		const hodId = (await departments.findById(departmentId)).hodId;
@@ -404,15 +399,15 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 			new Date(Date.UTC(input.date.year, input.date.month - 1, input.date.day));
 		} catch (err) {
 			return res
-				.status(413)
+				.status(213)
 				.json("you must specify a target Date in the form {year: ,month: ,day: }");
 		}
 		const targetDate = new Date(
 			Date.UTC(input.date.year, input.date.month - 1, input.date.day)
 		);
-
+		console.log(targetDate.toString());
 		if (type === "maternity" && sender.gender === "male") {
-			return res.status(413).json("males cannot submit maternity leaves");
+			return res.status(213).json("males cannot submit maternity leaves");
 		}
 
 		if (
@@ -420,27 +415,27 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 			(sender.accidentalLeaveBalance.balance <= 0 ||
 				sender.annualLeaveBalance.balance <= 0)
 		) {
-			return res.status(414).json("you consumed all your balance");
+			return res.status(212).json("you consumed all your balance");
 		}
 
 		if (type === "sick" && dateDiff(curDate, targetDate) > 3) {
 			return res
-				.status(415)
+				.status(215)
 				.json("you cannot submit a sick leave after more than 3 days");
 		}
 
 		if (type === "compensation" && !comment) {
-			return res.status(416).json("compensation leaves must have a reason");
+			return res.status(216).json("compensation leaves must have a reason");
 		}
 
 		if (type === "annual") {
 			if (sender.annualLeaveBalance.balance <= 0) {
-				return res.status(416).json("you consumed all your annual leaves");
+				return res.status(216).json("you consumed all your annual leaves");
 			}
 
 			if (dateDiff(targetDate, curDate) >= 0) {
 				return res
-					.status(416)
+					.status(216)
 					.json("Annual leaves should be submitted before the targeted day");
 			}
 		}
@@ -464,7 +459,7 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 
 		await sender.save();
 		await hod.save();
-		res.json("leave request is sent successfully");
+		res.json("done");
 	} catch (err) {
 		console.log(err);
 	}
@@ -480,7 +475,7 @@ router.post("/ac/viewSubmittedRequests", auth, async (req, res) => {
 		const status = req.body.status;
 
 		const sender = await academics.findById(decoded.id);
-		if (!sender) return res.status(413).json("invalid id");
+		if (!sender) return res.status(213).json("invalid id");
 		const reqID = sender.sentRequestsId;
 
 		if (status === "all") {
@@ -508,14 +503,14 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 		const decoded = jwt_decode(token);
 
 		const sender = await academics.findById(decoded.id);
-		if (!sender) return res.status(413).json("invalid id");
+		if (!sender) return res.status(213).json("invalid id");
 
 		const del = await requests.findById(req.body.reqId);
-		if (!del) return res.status(414).json("no such request");
+		if (!del) return res.status(212).json("no such request");
 		const curDate = getCurDate();
 		const x = await sender.sentRequestsId.includes(del._id);
 
-		if (!x) return res.status(415).json("user not owner of request");
+		if (!x) return res.status(215).json("user not owner of request");
 
 		let flag = false;
 		flag |= del.status === "pending";
@@ -534,7 +529,7 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 				});
 
 				if (!department) {
-					return res.status(418).json("couldn't find department");
+					return res.status(218).json("couldn't find department");
 				}
 
 				const hod = await academics.findOne({
