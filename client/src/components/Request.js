@@ -26,7 +26,6 @@ const Request = (props) => {
   useEffect(() => {
     const staff = async () => {
       const a = await getterFetcher.getStaffById(props.senderId, user.token);
-      console.log(a);
       setStaff(a);
     };
     const courseAndLocation = async () => {
@@ -36,11 +35,11 @@ const Request = (props) => {
           user.token
         );
         const l = await getterFetcher.getLocationNameById(
-          props.replacment.locationId,
+          props.replacement.locationId,
           user.token
         );
         setCourse(c);
-        setLocation(l);
+        setLocation(l.name);
       }
       if (props.type === "slotLinking") {
         const c = await getterFetcher.getCourseNameById(
@@ -84,14 +83,15 @@ const Request = (props) => {
   };
 
   const renderReplacment = () => {
+    console.log(props.replacement);
     if (props.type === "replacement")
       return (
         <ul class="list-group">
           <li class="list-group-item">{course}</li>
-          <li class="list-group-item">{props.replacment.slotDate}</li>
-          <li class="list-group-item">{props.replacment.slot}</li>
+          <li class="list-group-item">{props.replacement.slotDate}</li>
+          <li class="list-group-item">{props.replacement.slot}</li>
           <li class="list-group-item">{location}</li>
-          <li class="list-group-item">{props.replacment.academicResponse}</li>
+          <li class="list-group-item">{props.replacement.academicResponse}</li>
         </ul>
       );
     if (props.type === "slotLinking")
@@ -141,13 +141,13 @@ const Request = (props) => {
                     <dt class="col-sm-3">Issue date</dt>
                     <dd class="col-sm-9">{props.issueDate}</dd>
 
-                    {props.type === "replacement" ||
-                      (props.type === "slotLinking" && (
-                        <React.Fragment>
-                          <dt class="col-sm-3">{props.type}</dt>
-                          <dd class="col-sm-9">{renderReplacment()}</dd>
-                        </React.Fragment>
-                      ))}
+                    {(props.type === "replacement" ||
+                      props.type === "slotLinking") && (
+                      <React.Fragment>
+                        <dt class="col-sm-3">{props.type}</dt>
+                        <dd class="col-sm-9">{renderReplacment()}</dd>
+                      </React.Fragment>
+                    )}
 
                     {props.type === "compensation" && (
                       <React.Fragment>
