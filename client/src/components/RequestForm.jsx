@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { academicFetcher } from "../API/academicFetcher";
 import { Col, Form, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Spinner from 'react-bootstrap/Spinner'
+import Spinner from "react-bootstrap/Spinner";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import { GetUser } from "./GlobalState";
@@ -225,7 +225,7 @@ const RequestForm = (props) => {
 					</Col>
 				</Form.Group>
 			) : null}
-			{requestType === "slotLinking" ? (
+			{requestType === "slotLinking" || requestType === "replacement" ? (
 				<Form.Group as={Row}>
 					<Form.Label column="lg" lg={2}>
 						location:
@@ -292,13 +292,15 @@ const RequestForm = (props) => {
 			{requestType !== "undefined" ? (
 				<>
 					<Button className="col-5" variant="primary" onClick={handleSubmission}>
-						{spinner ? <Spinner
-							as="span"
-							animation="border"
-							size="sm"
-							role="status"
-							aria-hidden="true"
-						/> : null}
+						{spinner ? (
+							<Spinner
+								as="span"
+								animation="border"
+								size="sm"
+								role="status"
+								aria-hidden="true"
+							/>
+						) : null}
 						Submit
 					</Button>
 				</>
