@@ -11,9 +11,9 @@ router.post("/getCourseNameById", async (req, res) => {
 });
 
 router.post("/getStaffNameById", async (req, res) => {
-  const id = req.body.id;
-  const staffName = await getter.getStaffNameById(id);
-  return res.json(staffName);
+	const id = req.body.id;
+	const staffName = await getter.getStaffNameById(id);
+	return res.json(staffName);
 });
 
 router.post("/getCourseIdByName", async (req, res) => {
@@ -29,27 +29,27 @@ router.post("/getDepNameById", async (req, res) => {
 });
 
 router.post("/getDepIdByName", async (req, res) => {
-  const name = req.body.name;
-  const depId = await getter.getDepIdByName(name);
-  return res.json({
-    depId: depId,
-  });
+	const name = req.body.name;
+	const depId = await getter.getDepIdByName(name);
+	return res.json({
+		depId: depId,
+	});
 });
 
 router.post("/getLocationNameById", async (req, res) => {
-  const id = req.body.id;
-  const locName = await getter.getLocationNameById(id);
-  return res.json({
-    name: locName,
-  });
+	const id = req.body.id;
+	const locName = await getter.getLocationNameById(id);
+	return res.json({
+		name: locName,
+	});
 });
 
 router.post("/getLocationIdByName", async (req, res) => {
-  const name = req.body.name;
-  const locName = await getter.getLocationIdByName(name);
-  return res.json({
-    locName: locName,
-  });
+	const name = req.body.name;
+	const locName = await getter.getLocationIdByName(name);
+	return res.json({
+		locName: locName,
+	});
 });
 
 router.post("/getId", async (req, res) => {
@@ -60,6 +60,11 @@ router.post("/getId", async (req, res) => {
 router.post("/getCoursesInDep", async (req, res) => {
 	const arr = await getter.getCoursesInDep(req.body.id);
 	return res.json(arr);
+});
+
+router.post("/isHod", async (req, res) => {
+	const valid = await getter.isHod(req.body.depId, req.body.userId);
+	return res.json(valid);
 });
 
 module.exports = router;

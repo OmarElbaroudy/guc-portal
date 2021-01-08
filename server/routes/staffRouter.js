@@ -114,7 +114,7 @@ router.get("/myProfile/signOut", async (req, res) => {
 	res.json("done");
 });
 
-router.get("/myProfile/viewAttendanceRecords", async (req, res) => {
+router.post("/myProfile/viewAttendanceRecords", async (req, res) => {
 	//month number or 0 for all
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);

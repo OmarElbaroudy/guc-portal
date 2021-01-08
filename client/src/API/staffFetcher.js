@@ -59,6 +59,27 @@ export class staffFetcher {
 			console.log(error);
 		}
 	}
-  
+	
+	static async getAttendanceRecords(month, token) {
+		try {
+			const params = {month : month};
+			const res = await fetch("http://localhost:3000/myProfile/viewAttendanceRecords", {
+				method: "POST",
+				body: JSON.stringify(params),
+				headers: {
+					Authorization: "",
+					"auth-token": token,
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+			});
+
+			const data = await res.json();
+			return data;
+
+		} catch (e) {
+			console.log(e);
+		}
+  }
 
 }

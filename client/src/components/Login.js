@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { GetUser } from "./GlobalState";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { loginFetcher } from "../API/loginFetcher";
-import { hodFetcher } from "../API/hodFetcher";
+import { getterFetcher} from "../API/getterFetcher";
 import Form from "react-bootstrap/Form";
 import { Redirect } from "react-router-dom";
 
@@ -25,7 +25,11 @@ const Login = () => {
 				if (entry.position === "academic") academic = true;
 				if (entry.position === "instructor") instructor = true;
 				if (entry.position === "coordinator") coordinator = true;
-			}
+      }
+      
+      const valid = await getterFetcher.isHod(data.user.departmentId, data.user._id, data.token);
+      if(valid) hod = true;
+      
 
 			if (data) {
 				setUser({
@@ -37,6 +41,7 @@ const Login = () => {
 					coordinator: coordinator,
 					type: "academic",
 				});
+				
 				setRedirect("/staffHome");
 			}
 		} else {
