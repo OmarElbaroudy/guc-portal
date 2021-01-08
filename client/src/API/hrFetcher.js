@@ -58,6 +58,39 @@ export class hrFetcher {
     }
   }
 
+  static async updateStaffMember(
+    token,
+    id,
+    name,
+    email,
+    officeLocation,
+    salary
+  ) {
+    try {
+      const params = {
+        id:id,
+        name: name,
+        officeLocation: officeLocation,
+        email: email,
+        salary: salary
+      };
+      const res = await fetch("http://localhost:3000/hr/updateStaffMember", {
+        method: "PUT",
+        body: JSON.stringify(params),
+        headers: {
+          Authorization: "",
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   static async deleteStaffMember(token, id) {
     try {
       console.log(token);

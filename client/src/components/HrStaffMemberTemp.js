@@ -56,7 +56,7 @@ const HrStaffMemberTemp = (props) => {
                 className="col col-3"
                 variant="light"
               >
-                Delete course
+                Delete User
               </Button>
               <Button className="col col-3" variant="light">
                 update course
