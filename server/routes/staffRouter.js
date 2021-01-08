@@ -38,7 +38,6 @@ router
 			if (!doc) {
 				doc = await hr.findById(decoded.id);
 			}
-
 			if (input.gender === "male" || input.gender === "female") {
 				doc.gender = input.gender;
 			}
@@ -48,12 +47,12 @@ router
 				doc.altered = true;
 			}
 
-			if (input.personalInfo) {
+			if (input.personalInfo && input.personalInfo !== "undefined") {
 				doc.personalInfo = input.personalInfo;
 			}
 
 			await doc.save();
-			res.json({ message: "profile updated successfully", profile: doc });
+			res.json("done");
 		} catch (err) {
 			console.log(err);
 		}

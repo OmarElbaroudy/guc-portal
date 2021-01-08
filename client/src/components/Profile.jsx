@@ -53,7 +53,7 @@ const Profile = (props) => {
 			)}
 			{props.gender && (
 				<ListGroup.Item>
-					id: <strong>{props.gender}</strong>
+					gender: <strong>{props.gender}</strong>
 				</ListGroup.Item>
 			)}
 			{props.id && (
