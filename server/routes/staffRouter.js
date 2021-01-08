@@ -82,36 +82,42 @@ router.post("/myProfile/resetPassword", async (req, res) => {
 router.get("/myProfile/signIn", async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
+	try {
+		let doc;
+		if (decoded.type === "hr") {
+			doc = await hr.findById(decoded.id);
+		} else {
+			doc = await academic.findById(decoded.id);
+		}
 
-	let doc;
-	if (decoded.type === "hr") {
-		doc = await hr.findById(decoded.id);
-	} else {
-		doc = await academic.findById(decoded.id);
+		await calc.signIn(doc);
+		await doc.save();
+		res.json({ message: "signed in successfully", variant: "success" });
+	} catch (e) {
+		res.json({ message: "you can't sign in on a friday", variant: "danger" });
 	}
-
-	await calc.signIn(doc);
-	await doc.save();
-	res.json("done");
 });
 
 router.get("/myProfile/signOut", async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
+	try {
+		let doc;
+		if (decoded.type === "hr") {
+			doc = await hr.findById(decoded.id);
+		} else {
+			doc = await academic.findById(decoded.id);
+		}
 
-	let doc;
-	if (decoded.type === "hr") {
-		doc = await hr.findById(decoded.id);
-	} else {
-		doc = await academic.findById(decoded.id);
+		await calc.signOut(doc);
+		doc.missingHours = calc.calculateMissingHours(doc);
+		doc.missingDays = calc.calculateMissingDays(doc);
+
+		await doc.save();
+		res.json({ message: "signed out successfully", variant: "success" });
+	} catch (e) {
+		res.json({ message: "you can't sign out on a friday", variant: "danger" });
 	}
-
-	await calc.signOut(doc);
-	doc.missingHours = calc.calculateMissingHours(doc);
-	doc.missingDays = calc.calculateMissingDays(doc);
-
-	await doc.save();
-	res.json("done");
 });
 
 router.post("/myProfile/viewAttendanceRecords", async (req, res) => {

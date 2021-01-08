@@ -44,7 +44,7 @@ function NavBar() {
 
 	if (redirect) return <Redirect to={Redirect} />;
 	return (
-		<div>
+		<div class="container-fluid">
 			<div id="mySidenav" class="sidenav">
 				<button type="button" class="btn btn-light closebtn" onClick={closeNav}>
 					&times;
