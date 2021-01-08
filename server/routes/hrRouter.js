@@ -133,7 +133,8 @@ router.route("/hr/deleteLocation").delete(auth, async (req, res) => {
 				);
 		} else {
 			await Location.deleteOne({ name: req.body.name });
-			res.send("deleted successfully");
+			const o=await Location.find()
+			res.json(o);
 		}
 	} catch (err) {
 		console.log(err);
@@ -146,6 +147,54 @@ router.route("/hr/viewAllStaffMembers").get(async(req,res)=>{
 		const result=h.concat(a);
 		
 		res.json(result)
+		//res.json([])
+	}
+	catch(err){
+		res.json(err);
+	}
+})
+
+router.route("/hr/viewAllLocations").get(async(req,res)=>{
+	try{
+		const l=await Location.find()
+		
+		res.json(l)
+		//res.json([])
+	}
+	catch(err){
+		res.json(err);
+	}
+})
+
+router.route("/hr/viewAllFaculties").get(async(req,res)=>{
+	try{
+		const f=await Faculty.find()
+		
+		res.json(f)
+		//res.json([])
+	}
+	catch(err){
+		res.json(err);
+	}
+})
+
+router.route("/hr/viewAllDepartments").get(async(req,res)=>{
+	try{
+		const d=await Department.find()
+		
+		res.json(d)
+		//res.json([])
+	}
+	catch(err){
+		res.json(err);
+	}
+})
+
+router.route("/hr/viewAllCourses").get(async(req,res)=>{
+	try{
+		const c=await Course.find()
+		
+		res.json(c)
 		//res.json([])
 	}
 	catch(err){
@@ -264,7 +313,7 @@ router.route("/hr/deleteFaculty").delete(auth, async (req, res) => {
 			const dep = await Department.findOne({
 				facultyId: x._id,
 			});
-			res.send("deleted successfully");
+			
 			while (dep) {
 				const dep = await Department.findOneAndUpdate(
 					{ facultyId: x._id },
@@ -273,6 +322,8 @@ router.route("/hr/deleteFaculty").delete(auth, async (req, res) => {
 				);
 				await dep.save();
 			}
+			const o=await Faculty.find()
+			res.json(o);
 		} else {
 			res.status(403).send("this faculty does not exist");
 		}
@@ -354,7 +405,9 @@ router.route("/hr/deleteDepartment").delete(auth, async (req, res) => {
 				await entry.save();
 			}
 			await Department.findByIdAndDelete(x._id);
-			res.send("deleted successfully");
+
+			const o=await Department.find()
+			res.json(o);
 		} else {
 			res.send("not found");
 		}
@@ -487,7 +540,8 @@ router.route("/hr/deleteCourse").delete(async (req, res) => {
 			}
 
 			await Course.findOneAndDelete({ _id: x._id });
-			res.send("deleted successfully");
+			const o=await Course.find()
+			res.json(o);
 		}
 	} catch (err) {
 		console.log(err);

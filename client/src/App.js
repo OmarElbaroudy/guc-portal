@@ -10,6 +10,11 @@ import CourseCoverage from "./components/CourseCoverage";
 import viewProfile from "./components/ViewProfile";
 import StaffHome from "./StaffHome";
 import HrStaffMember from "./components/HrStaffMember"
+import HrLocation from "./components/HrLocation"
+import HrDepartment from "./components/HrDepartment"
+import HrFaculty from "./components/HrFaculty"
+import HrCourse from "./components/HrCourse"
+
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -25,6 +30,11 @@ function App() {
           <Route exact path="/homePage/staffMembers" component={ViewStaff} />
           <Route exact path="/staffHome/viewProfile" component={viewProfile} />
           <Route exact path="/hr/StaffMembers" component={HrStaffMember} />
+          <Route exact path="/hr/Locations" component={HrLocation} />
+          <Route exact path="/hr/Departments" component={HrDepartment} />
+          <Route exact path="/hr/Faculties" component={HrFaculty} />
+          <Route exact path="/hr/Courses" component={HrCourse} />
+
           <Route
             exact
             path="/homePage/coursesCoverage"

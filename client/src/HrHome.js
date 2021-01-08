@@ -21,49 +21,53 @@ const HrHome = () => {
       <NavBar />
       <div class="row center offset-1">
           <div class="col-md-2 containerIntro">
-            <button
+          <button onClick={()=>setRedirect("/hr/Locations")}
               type="button"
-              href="#"
+              href="/hr/Locations"
               class="btn"
             >
               <span class="fas fa-book fa-3x" href="#"></span>
             </button>
-            <p>Courses</p>
+            <p>Locations</p>
             <br />
             <span class="border-left border-dark icons">description</span>
           </div>
 
           <div class="col-md-2 containerIntro">
-            <button
+          <button onClick={()=>setRedirect("/hr/Faculties")}
               type="button"
-              href="#"
+              href="/hr/Faculties"
               class="btn"
             >
               <span class="far fa-user fa-3x"> </span>
             </button>
-            <p>Profile</p>
+            <p>Faculties</p>
             <br />
             <span class="border-left border-dark icons">description</span>
           </div>
 
           <div class="col-md-2 containerIntro">
-            <button
+          <button onClick={()=>setRedirect("/hr/Departments")}
               type="button"
-              href="#"
+              href="/hr/Departments"
               class="btn"
             >
               <span class="far fa-user fa-3x"> </span>
             </button>
-            <p>Profile</p>
+            <p>Departments</p>
             <br />
             <span class="border-left border-dark icons">description</span>
           </div>
 
           <div class="col-md-2 containerIntro">
-            <button type="button" href="#" onClick={openNav} class="btn">
+          <button onClick={()=>setRedirect("/hr/Courses")}
+              type="button"
+              href="/hr/Courses"
+              class="btn"
+            >
               <span class="fa fa-industry fa-3x"> </span>
             </button>
-            <p>Inventory control</p>
+            <p>Courses</p>
             <br />
             <span class="border-left border-dark icons">description</span>
           </div>
