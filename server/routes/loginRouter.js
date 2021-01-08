@@ -15,13 +15,13 @@ router.post("/login", async (req, res) => {
   const h = await hr.findOne({ email: email });
   const a = await academic.findOne({ email: email });
   if (!h && !a) {
-    return res.status(408).send("This email doesn't exist");
+    return res.status(408).json("This email doesn't exist");
   }
 
   let user = h !== null ? h : a;
   const verified = await bcrypt.compare(req.body.password, user.password);
   if (!verified) {
-    return res.status(409).send("wrong password");
+    return res.status(409).json("wrong password");
   }
 
   const payload = { id: user._id, type: h !== null ? "hr" : "academic" };

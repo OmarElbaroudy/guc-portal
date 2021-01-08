@@ -66,7 +66,7 @@ router
           await c.save();
         } else {
           console.log("not found");
-          res.send("not found");
+          res.json("not found");
         }
         if (x) {
           x.courses.push({ courseId: c._id, position: req.body.type });
@@ -173,10 +173,9 @@ router.route("/HOD/view_staff").post(auth, async (req, res) => {
       const c = await course.findOne({
         name: req.body.courseName,
       });
-
       if (c) {
         if (!c.hodId.equals(cur._id)) {
-          res.status(458).json("you are not the hod of this course");
+          return res.status(458).json("you are not the hod of this course");
         }
 
         let arr = c.instructorId;
@@ -226,11 +225,11 @@ router
         });
 
         if (!x || !y) {
-          return res.status(460).send("invalid instructor id");
+          return res.status(460).json("wrong course");
         }
 
         if (!c) {
-          return res.status(460).send("invalid course name");
+          return res.status(460).json("wrong course");
         }
 
         if (c) {
@@ -238,9 +237,7 @@ router
             c.hodId.equals(x._id) ||
             (c.coordinatorId && c.coordinatorId.equals(x._id))
           ) {
-            return res
-              .status(460)
-              .send("you can't update the hod or coordinator of the course");
+            return res.status(460).json("wrong course");
           }
 
           c.instructorId = c.instructorId.filter(function (value) {

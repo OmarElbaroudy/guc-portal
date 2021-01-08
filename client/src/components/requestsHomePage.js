@@ -49,14 +49,14 @@ const RequestOnHome = () => {
       </div>
       <div class="card-body">
         <h5 class="card-title">Current requests records</h5>
-        <ul>
+        <ul class="col-7 offset-3">
           <li>You currently have {pending} pending requests</li>
           <li>You currently have {accepted} accepted requests</li>
           <li>You currently have {rejected} rejected requests</li>
         </ul>
         <a
           href="#"
-          class="btn btn-primary"
+          class="btn btn-primary col-10 offset-1"
           onClick={() => {
             {
               setRedirect("/homePage/requests");
