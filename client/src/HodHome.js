@@ -12,7 +12,6 @@ function HodHome() {
     document.getElementById("main").style.marginLeft = "250px";
   };
 
-  const [notificationNum, setNotificationNum] = useState(x);
   let classes = "badge m-5 ";
   classes += x === 0 ? "badge-warning" : "badge-primary";
   const [redirect, setRedirect] = useState(null);
@@ -24,11 +23,11 @@ function HodHome() {
       <NavBar />
       <div class="col col-12 head containerIntro">
         <h1>Home</h1>
-        <span className="m-2">Welcome</span>
+        <span className="m-2">Welcome as head of department</span>
       </div>
       <div class="container">
         <div class="row center">
-          <div class="col-md-3 containerIntro">
+          <div class="col-md-4 containerIntro offset-2">
             <button
               type="button"
               href="#"
@@ -41,35 +40,13 @@ function HodHome() {
             </button>
             <p>Courses</p>
             <br />
-            <span class="border-left border-dark icons">description</span>
+            <span class="icons">view course coverage and schedule</span>
           </div>
 
-          <div class="col-md-3 containerIntro">
-            <button
-              type="button"
-              href="#"
-              onClick={() => {
-                setRedirect("/homePage/viewProfile");
-              }}
-              class="btn"
-            >
-              <span class="far fa-user fa-3x"> </span>
-            </button>
-            <p>Profile</p>
-            <br />
-            <span class="border-left border-dark icons">description</span>
-          </div>
-
-          <div class="col-md-3 containerIntro">
-            <button type="button" href="#" onClick={openNav} class="btn">
-              <span class="fa fa-industry fa-3x"> </span>
-            </button>
-            <p>Inventory control</p>
-            <br />
-            <span class="border-left border-dark icons">description</span>
-          </div>
-
-          <div class="col-md-3 containerIntro">
+          <div
+            class="col-md-4 offset-1
+          containerIntro"
+          >
             <button
               type="button"
               href="#"
@@ -82,46 +59,17 @@ function HodHome() {
             </button>
             <p>Staff members</p>
             <br />
-            <span class="border-left border-dark icons">description</span>
+            <span class="icons">
+              view staff members profiles, assigning, updating, deleting course
+              instructor
+            </span>
           </div>
         </div>
       </div>
       <div class="container">
         <div class="row center">
-          <div class="col-md-4 containerIntro">
+          <div class="col-md-8 offset-2 containerIntro">
             <RequestsHome />
-          </div>
-
-          <div class="col-md-4 containerIntro">
-            <div class="card text-white bg-dark ">
-              <div class="card-header">Featured</div>
-              <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">
-                  With supporting text below as a natural lead-in to additional
-                  content.
-                </p>
-                <a href="#" class="btn btn-primary">
-                  Go somewhere
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4 containerIntro">
-            <div class="card text-white bg-dark ">
-              <div class="card-header">Featured</div>
-              <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">
-                  With supporting text below as a natural lead-in to additional
-                  content.
-                </p>
-                <a href="#" class="btn btn-primary">
-                  Go somewhere
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       </div>
