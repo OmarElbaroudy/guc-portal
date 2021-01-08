@@ -45,6 +45,19 @@ const HrStaffMember = () => {
       console.log(err);
     }
   };
+  const updateStaff = async(id,
+    name,
+    officeLocation,
+    email,
+    salary) => {
+    try{
+
+      const res = await hrFetcher.updateStaffMember(user.token, id,name,email,officeLocation,salary);
+      setStaff(res);
+    }catch(err){
+      console.log(err)
+    }
+  }
 
   const addStaff= async()=>{
     try{
@@ -80,6 +93,7 @@ const HrStaffMember = () => {
               salary={obj.salary}
               office={obj.officeLocationId}
               handleDelete={deleteStaff}
+              handleUpdate={updateStaff}
             />
           );
         })}

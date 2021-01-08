@@ -67,6 +67,7 @@ export class hrFetcher {
     salary
   ) {
     try {
+      console.log("reached fetcher "+email)
       const params = {
         id:id,
         name: name,
@@ -132,6 +133,69 @@ export class hrFetcher {
     }
   }
 
+  static async addLocation(
+    token,
+    name,
+    maxCapacity,
+    type
+  ) {
+    try {
+      console.log("fetcher "+name)
+      const params = {
+        name: name,
+        maxCapacity:maxCapacity,
+        type:type
+
+      };
+      const res = await fetch("http://localhost:3000/hr/location", {
+        method: "POST",
+        body: JSON.stringify(params),
+        headers: {
+          Authorization: "",
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async updateLocation(
+    token,
+    name,
+    newName,
+    maxCapacity,
+    type
+  ) {
+    try {
+      console.log("fetcher "+name+" "+newName)
+      const params = {
+        name:name,
+        newName: newName,
+        maxCapacity:maxCapacity,
+        type:type
+      };
+      const res = await fetch("http://localhost:3000/hr/location", {
+        method: "PUT",
+        body: JSON.stringify(params),
+        headers: {
+          Authorization: "",
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   static async deleteLocation(token, name) {
     try {
       console.log(token);
@@ -159,6 +223,60 @@ export class hrFetcher {
       console.log(token);
       const res = await fetch("http://localhost:3000/hr/viewAllFaculties", {
         method: "GET",
+        headers: {
+          Authorization: "",
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async addFaculty(
+    token,
+    name
+  ) {
+    try {
+      console.log("fetcher "+name)
+      const params = {
+        name: name
+      };
+      const res = await fetch("http://localhost:3000/hr/addFaculty", {
+        method: "POST",
+        body: JSON.stringify(params),
+        headers: {
+          Authorization: "",
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async updateFaculty(
+    token,
+    name,
+    newName
+  ) {
+    try {
+      console.log("fetcher "+name+" "+newName)
+      const params = {
+        name:name,
+        newName: newName
+      };
+      const res = await fetch("http://localhost:3000/hr/updateFaculty", {
+        method: "PUT",
+        body: JSON.stringify(params),
         headers: {
           Authorization: "",
           "auth-token": token,
@@ -214,6 +332,64 @@ export class hrFetcher {
     }
   }
 
+  static async addDepartment(
+    token,
+    name,
+    faculty
+  ) {
+    try {
+      console.log("fetcher "+name+" "+faculty)
+      const params = {
+        name: name,
+        faculty:faculty
+      };
+      const res = await fetch("http://localhost:3000/hr/addDepartment", {
+        method: "POST",
+        body: JSON.stringify(params),
+        headers: {
+          Authorization: "",
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async updateDepartment(
+    token,
+    name,
+    newName,
+    newFaculty
+  ) {
+    try {
+      console.log("fetcher "+name+" "+newName+" "+newFaculty)
+      const params = {
+        name:name,
+        newName: newName,
+       newFaculty:newFaculty
+      };
+      const res = await fetch("http://localhost:3000/hr/updateDepartment", {
+        method: "PUT",
+        body: JSON.stringify(params),
+        headers: {
+          Authorization: "",
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   static async deleteDepartment(token, name) {
     try {
       console.log(token);
@@ -241,6 +417,62 @@ export class hrFetcher {
       console.log(token);
       const res = await fetch("http://localhost:3000/hr/viewAllCourses", {
         method: "GET",
+        headers: {
+          Authorization: "",
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  static async addCourse(
+    token,
+    name,
+    department
+  ) {
+    try {
+      const params = {
+        name: name,
+        department:department
+      };
+      const res = await fetch("http://localhost:3000/hr/addCourse", {
+        method: "POST",
+        body: JSON.stringify(params),
+        headers: {
+          Authorization: "",
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async updateCourse(
+    token,
+    name,
+    newName,
+    department
+  ) {
+    try {
+      console.log(department)
+      const params = {
+        name:name,
+        newName: newName,
+        department:department
+      };
+      const res = await fetch("http://localhost:3000/hr/updateCourse", {
+        method: "PUT",
+        body: JSON.stringify(params),
         headers: {
           Authorization: "",
           "auth-token": token,

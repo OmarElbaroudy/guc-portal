@@ -6,10 +6,20 @@ import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+//import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
 
 
 
 const HrDepartmentTemp = (props) => {
+  const { user } = GetUser();
+  const [showAdd, setShowAdd] = useState(false);
+  const [name, setName] = useState(null);
+  const [faculty, setFaculty] = useState(null);
+
+  const handleClose1 = () => setShowAdd(false);
+  const handleShow1 = () => setShowAdd(true);
 
     return(
         <div className="col-xl-10 offset-3">
@@ -40,6 +50,7 @@ const HrDepartmentTemp = (props) => {
                     Delete course
                   </Button>
                   <Button
+                  onClick={() => handleShow1()}
                     className="col col-3"
                     variant="light"
                   >
@@ -49,7 +60,54 @@ const HrDepartmentTemp = (props) => {
               </Accordion.Collapse>
             </Card>
           </Accordion>
+          <Modal
+        show={showAdd}
+        onHide={handleClose1}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>update Course</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Row>
+              <Form.Group as={Col} controlId="formGridEmail">
+                <Form.Label>New Name</Form.Label>
+                <Form.Control
+                  placeholder="Enter name"
+                  onChange={(event) => {
+                    setName(event.target.value);
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridPassword">
+                <Form.Label>New Faculty</Form.Label>
+                <Form.Control
+                  placeholder="enter department name"
+                  onChange={(event) => {
+                    setFaculty(event.target.value);
+                  }}
+                />
+              </Form.Group>
+            </Form.Row>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => handleClose1}>
+            Close
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => props.handleUpdate(props.name, name, faculty)}
+          >
+            Update
+          </Button>
+        </Modal.Footer>
+      </Modal>
         </div>
+
     )
 
 }
