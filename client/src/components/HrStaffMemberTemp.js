@@ -7,9 +7,19 @@ import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { getterFetcher } from "../API/getterFetcher";
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
 
 const HrStaffMemberTemp = (props) => {
   const { user } = GetUser();
+  const [email,setEmail]=useState(null)
+  const [name,setName]=useState(null)
+  const [officeLocation,setOfficeLocation]=useState(null)
+  const [salary,setSalary]=useState(null)
+  const [showAdd, setShowAdd] = useState(false);
+
+  const handleClose1 = () => setShowAdd(false);
+  const handleShow1 = () => setShowAdd(true);
 
   const [office, setOffice] = useState("");
 
@@ -19,7 +29,7 @@ const HrStaffMemberTemp = (props) => {
         props.office,
         user.token
       );
-      console.log(y)
+      //console.log(y)
       setOffice(y);
     };
     x();
@@ -58,13 +68,55 @@ const HrStaffMemberTemp = (props) => {
               >
                 Delete User
               </Button>
-              <Button className="col col-3" variant="light">
-                update course
+              <Button  onClick={() => handleShow1()} className="col col-3" variant="light">
+                update user
               </Button>
             </Card.Body>
           </Accordion.Collapse>
         </Card>
       </Accordion>
+      <Modal
+        show={showAdd}
+        onHide={handleClose1}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>update Staff Member</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Row>
+              <Form.Group as={Col} controlId="formGridEmail">
+                <Form.Label>Name</Form.Label>
+                <Form.Control placeholder="Enter name" onChange={(event)=>{setName(event.target.value)}} />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridPassword">
+                <Form.Label>Office Location</Form.Label>
+                <Form.Control placeholder="ex: c7.202" onChange={(event)=>{setOfficeLocation(event.target.value)}}/>
+              </Form.Group>
+            </Form.Row>
+
+            <Form.Group controlId="formGridAddress1">
+              <Form.Label>Email</Form.Label>
+              <Form.Control placeholder="ex: test@guc.edu.eg" onChange={(event)=>{setEmail(event.target.value)}}/>
+            </Form.Group>
+
+            <Form.Group as={Col} controlId="formGridCity">
+                <Form.Label>salary</Form.Label>
+                <Form.Control placeholder="10000" onChange={(event)=>{setSalary(event.target.value)}}/>
+            </Form.Group>
+
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={()=>handleClose1}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={()=>props.handleUpdate(props.id, name,officeLocation,email,salary) }>Update</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
