@@ -82,7 +82,6 @@ export class getterFetcher {
 	}
 
 	static async getLocationNameById(id, token) {
-		console.log("getterfetcher");
 		const params = { id: id };
 		const res = await fetch("http://localhost:3000/getLocationNameById", {
 			method: "POST",
@@ -100,6 +99,37 @@ export class getterFetcher {
 	static async getLocationIdByName(name, token) {
 		const params = { name: name };
 		const res = await fetch("http://localhost:3000/getLocationIdByName", {
+			method: "POST",
+			body: JSON.stringify(params),
+			headers: {
+				"auth-token": token,
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
+		});
+
+		const data = await res.json();
+		return data;
+	}
+
+	static async getFacultyNameById(id, token) {
+		const params = { id: id };
+		const res = await fetch("http://localhost:3000/getFacultyNameById", {
+			method: "POST",
+			body: JSON.stringify(params),
+			headers: {
+				"auth-token": token,
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
+		});
+		const data = await res.json();
+		return data;
+	}
+
+	static async getFacultyIdByName(name, token) {
+		const params = { name: name };
+		const res = await fetch("http://localhost:3000/getFacultyIdByName", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {

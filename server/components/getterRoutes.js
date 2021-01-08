@@ -2,6 +2,7 @@ const courses = require("../models/course");
 const academics = require("../models/academic");
 const departments = require("../models/department");
 const locations = require("../models/locations");
+const faculties = require("../models/faculty");
 const hr = require("../models/hr");
 
 class getterRoutes {
@@ -24,7 +25,7 @@ class getterRoutes {
 
 	async getDepNameById(id) {
 		const ret = await departments.findById(id).select("name -_id");
-		return ret ? ret.name : undefined;
+		return ret ? ret.name : "";
 	}
 
 	async getDepIdByName(name) {
@@ -39,6 +40,16 @@ class getterRoutes {
 
 	async getLocationIdByName(name) {
 		const ret = await locations.findOne({ name: name });
+		return ret ? ret._id : undefined;
+	}
+
+	async getFacultyNameById(id) {
+		const ret = await faculties.findById(id).select("name -_id");
+		return ret ? ret.name : undefined;
+	}
+
+	async getFacultyIdByName(name) {
+		const ret = await faculties.findOne({ name: name });
 		return ret ? ret._id : undefined;
 	}
 

@@ -39,15 +39,14 @@ export class staffFetcher {
 		}
 	}
 
-	static async updateProfile(gender, password, personalInfo, token) {
+	static async updateProfile(gender, personalInfo, token) {
 		try {
 			const params = {
-				password: password,
 				gender: gender,
 				personalInfo: personalInfo,
 			};
-			const res = await fetch("http://localhost:3000/myProfile/myProfile", {
-				method: "POST",
+			const res = await fetch("http://localhost:3000/myProfile", {
+				method: "PUT",
 				body: JSON.stringify(params),
 				headers: {
 					Authorization: "",
