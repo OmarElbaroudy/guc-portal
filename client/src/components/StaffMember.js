@@ -9,6 +9,8 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import { getterFetcher } from "../API/getterFetcher";
 import { GetUser } from "./GlobalState";
+import Spinner from "react-bootstrap/Spinner";
+import Alert from "react-bootstrap/Alert";
 
 const ViewStaff = (props) => {
   const { user } = GetUser();
@@ -206,15 +208,38 @@ const ViewStaff = (props) => {
           <Form.Text className="text-muted">
             enter "instructor" or "academic"
           </Form.Text>
+          <Alert
+            variant="danger"
+            show={props.showAlert}
+            onClose={() => props.setShowAlert(false)}
+            dismissible
+          >
+            {props.message}
+          </Alert>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose1}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              handleClose1();
+              props.setShowAlert(false);
+            }}
+          >
             Close
           </Button>
           <Button
             onClick={() => props.handleAdd(course, props.id, type)}
             variant="primary"
           >
+            {props.spinner ? (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            ) : null}
             Add
           </Button>
         </Modal.Footer>
@@ -240,9 +265,23 @@ const ViewStaff = (props) => {
           <Form.Text className="text-muted">
             Enter the exact course name.
           </Form.Text>
+          <Alert
+            variant="danger"
+            show={props.showAlert}
+            onClose={() => props.setShowAlert(false)}
+            dismissible
+          >
+            {props.message}
+          </Alert>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose2}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              handleClose2();
+              props.setShowAlert(false);
+            }}
+          >
             Close
           </Button>
           <Button
@@ -252,6 +291,15 @@ const ViewStaff = (props) => {
             }}
             variant="primary"
           >
+            {props.spinner ? (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            ) : null}
             Delete
           </Button>
         </Modal.Footer>
@@ -286,9 +334,23 @@ const ViewStaff = (props) => {
           <Form.Text className="text-muted">
             Enter the new staff member to swap courses.
           </Form.Text>
+          <Alert
+            variant="danger"
+            show={props.showAlert}
+            onClose={() => props.setShowAlert(false)}
+            dismissible
+          >
+            {props.message}
+          </Alert>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose3}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              handleClose3();
+              props.setShowAlert(false);
+            }}
+          >
             Close
           </Button>
           <Button
@@ -298,6 +360,15 @@ const ViewStaff = (props) => {
             }}
             variant="primary"
           >
+            {props.spinner ? (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            ) : null}
             update
           </Button>
         </Modal.Footer>
