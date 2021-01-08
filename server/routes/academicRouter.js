@@ -33,7 +33,8 @@ const getLocationIdByName = async (name) => {
 };
 
 const getId = async (_id) => {
-	return (await academics.findById(_id).select("id")).id;
+	const c = await academics.findById(_id).select("id");
+	return c ? c.id : null;
 };
 
 const getCurDate = () => {
@@ -195,7 +196,7 @@ router
 				receiver.receivedRequestsId.push(reqID);
 				await receiver.save();
 			}
-			console.log("here");
+			
 			res.json("done");
 		} catch (err) {
 			console.log(err);
@@ -218,20 +219,8 @@ router
 					type: "replacement",
 				});
 
-				if (!request) res.status(209).json("no requests");
-
-				let replacementReq = {
-					course: await getCourseNameById(request.replacement.courseId),
-					slotDate: request.replacement.slotDate,
-					slot: request.replacement.slot,
-					location: await getLocationNameById(request.replacement.locationId),
-					status: request.replacement.academicResponse,
-					hodStatus: request.status,
-					receiver: await getId(request.receiverId),
-					issueDate: request.issueDate,
-				};
-
-				replacements.push(replacementReq);
+				if (!request) continue;
+				replacements.push(request);
 			}
 
 			for (const reqID of sender.receivedRequestsId) {
@@ -240,18 +229,8 @@ router
 					type: "replacement",
 				});
 
-				let replacementReq = {
-					course: await getCourseNameById(request.replacement.courseId),
-					slotDate: request.replacement.slotDate,
-					slot: request.replacement.slot,
-					location: await getLocationNameById(request.replacement.locationId),
-					status: request.replacement.academicResponse,
-					hodStatus: request.status,
-					sender: await getId(request.senderId),
-					issueDate: request.issueDate,
-				};
-
-				replacements.push(replacementReq);
+				if (!request) continue;
+				replacements.push(request);
 			}
 
 			res.json(replacements);
@@ -567,7 +546,7 @@ router.post("/ac/cancelRequest", auth, async (req, res) => {
 
 			await sender.save();
 			await requests.deleteOne({ _id: delID });
-			res.json("request deleted successfully");
+			return res.json("done");
 		}
 	} catch (err) {
 		console.log(err);

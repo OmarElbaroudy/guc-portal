@@ -7,13 +7,13 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Schedule from "./components/Schedule";
 import RequestForm from "./components/RequestForm";
-
-
+import { Redirect } from "react-router-dom";
 
 const AcademicHome = () => {
 	const { user } = GetUser();
 	const [show, setShow] = useState(false);
 	const [sessions, setSessions] = useState([]);
+	const [redirect, setRedirect] = useState(null);
 	const [comp, setComp] = useState("");
 
 	const handleClose = () => setShow(false);
@@ -35,6 +35,8 @@ const AcademicHome = () => {
 
 		data();
 	}, [user.token]);
+
+	if (redirect) return <Redirect to={redirect} />;
 
 	return (
 		<>
@@ -99,7 +101,14 @@ const AcademicHome = () => {
 						</div>
 
 						<div class="col-md-3 containerIntro">
-							<button type="button" href="#" class="btn">
+							<button
+								type="button"
+								href="#"
+								class="btn"
+								onClick={() => {
+									setRedirect("/academicHome/replacementRequests");
+								}}
+							>
 								<span class="fas fa-exchange-alt fa-3x"> </span>
 							</button>
 							<p>Replacement Requests</p>
@@ -108,7 +117,14 @@ const AcademicHome = () => {
 						</div>
 
 						<div class="col-md-3 containerIntro">
-							<button type="button" href="#" onClick={() => {}} class="btn">
+							<button
+								type="button"
+								href="#"
+								class="btn"
+								onClick={() => {
+									setRedirect("/academicHome/submittedRequests");
+								}}
+							>
 								<span class="far fa-envelope fa-3x"> </span>
 							</button>
 							<p>Submitted Requests</p>

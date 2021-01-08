@@ -145,7 +145,7 @@ export class academicFetcher {
 		return data;
 	}
 
-	static async cancelRequest(reqId, token) {
+	static async cancelRequest(type, reqId, token) {
 		const params = { reqId: reqId };
 		const res = await fetch("http://localhost:3000/ac/cancelRequest", {
 			method: "POST",
@@ -158,8 +158,9 @@ export class academicFetcher {
 			},
 		});
 
-		const data = await res.json();
-		return data;
+		const ret = await res.json();
+		if (!type && ret === "done") return await this.viewReplacement(token);
+		if (type && ret === "done") return await this.viewRequests(type, token);
 	}
 
 	static async sendRequest(requestType, p, token) {
