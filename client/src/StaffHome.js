@@ -4,20 +4,32 @@ import "bootstrap/dist/css/bootstrap.css";
 import Modal from "react-bootstrap/Modal";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
-import Popover from "react-bootstrap/Popover";
 import { GetUser } from "./components/GlobalState";
 import { staffFetcher } from "./API/staffFetcher";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import AttendanceRecord from "./components/AttendanceRecord";
+import Profile from "./components/Profile";
 
 const StaffHome = () => {
 	const { user } = GetUser();
 	const [show, setShow] = useState(false);
+	const [showA, setShowA] = useState(false);
+	const [showB, setShowB] = useState(false);
+	const [showC, setShowC] = useState(false);
+	const [message, setMessage] = useState("");
+	const [missingHours, setMissingHours] = useState(0);
+	const [missingDays, setMissingDays] = useState(0);
 	const [variant, setVariant] = useState("success");
 	const [showAlert, setShowAlert] = useState(false);
-	const [message, setMessage] = useState("");
+	const [profile, setProfile] = useState(null);
+
 	const handleClose = () => setShow(false);
+	const handleCloseA = () => setShowA(false);
+	const handleCloseB = () => setShowB(false);
+	const handleCloseC = () => setShowC(false);
 	const handleShow = () => setShow(true);
+	const handleShowA = () => setShowA(true);
+	const handleShowB = () => setShowB(true);
+	const handleShowC = () => setShowC(true);
 
 	const signIn = async () => {
 		const data = await staffFetcher.signIn(user.token);
@@ -34,22 +46,23 @@ const StaffHome = () => {
 		setShowAlert(true);
 	};
 
-	const missingDays = async () => {
+	const showMissingDays = async () => {
 		const data = await staffFetcher.missingDays(user.token);
+		setMissingDays(data);
+		handleShowA();
 	};
 
-	const missingHours = async () => {
+	const showMissingHours = async () => {
 		const data = await staffFetcher.missingHours(user.token);
+		setMissingHours(data);
+		handleShowB();
 	};
 
-	const popover = (
-		<Popover id="popover-basic">
-			<Popover.Title as="h3">Popover right</Popover.Title>
-			<Popover.Content>
-				And here's some <strong>amazing</strong> content. It's very engaging. right?
-			</Popover.Content>
-		</Popover>
-	);
+	const showProfile = async () => {
+    const data = await staffFetcher.viewProfile(user.token);
+		setProfile(data);
+    handleShowC();
+  };
 
 	return (
 		<>
@@ -63,6 +76,7 @@ const StaffHome = () => {
 			>
 				{message}
 			</Alert>
+
 			<Modal size="lg" show={show} onHide={handleClose}>
 				<Modal.Header closeButton>
 					<Modal.Title>Attendance Records</Modal.Title>
@@ -72,6 +86,65 @@ const StaffHome = () => {
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="secondary" onClick={handleClose}>
+						Close
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			<Modal size="sm" show={showA} onHide={handleCloseA}>
+				<Modal.Header closeButton>
+					<Modal.Title>Missing Days</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					number of missing days is <strong>{missingDays}</strong> days
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="secondary" onClick={handleCloseA}>
+						Close
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			<Modal size="sm" show={showB} onHide={handleCloseB}>
+				<Modal.Header closeButton>
+					<Modal.Title>
+						{missingHours >= 0 ? "Missing Hours" : "Extra Hours"}
+					</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{missingHours >= 0 ? "Missing Hours " : "Extra Hours "} is{" "}
+					<strong>{missingHours}</strong> hours
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="secondary" onClick={handleCloseB}>
+						Close
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			<Modal size="lg" show={showC} onHide={handleCloseC}>
+				<Modal.Header closeButton>
+					<Modal.Title>Profile</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{profile && (
+						<Profile
+							name={profile.name}
+							email={profile.email}
+							salary={profile.salary}
+							id={profile.id}
+							accidentalLeaveBalance={profile.accidentalLeaveBalance.balance}
+							annualLeaveBalance={profile.annualLeaveBalance.balance}
+							gender={profile.gender}
+							personalInfo={profile.personalInfo}
+							department={profile.departmentId}
+							location={profile.locationId}
+							faculty={profile.facultyId}
+						></Profile>
+					)}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="secondary" onClick={handleCloseC}>
 						Close
 					</Button>
 				</Modal.Footer>
@@ -98,7 +171,7 @@ const StaffHome = () => {
 						</div>
 
 						<div class="col-md-3 containerIntro">
-							<button type="button" href="#" class="btn">
+							<button type="button" href="#" class="btn" onClick={showProfile}>
 								<span class="far fa-user fa-3x"> </span>
 							</button>
 							<p>Profile</p>
@@ -107,19 +180,16 @@ const StaffHome = () => {
 						</div>
 
 						<div class="col-md-3 containerIntro">
-							<OverlayTrigger trigger="click" placement="top" overlay={popover}>
-								<button type="button" href="#" class="btn">
-									<span class="far fa-calendar-times fa-3x"> </span>
-								</button>
-							</OverlayTrigger>
-
+							<button type="button" href="#" class="btn" onClick={showMissingDays}>
+								<span class="far fa-calendar-times fa-3x"> </span>
+							</button>
 							<p>Missing Days</p>
 							<br />
 							<span class=" border-dark icons">view missing days</span>
 						</div>
 
 						<div class="col-md-3 containerIntro">
-							<button type="button" href="#" class="btn">
+							<button type="button" href="#" class="btn" onClick={showMissingHours}>
 								<span class="far fa-clock fa-3x"> </span>
 							</button>
 							<p>Missing/Extra hours</p>

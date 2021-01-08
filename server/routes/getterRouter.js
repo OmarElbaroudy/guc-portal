@@ -46,9 +46,26 @@ router.post("/getLocationNameById", async (req, res) => {
 
 router.post("/getLocationIdByName", async (req, res) => {
 	const name = req.body.name;
-	const locName = await getter.getLocationIdByName(name);
+	const id = await getter.getLocationIdByName(name);
 	return res.json({
-		locName: locName,
+		id: id,
+	});
+});
+
+
+router.post("/getFacultyNameById", async (req, res) => {
+	const id = req.body.id;
+	const name = await getter.getFacultyNameById(id);
+	return res.json({
+		name: name,
+	});
+});
+
+router.post("/getFacultyIdByName", async (req, res) => {
+	const name = req.body.name;
+	const id = await getter.getFacultyIdByName(name);
+	return res.json({
+		id: id,
 	});
 });
 
