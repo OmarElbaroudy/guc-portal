@@ -139,6 +139,19 @@ router.route("/hr/deleteLocation").delete(auth, async (req, res) => {
 		console.log(err);
 	}
 });
+router.route("/hr/viewAllStaffMembers").get(async(req,res)=>{
+	try{
+		const h=await HR.find()
+		const a=await Academic.find()
+		const result=h.concat(a);
+		
+		res.json(result)
+		//res.json([])
+	}
+	catch(err){
+		res.json(err);
+	}
+})
 
 router.route("/hr/registerMember").post(auth, async (req, res) => {
 	try {
@@ -678,10 +691,16 @@ router.route("/hr/deleteStaffMember").put(async (req, res) => {
 			}
 
 			await Academic.findOneAndDelete({ _id: x._id });
-			res.send("deleted successfully");
+			const h=await HR.find()
+			const a=await Academic.find()
+			const result=h.concat(a);
+			res.json(result)
 		} else {
 			await HR.findOneAndDelete({ _id: x._id });
-			res.send("deleted successfully");
+			const h=await HR.find()
+			const a=await Academic.find()
+			const result=h.concat(a);
+			res.json(result)
 		}
 	} catch (err) {
 		console.log(err);
