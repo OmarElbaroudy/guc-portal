@@ -648,7 +648,10 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
       }
 
       await HR.findOneAndUpdate({ id: req.body.id }, h, { new: true });
-      res.send("hr updated successfully");
+      const z = await HR.find();
+      const w = await Academic.find();
+      const result = z.concat(w);
+      res.json(result);
     }
   } catch (err) {
     console.log(err);
