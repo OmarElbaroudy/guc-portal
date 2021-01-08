@@ -128,7 +128,7 @@ function NavBar() {
 									)}
 
 									{user.academic && (
-										<NavDropdown.Item href="#action/3.2">Academic</NavDropdown.Item>
+										<NavDropdown.Item href="/academicHome">Academic</NavDropdown.Item>
 									)}
 									{user.coordinator && (
 										<NavDropdown.Item href="#action/3.2">Coordinator</NavDropdown.Item>
