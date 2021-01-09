@@ -229,7 +229,7 @@ const ViewStaff = (props) => {
           </Button>
           <Button
             onClick={() => props.handleAdd(course, props.id, type)}
-            variant="primary"
+            variant="success"
           >
             {props.spinner ? (
               <Spinner
@@ -289,7 +289,7 @@ const ViewStaff = (props) => {
               props.handleDelete(course, props.id);
               setCourse("");
             }}
-            variant="primary"
+            variant="danger"
           >
             {props.spinner ? (
               <Spinner

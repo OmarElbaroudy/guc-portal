@@ -188,4 +188,27 @@ export class hodFetcher {
       console.log(error);
     }
   }
+
+  static async viewCourseAss(course, token) {
+    try {
+      const params = { courseName: course };
+      const res = await fetch(
+        "http://localhost:3000/HOD/view_course_schedule",
+        {
+          method: "post",
+          body: JSON.stringify(params),
+          headers: {
+            Authorization: "",
+            "auth-token": token,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

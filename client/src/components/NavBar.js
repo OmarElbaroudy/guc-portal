@@ -113,7 +113,7 @@ function NavBar() {
                   )}
 
                   {user.instructor && (
-                    <NavDropdown.Item href="#action/3.2">
+                    <NavDropdown.Item href="/instructorHome">
                       Instructor
                     </NavDropdown.Item>
                   )}
