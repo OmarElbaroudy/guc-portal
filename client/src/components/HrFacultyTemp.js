@@ -9,8 +9,6 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 
-
-
 const HrFacultyTemp = (props) => {
   const { user } = GetUser();
   const [showAdd, setShowAdd] = useState(false);
@@ -19,46 +17,36 @@ const HrFacultyTemp = (props) => {
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
 
-    return(
-        <div className="col-xl-10 offset-3">
-          <Accordion defaultActiveKey="1">
-            <Card>
-              <Accordion.Toggle as={Card.Header} eventKey="0">
-                <span>{props.name}</span>
-                <span style={{ paddingInline: 300 }}>props.id</span>
-                <span style={{ paddingInline: 0 }}>props.type</span>
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey="0">
-                <Card.Body>
-                  <dl class="row">
-                    <dt class="col-sm-3">Max</dt>
-                    <dd class="col-sm-9">aaa</dd>
-                  </dl>
-                  <Button
-                    className="col col-3"
-                    variant="light"
-                  >
-                    Add Faculty
-                  </Button>
-                  <Button
-                    onClick={()=>{props.handleDelete(props.name)}}
-                    className="col col-3"
-                    variant="light"
-                  >
-                    Delete faculty
-                  </Button>
-                  <Button
-                  onClick={() => handleShow1()}
-                    className="col col-3"
-                    variant="light"
-                  >
-                    update faculty
-                  </Button>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-          <Modal
+  return (
+    <div className="col-xl-10 offset-3">
+      <Accordion style={{ marginTop: 10 }} defaultActiveKey="1">
+        <Card>
+          <Accordion.Toggle as={Card.Header} eventKey="0">
+            <span style={{ fontWeight: "bold" }}>{props.name}</span>
+          </Accordion.Toggle>
+          <Accordion.Collapse eventKey="0">
+            <Card.Body>
+              <Button
+                onClick={() => {
+                  props.handleDelete(props.name);
+                }}
+                className="col col-6"
+                variant="light"
+              >
+                Delete faculty
+              </Button>
+              <Button
+                onClick={() => handleShow1()}
+                className="col col-6"
+                variant="light"
+              >
+                update faculty
+              </Button>
+            </Card.Body>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
+      <Modal
         show={showAdd}
         onHide={handleClose1}
         backdrop="static"
@@ -94,8 +82,7 @@ const HrFacultyTemp = (props) => {
           </Button>
         </Modal.Footer>
       </Modal>
-        </div>
-    )
-
-}
-export default HrFacultyTemp
+    </div>
+  );
+};
+export default HrFacultyTemp;

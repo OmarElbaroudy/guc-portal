@@ -9,23 +9,23 @@ import Button from "react-bootstrap/Button";
 import { getterFetcher } from "../API/getterFetcher";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
+import Spinner from "react-bootstrap/Spinner";
+import Alert from "react-bootstrap/Alert";
 
 const HrStaffMemberTemp = (props) => {
   const { user } = GetUser();
-  const [email,setEmail]=useState(null)
-  const [name,setName]=useState(null)
-  const [officeLocation,setOfficeLocation]=useState(null)
-  const [salary,setSalary]=useState(null)
+  const [email, setEmail] = useState(null);
+  const [name, setName] = useState(null);
+  const [officeLocation, setOfficeLocation] = useState(null);
+  const [salary, setSalary] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
-
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
-
   const [office, setOffice] = useState("");
 
   useEffect(() => {
     const x = async () => {
-      const y=await getterFetcher.getLocationNameById(
+      const y = await getterFetcher.getLocationNameById(
         props.office,
         user.token
       );
@@ -40,9 +40,9 @@ const HrStaffMemberTemp = (props) => {
       <Accordion defaultActiveKey="1">
         <Card>
           <Accordion.Toggle as={Card.Header} eventKey="0">
-            <span>{props.name}</span>
-            <span style={{ paddingInline: 300 }}>{props.id}</span>
-            <span style={{ paddingInline: 0 }}>props.type</span>
+            <span style={{ fontWeight: "bold" }}>
+              {props.name} ( {props.id} )
+            </span>
           </Accordion.Toggle>
           <Accordion.Collapse eventKey="0">
             <Card.Body>
@@ -54,21 +54,33 @@ const HrStaffMemberTemp = (props) => {
                 <dd class="col-sm-9">{props.salary}</dd>
 
                 <dt class="col-sm-3 text-truncate">Office location</dt>
-                <dd class="col-sm-9">{office.name}</dd>
+                <dd class="col-sm-9">
+                  {office.name ? office.name : "-no office yet-"}
+                </dd>
               </dl>
-              <Button className="col col-3" variant="light">
-                Add course
-              </Button>
               <Button
                 onClick={() => {
                   props.handleDelete(props.id);
                 }}
-                className="col col-3"
+                className="col col-6"
                 variant="light"
               >
+                {props.spinner ? (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                ) : null}
                 Delete User
               </Button>
-              <Button  onClick={() => handleShow1()} className="col col-3" variant="light">
+              <Button
+                onClick={() => handleShow1()}
+                className="col col-6"
+                variant="light"
+              >
                 update user
               </Button>
             </Card.Body>
@@ -89,32 +101,81 @@ const HrStaffMemberTemp = (props) => {
             <Form.Row>
               <Form.Group as={Col} controlId="formGridEmail">
                 <Form.Label>Name</Form.Label>
-                <Form.Control placeholder="Enter name" onChange={(event)=>{setName(event.target.value)}} />
+                <Form.Control
+                  placeholder="Enter name"
+                  onChange={(event) => {
+                    setName(event.target.value);
+                  }}
+                />
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridPassword">
                 <Form.Label>Office Location</Form.Label>
-                <Form.Control placeholder="ex: c7.202" onChange={(event)=>{setOfficeLocation(event.target.value)}}/>
+                <Form.Control
+                  placeholder="ex: c7.202"
+                  onChange={(event) => {
+                    setOfficeLocation(event.target.value);
+                  }}
+                />
               </Form.Group>
             </Form.Row>
 
             <Form.Group controlId="formGridAddress1">
               <Form.Label>Email</Form.Label>
-              <Form.Control placeholder="ex: test@guc.edu.eg" onChange={(event)=>{setEmail(event.target.value)}}/>
+              <Form.Control
+                placeholder="ex: test@guc.edu.eg"
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                }}
+              />
             </Form.Group>
 
             <Form.Group as={Col} controlId="formGridCity">
-                <Form.Label>salary</Form.Label>
-                <Form.Control placeholder="10000" onChange={(event)=>{setSalary(event.target.value)}}/>
+              <Form.Label>salary</Form.Label>
+              <Form.Control
+                placeholder="10000"
+                onChange={(event) => {
+                  setSalary(event.target.value);
+                }}
+              />
             </Form.Group>
-
           </Form>
         </Modal.Body>
+        <Alert
+          variant="danger"
+          show={props.showAlert}
+          onClose={() => props.setShowAlert(false)}
+          dismissible
+        >
+          {props.message}
+        </Alert>
         <Modal.Footer>
-          <Button variant="secondary" onClick={()=>handleClose1}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              handleClose1();
+              props.setShowAlert(false);
+            }}
+          >
             Close
           </Button>
-          <Button variant="primary" onClick={()=>props.handleUpdate(props.id, name,officeLocation,email,salary) }>Update</Button>
+          <Button
+            variant="primary"
+            onClick={() =>
+              props.handleUpdate(props.id, name, officeLocation, email, salary)
+            }
+          >
+            {props.spinner2 ? (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            ) : null}
+            Update
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
