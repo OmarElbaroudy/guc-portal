@@ -70,7 +70,7 @@ class getterRoutes {
 
 	async isHod(departmentId, userId) {
 		const dep = await departments.findById(departmentId);
-		return dep.hodId && dep.hodId.toString() === userId;
+		return dep && dep.hodId && dep.hodId.toString() === userId;
 	}
 }
 

@@ -1,6 +1,5 @@
 import React from "react";
 import Accordion from "react-bootstrap/Accordion";
-import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 
 const getDay = (num) => {
@@ -24,23 +23,33 @@ const getDay = (num) => {
 };
 
 const Record = (props) => {
+	const getDate = () => {
+		const d = new Date(props.day);
+		const utc = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDay()));
+		return utc.getDate() + "/" + (utc.getMonth() + 1) + "/" + utc.getFullYear();
+	};
 	return (
-		<Accordion>
-			<Card>
-				<Card.Header>
-					<Accordion.Toggle as={Button} variant="link" eventKey="0">
-						{props.idx + 1}
-					</Accordion.Toggle>
-				</Card.Header>
-				<Accordion.Collapse eventKey="0">
-					<Card.Body>{props.day.toString()}</Card.Body>
-					<Card.Body>{getDay(props.weekDay)}</Card.Body>
-					{props.compensation && (
-						<Card.Body>this day is considered as compensation</Card.Body>
-					)}
-				</Accordion.Collapse>
-			</Card>
-		</Accordion>
+		<div style={{ marginTop: 15 }} className="container row">
+			<div className="col-xl-12">
+				<Accordion defaultActiveKey="1">
+					<Card>
+						<Accordion.Toggle as={Card.Header} eventKey="0">
+							<span style={{ fontWeight: "bold" }}>
+								attendance record number {props.idx + 1}
+							</span>
+						</Accordion.Toggle>
+						<Accordion.Collapse eventKey="0">
+							<Card.Body>
+								<h6>
+									<strong>attendance date</strong> : {getDay(props.weekDay)} {getDate()}
+								</h6>
+								{props.compensation && <h6>this day is considered as compensation</h6>}
+							</Card.Body>
+						</Accordion.Collapse>
+					</Card>
+				</Accordion>
+			</div>
+		</div>
 	);
 };
 

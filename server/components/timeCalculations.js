@@ -107,7 +107,7 @@ class timeCalculations {
 			doc.dayOff,
 			true
 		);
-		return totalTimeInMonth /60 - sum;
+		return totalTimeInMonth / 60 - sum;
 	}
 
 	calculateMissingDays(doc) {
@@ -204,11 +204,17 @@ class timeCalculations {
 
 	viewAttendanceRecords(month, doc) {
 		let arr = [];
+		let dec = 0;
 		let startDate = new Date(Date.UTC(new Date().getFullYear(), 0, 11));
 		let endDate = this.getCurDate();
 
+		if (startDate > endDate) {
+			dec--;
+			startDate = new Date(Date.UTC(new Date().getFullYear() - 1, 0, 11));
+		}
+
 		if (month > -1) {
-			startDate = new Date(Date.UTC(new Date().getFullYear(), month, 11));
+			startDate = new Date(Date.UTC(new Date().getFullYear() + dec, month, 11));
 			endDate = this.getEndDate(startDate);
 		}
 

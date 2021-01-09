@@ -65,7 +65,7 @@ export class staffFetcher {
 
 	static async getAttendanceRecords(month, token) {
 		try {
-			const params = { month: month };
+			const params = { month: parseInt(month) };
 			const res = await fetch(
 				"http://localhost:3000/myProfile/viewAttendanceRecords",
 				{

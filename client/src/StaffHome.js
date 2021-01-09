@@ -138,7 +138,7 @@ const StaffHome = () => {
 							gender={profile.gender}
 							personalInfo={profile.personalInfo}
 							department={profile.departmentId}
-							location={profile.locationId}
+							location={profile.officeLocationId}
 							faculty={profile.facultyId}
 						></Profile>
 					)}
