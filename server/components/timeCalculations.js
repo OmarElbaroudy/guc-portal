@@ -233,7 +233,11 @@ class timeCalculations {
 			? doc.accidentalLeaveBalance.lastUpdated
 			: undefined;
 
-		let updateTime = new Date(Date.UTC(new Date().getFullYear(), 0, 11));
+		let dec =
+			this.getCurDate().getMonth() === 0 && this.getCurDate().getDate() < 11
+				? 1
+				: 0;
+		let updateTime = new Date(Date.UTC(new Date().getFullYear() - dec, 0, 11));
 		if (!lstTime || !this.valid(updateTime, lstTime)) {
 			//first day of the year
 			doc.annualLeaveBalance = {

@@ -10,7 +10,7 @@ const Schedule = (props) => {
 			let arr = Array(40).fill(undefined);
 			for (let i = 0; i < sessions.length; i++) {
 				const idx = sessions[i].weekDay * 5 + sessions[i].slot;
-				arr[idx] = sessions[i];
+				arr[idx].push(sessions[i]);
 			}
 			return arr;
 		};

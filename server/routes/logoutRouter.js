@@ -20,11 +20,11 @@ const loadTokens = async function () {
 router.get("/logout", async (req, res) => {
   try {
     blackListToken(await loadTokens(), req.header("auth-token"));
-    res.send("logged out successfully");
+    res.json("logged out successfully");
   } catch (err) {
     res
       .status(401)
-      .send("invalid token you need to be loggedIn in order to logout");
+      .json("invalid token you need to be loggedIn in order to logout");
   }
 });
 
