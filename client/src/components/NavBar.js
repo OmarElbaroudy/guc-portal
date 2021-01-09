@@ -96,7 +96,7 @@ function NavBar() {
 									)}
 
 									{user.instructor && (
-										<NavDropdown.Item href="#action/3.2">Instructor</NavDropdown.Item>
+										<NavDropdown.Item href="/instructorHome">Instructor</NavDropdown.Item>
 									)}
 
 									{user.academic && (

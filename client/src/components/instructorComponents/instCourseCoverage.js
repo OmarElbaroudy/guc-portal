@@ -1,27 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { GetUser } from "./GlobalState";
+import { GetUser } from "../GlobalState";
 import "bootstrap/dist/css/bootstrap.min.css";
-import StaffMember from "./StaffMember";
-import NavBar from "./NavBar";
-import { hodFetcher } from "../API/hodFetcher";
-import Form from "react-bootstrap/Form";
+import NavBar from "../NavBar";
+import { instructorFetcher } from "../../API/instructorFetcher";
+import Schedule from "../Schedule";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import Schedule from "./Schedule";
 
-const CourseCoverage = () => {
+const Courses = () => {
   const { user } = GetUser();
-  const [courses, setCourses] = useState([]);
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
   const [showAdd, setShowAdd] = useState(false);
+  const [courses, setCourses] = useState([]);
   const [schedule, setSchedule] = useState([]);
   const [courseName, setCourseName] = useState("");
 
   useEffect(() => {
     const data = async () => {
       try {
-        const res = await hodFetcher.viewCourseCoverage(user.token);
+        const res = await instructorFetcher.viewCourseCoverage(user.token);
         console.log("res" + res);
         setCourses(res);
       } catch (err) {
@@ -31,19 +29,21 @@ const CourseCoverage = () => {
     data();
   }, []);
 
-  const slotAss = async (course) => {
-    const res = await hodFetcher.viewCourseAss(course, user.token);
-    console.log(res);
-    setSchedule(res);
+  const slotAss = async () => {
+    const res = await instructorFetcher.viewCourseAss(user.token);
+    for (const entry of res) {
+      if (entry.course === courseName) setSchedule(entry.AssignedSlots);
+    }
     handleShow1();
   };
 
   return (
-    <React.Fragment>
+    <div>
       <NavBar />
       <h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
-        Courses coverage
+        Courses
       </h1>
+
       <div class="col-7 offset-4">
         <table class="table">
           <thead>
@@ -65,7 +65,7 @@ const CourseCoverage = () => {
                   <td class="col-2">
                     <button
                       onClick={() => {
-                        slotAss(obj.course);
+                        slotAss();
                         setCourseName(obj.course);
                       }}
                     >
@@ -79,7 +79,6 @@ const CourseCoverage = () => {
           </tbody>
         </table>
       </div>
-
       <Modal
         show={showAdd}
         onHide={handleClose1}
@@ -103,7 +102,7 @@ const CourseCoverage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </React.Fragment>
+    </div>
   );
 };
-export default CourseCoverage;
+export default Courses;
