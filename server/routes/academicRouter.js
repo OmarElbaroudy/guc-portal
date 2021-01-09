@@ -124,7 +124,10 @@ router
 			const sender = await academics.findById(decoded.id);
 			const receiver = await academics.findOne({ id: input.id });
 			const courseId = await getCourseIdByName(input.course);
-			const hodId = (await departments.findById(sender.departmentId)).hodId;
+			const dep = await departments.findById(sender.departmentId);
+			
+			if(!dep) return res.status(217).json("you must be in a department to send a request");
+			const hodId = dep.hodId;
 			const hod = await academics.findById(hodId);
 
 			if (!courseId) return res.status(216).json("no such course");
@@ -369,6 +372,7 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 		if (!sender) return res.status(213).json("invalid id");
 
 		const departmentId = sender.departmentId;
+		if(!departmentId) return res.json("you need to be in a department to send this request")
 		const hodId = (await departments.findById(departmentId)).hodId;
 		const hod = await academics.findById(hodId);
 

@@ -6,6 +6,7 @@ const jwt_decode = require("jwt-decode");
 const hr = require("../models/hr");
 const academic = require("../models/academic");
 const timeCalculations = require("../components/timeCalculations");
+const requests = require("../models/requests");
 
 const router = express.Router();
 const calc = new timeCalculations();
@@ -168,6 +169,38 @@ router.get("/myProfile/viewMissingHours", async (req, res) => {
 	await doc.save();
 
 	res.json(doc.missingHours);
+});
+
+router.get("/myProfile/notifications", async (req, res) => {
+	const token = req.header("auth-token");
+	const decoded = jwt_decode(token);
+
+	let doc;
+	if (decoded.type === "hr") {
+		doc = await hr.findById(decoded.id);
+	} else {
+		doc = await academic.findById(decoded.id);
+	}
+
+	const reqID = doc.notifications;
+	const arr = await requests.find({
+		_id: { $in: reqID },
+	});
+
+	let cntA = 0,
+		cntR = 0;
+	for (const entry of arr) {
+		const status = entry.status;
+		cntA += status === "accepted" ? 1 : 0;
+		cntR += status === "Rejected" ? 1 : 0;
+	}
+
+	doc.notifications = [];
+	await doc.save();
+
+	let password = doc.altered;
+
+	res.json({ accepted: cntA, rejected: cntR, altered: password });
 });
 
 module.exports = router;
