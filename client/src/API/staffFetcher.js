@@ -65,7 +65,7 @@ export class staffFetcher {
 
 	static async getAttendanceRecords(month, token) {
 		try {
-			const params = { month: month };
+			const params = { month: parseInt(month) };
 			const res = await fetch(
 				"http://localhost:3000/myProfile/viewAttendanceRecords",
 				{
@@ -147,6 +147,25 @@ export class staffFetcher {
 	static async missingDays(token) {
 		try {
 			const res = await fetch("http://localhost:3000/myProfile/viewMissingDays", {
+				method: "GET",
+				headers: {
+					Authorization: "",
+					"auth-token": token,
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+			});
+
+			const data = await res.json();
+			return data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	static async getNotifications(token) {
+		try {
+			const res = await fetch("http://localhost:3000/myProfile/notifications", {
 				method: "GET",
 				headers: {
 					Authorization: "",

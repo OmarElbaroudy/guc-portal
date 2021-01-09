@@ -48,9 +48,13 @@ function NavBar() {
 
   if (redirect) return <Redirect to={Redirect} />;
   return (
-    <div class="container-fluid">
-      <div id="mySidenav" class="sidenav">
-        <button type="button" class="btn btn-light closebtn" onClick={closeNav}>
+    <div className="container-fluid">
+      <div id="mySidenav" className="sidenav">
+        <button
+          type="button"
+          className="btn btn-light closebtn"
+          onClick={closeNav}
+        >
           &times;
         </button>
         <a href="#">About</a>
@@ -59,21 +63,21 @@ function NavBar() {
         <a href="#">Contact</a>
       </div>
 
-      <div id="main" class="row container-fluid">
-        <nav class="col-xl-12 navbar navbar-expand-lg navbar-dark bg-dark">
-          <a class="navbar-brand" href="#">
+      <div id="main" className="row container-fluid col-12">
+        <nav className="col-12 navbar navbar-expand-lg navbar-dark bg-dark">
+          <a className="navbar-brand" href="#">
             {" "}
-            <button type="button" href="#" onClick={openNav} class="btn">
-              <span class="navbar-toggler-icon"></span>
+            <button type="button" href="#" onClick={openNav} className="btn">
+              <span className="navbar-toggler-icon"></span>
             </button>
             GUC
           </a>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               {user.type === "academic" && (
-                <li class="nav-item">
+                <li className="nav-item">
                   <a
-                    class="nav-link active"
+                    className="nav-link active"
                     aria-current="page"
                     href="http://localhost:3001/staffHome/"
                   >
@@ -82,9 +86,9 @@ function NavBar() {
                 </li>
               )}
               {user.type === "Hr" && (
-                <li class="nav-item">
+                <li className="nav-item">
                   <a
-                    class="nav-link active"
+                    className="nav-link active"
                     aria-current="page"
                     href="http://localhost:3001/hrHome/"
                   >
@@ -93,7 +97,7 @@ function NavBar() {
                 </li>
               )}
               <NavDropdown title="preferences" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1" onClick={setShowA}>
+                <NavDropdown.Item href="#action/3.1" onClick={handleShowA}>
                   Update profile
                 </NavDropdown.Item>
                 <NavDropdown.Item onClick={handleShow1} href="#action/3.2">
@@ -130,9 +134,9 @@ function NavBar() {
                   )}
                 </NavDropdown>
               )}
-              <li class="nav-item">
+              <li className="nav-item">
                 <a
-                  class="nav-link active"
+                  className="nav-link active"
                   aria-current="page"
                   href="/"
                   onClick={logOut}

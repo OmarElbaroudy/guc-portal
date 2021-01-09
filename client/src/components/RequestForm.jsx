@@ -7,7 +7,6 @@ import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import { GetUser } from "./GlobalState";
 
-
 const RequestForm = (props) => {
 	const { user } = GetUser();
 
@@ -91,15 +90,15 @@ const RequestForm = (props) => {
 							setRequestType(event.target.value);
 						}}
 					>
-						<option value="undefined">Choose...</option>
-						<option value="replacement">replacement</option>
-						<option value="slotLinking">slot linking</option>
-						<option value="maternity">maternity</option>
-						<option value="accidental">accidental</option>
-						<option value="annual">annual</option>
-						<option value="sick">sick</option>
-						<option value="compensation">compensation</option>
-						<option value="changeDayOff">change day off</option>
+							<option value="undefined">Choose...</option>
+							<option value="replacement">replacement</option>
+							<option value="slotLinking">slot linking</option>
+							<option value="maternity">maternity</option>
+							<option value="accidental">accidental</option>
+							<option value="annual">annual</option>
+							<option value="sick">sick</option>
+							<option value="compensation">compensation</option>
+							<option value="changeDayOff">change day off</option>
 					</Form.Control>
 				</Col>
 			</Form.Group>

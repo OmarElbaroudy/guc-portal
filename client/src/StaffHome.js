@@ -20,6 +20,8 @@ const StaffHome = () => {
 	const [missingDays, setMissingDays] = useState(0);
 	const [variant, setVariant] = useState("success");
 	const [showAlert, setShowAlert] = useState(false);
+	const [showNotification, setShowNotification] = useState(false);
+	const [notification, setNotification] = useState(null);
 	const [profile, setProfile] = useState(null);
 
 	const handleClose = () => setShow(false);
@@ -30,6 +32,19 @@ const StaffHome = () => {
 	const handleShowA = () => setShowA(true);
 	const handleShowB = () => setShowB(true);
 	const handleShowC = () => setShowC(true);
+
+	useEffect(() => {
+		const getNotifications = async () => {
+			const data = await staffFetcher.getNotifications(user.token);
+			console.log(data);
+			const flag = data.accepted > 0 || data.rejected > 0 || !data.altered;
+			if (flag) {
+				setNotification(data);
+				setShowNotification(true);
+			}
+		};
+		getNotifications();
+	}, [user.token]);
 
 	const signIn = async () => {
 		const data = await staffFetcher.signIn(user.token);
@@ -59,10 +74,10 @@ const StaffHome = () => {
 	};
 
 	const showProfile = async () => {
-    const data = await staffFetcher.viewProfile(user.token);
+		const data = await staffFetcher.viewProfile(user.token);
 		setProfile(data);
-    handleShowC();
-  };
+		handleShowC();
+	};
 
 	return (
 		<>
@@ -75,6 +90,26 @@ const StaffHome = () => {
 				dismissible
 			>
 				{message}
+			</Alert>
+			<Alert
+				className="col-12"
+				variant="warning"
+				show={showNotification}
+				onClose={() => {
+					setNotification(null);
+					setShowNotification(false);
+				}}
+				dismissible
+			>
+				{notification && notification.accepted > 0 && (
+					<h5>you have {notification.accepted} requests that have been accepted!</h5>
+				)}
+				{notification && notification.rejected > 0 && (
+					<h5>you have {notification.rejected} requests that have been rejected!</h5>
+				)}
+				{notification && !notification.altered && (
+					<h5>please change your password</h5>
+				)}
 			</Alert>
 
 			<Modal size="lg" show={show} onHide={handleClose}>
@@ -138,8 +173,9 @@ const StaffHome = () => {
 							gender={profile.gender}
 							personalInfo={profile.personalInfo}
 							department={profile.departmentId}
-							location={profile.locationId}
+							location={profile.officeLocationId}
 							faculty={profile.facultyId}
+							dayOff={profile.dayOff}
 						></Profile>
 					)}
 				</Modal.Body>

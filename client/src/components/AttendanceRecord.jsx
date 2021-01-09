@@ -37,26 +37,28 @@ const AttendanceRecord = () => {
 	}, [month, user.token]);
 
 	return (
-		<Form.Group as={Row}>
-			<Form.Label column="lg" lg={2}>
-				Month:
-			</Form.Label>
-			<Col xs="auto" className="my-1">
-				<Form.Control
-					as="select"
-					className="mr-sm-2"
-					id="requestType"
-					custom
-					onChange={(event) => {
-						setMonth(event.target.value);
-					}}
-				>
-					<option value={-1}>choose...</option>
-					{arr.map((name, idx) => {
-						return <option value={idx}>{name}</option>;
-					})}
-				</Form.Control>
-			</Col>
+		<>
+			<Form.Group as={Row}>
+				<Form.Label column="lg" lg={2}>
+					Month:
+				</Form.Label>
+				<Col xs="auto" className="my-1">
+					<Form.Control
+						as="select"
+						className="mr-sm-2"
+						id="requestType"
+						custom
+						onChange={(event) => {
+							setMonth(event.target.value);
+						}}
+					>
+						<option value={-1}>choose...</option>
+						{arr.map((name, idx) => {
+							return <option value={idx}>{name}</option>;
+						})}
+					</Form.Control>
+				</Col>
+			</Form.Group>
 			{records.map((e, idx) => {
 				return (
 					<Record
@@ -67,7 +69,7 @@ const AttendanceRecord = () => {
 					></Record>
 				);
 			})}
-		</Form.Group>
+		</>
 	);
 };
 
