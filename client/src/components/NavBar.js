@@ -1,10 +1,10 @@
-import React, { component, useState } from "react";
+import React, { useState } from "react";
 import "../HodHome";
 import "bootstrap/dist/css/bootstrap.css";
 import { NavDropdown } from "react-bootstrap";
 import { logoutFetcher } from "../API/logoutFetcher";
 import { staffFetcher } from "../API/staffFetcher";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { GetUser } from "./GlobalState";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
@@ -48,29 +48,27 @@ function NavBar() {
 
 	if (redirect) return <Redirect to={Redirect} />;
 	return (
-		<div className="container-fluid">
-			<div id="mySidenav" className="sidenav">
-				<button type="button" className="btn btn-light closebtn" onClick={closeNav}>
+		<div className="w-100">
+			<div id="mySidenav" className="sidenav bg-dark">
+				<button type="button" className="btn btn-dark closebtn" onClick={closeNav}>
 					&times;
 				</button>
-				<a href="#">About</a>
-				<a href="#">Services</a>
-				<a href="#">Clients</a>
-				<a href="#">Contact</a>
+				<a href="/faq">FAQ</a>
+				<a href="/aboutUs">About Us</a>
+				<a href="/contact">Contact</a>
 			</div>
 
-			<div id="main" className="row container-fluid col-12">
-				<nav className="col-12 navbar navbar-expand-lg navbar-dark bg-dark">
-					<a className="navbar-brand" href="#">
-						{" "}
+			<div id="main">
+				<nav className="col-12 row container-fluid navbar navbar-expand-lg navbar-dark bg-dark">
+					<div className="navbar-brand">
 						<button type="button" href="#" onClick={openNav} className="btn">
 							<span className="navbar-toggler-icon"></span>
 						</button>
 						GUC
-					</a>
+					</div>
 					<div className="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul className="navbar-nav me-auto mb-2 mb-lg-0">
-							{user.type === "academic" && (
+							{
 								<li className="nav-item">
 									<a
 										className="nav-link active"
@@ -80,18 +78,7 @@ function NavBar() {
 										Home
 									</a>
 								</li>
-							)}
-							{user.type === "Hr" && (
-								<li className="nav-item">
-									<a
-										className="nav-link active"
-										aria-current="page"
-										href="http://localhost:3001/hrHome/"
-									>
-										Home
-									</a>
-								</li>
-							)}
+							}
 							<NavDropdown title="preferences" id="basic-nav-dropdown">
 								<NavDropdown.Item href="#action/3.1" onClick={handleShowA}>
 									Update profile
@@ -99,11 +86,7 @@ function NavBar() {
 								<NavDropdown.Item onClick={handleShow1} href="#action/3.2">
 									Reset password
 								</NavDropdown.Item>
-								<NavDropdown.Item href="#action/3.3">not yet</NavDropdown.Item>
-								<NavDropdown.Divider />
-								<NavDropdown.Item href="#action/3.4">not yet</NavDropdown.Item>
 							</NavDropdown>
-
 							{user.type === "academic" && (
 								<NavDropdown title="navigate" id="basic-nav-dropdown">
 									{user.hod && (
@@ -122,6 +105,11 @@ function NavBar() {
 									{user.coordinator && (
 										<NavDropdown.Item href="#action/3.2">Coordinator</NavDropdown.Item>
 									)}
+								</NavDropdown>
+							)}
+							{user.type === "Hr" && (
+								<NavDropdown title="navigate" id="basic-nav-dropdown">
+									<NavDropdown.Item href="/hrHome">Human Resource</NavDropdown.Item>
 								</NavDropdown>
 							)}
 							<li className="nav-item">

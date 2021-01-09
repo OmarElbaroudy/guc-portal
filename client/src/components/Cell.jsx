@@ -1,16 +1,21 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../views/Cell.css";
 
 const Cell = (props) => {
-	return props.session && props.session.course ? (
-		<td className="cont">
-			<h5 className="primary">{props.session.course}</h5>
-			<h5 className="primary">{props.session.location}</h5>
-			<h6 className="secondary">{props.session.type}</h6>
-		</td>
-	) : (
-		<td></td>
+	return (
+		props.session && (
+			<td className="cont">
+				{props.session.map((e) => {
+					return (
+						<>
+							{e.course && <h5 className="">{e.course}</h5>}
+							{e.location && <h5 className="">{e.location}</h5>}
+							{e.type && <h6 className="">{e.type}</h6>}
+						</>
+					);
+				})}
+			</td>
+		)
 	);
 };
 
