@@ -17,43 +17,6 @@ const HrHome = () => {
     <div>
       <NavBar />
       <div class="row center offset-1">
-        <div class="col-md-4 containerIntro">
-          <button type="button" href="#" class="btn">
-            <span class="fa fa-map-marker fa-3x" href="#"></span>
-          </button>
-          <p>Locations</p>
-          <br />
-          <span class="icons">
-            view, add, update,
-            <br /> and delete locations
-          </span>
-        </div>
-
-        <div class="col-md-4 containerIntro">
-          <button type="button" href="#" class="btn">
-            <span class="fas fa-school fa-3x"> </span>
-          </button>
-          <p>Faculties</p>
-          <br />
-          <span class="icons">
-            {" "}
-            view, add, update,
-            <br /> and delete Faculties
-          </span>
-        </div>
-
-        <div class="col-md-4 containerIntro">
-          <button type="button" href="#" class="btn">
-            <span class="fa fa-university fa-3x"> </span>
-          </button>
-          <p>Departments</p>
-          <br />
-          <span class="icons">
-            view, add, update,
-            <br /> delete, and assigning head to the department
-          </span>
-        </div>
-
         <div
           style={{ marginTop: 50, marginLeft: 200 }}
           class="col-md-5 containerIntro"
@@ -68,10 +31,7 @@ const HrHome = () => {
           </button>
           <p>Courses</p>
           <br />
-          <span class="icons">
-            view, add, update,
-            <br /> and delete courses
-          </span>
+          <span class="icons">view courses names,coverage, and schedules</span>
         </div>
 
         <div
@@ -89,8 +49,13 @@ const HrHome = () => {
           <p>Staff members</p>
           <br />
           <span class="icons">
-            view, add, update,
-            <br /> and delete staff members
+            view staff members
+            <br />
+            assign, delete and update slot assignment
+            <br />
+            delete academic from course
+            <br />
+            set coordinator
           </span>
         </div>
       </div>
