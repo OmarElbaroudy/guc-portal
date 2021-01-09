@@ -33,7 +33,6 @@ router.post("/login", async (req, res) => {
 	await user.save();
 
 	res.header("auth-token", token);
-	console.log(user);
 
 	return res.status(201).json({
 		token: token,

@@ -9,12 +9,33 @@ const Profile = (props) => {
 	const [location, setLocation] = useState(null);
 	const [faculty, setFaculty] = useState(null);
 
+	const getDay = (num) => {
+		switch (num) {
+			case 0:
+				return "Sunday";
+			case 1:
+				return "Monday";
+			case 2:
+				return "Tuesday";
+			case 3:
+				return "Wednesday";
+			case 4:
+				return "Thursday";
+			case 5:
+				return "Friday";
+			case 6:
+				return "Saturday";
+			default:
+		}
+	};
+
 	useEffect(() => {
 		const getDepartment = async () => {
 			const data = await getterFetcher.getDepNameById(
 				props.department,
 				user.token
 			);
+			console.log(data);
 			setDepartment(data);
 		};
 
@@ -79,7 +100,7 @@ const Profile = (props) => {
 			)}
 			{props.salary && (
 				<ListGroup.Item>
-					salary: <strong>{props.salary}</strong>EGP
+					salary: <strong>{props.salary}</strong> EGP
 				</ListGroup.Item>
 			)}
 			{location && (
@@ -95,6 +116,11 @@ const Profile = (props) => {
 			{faculty && (
 				<ListGroup.Item>
 					faculty: <strong>{faculty}</strong>
+				</ListGroup.Item>
+			)}
+			{props.dayOff && (
+				<ListGroup.Item>
+					day off: <strong>{getDay(props.dayOff)}</strong>
 				</ListGroup.Item>
 			)}
 		</ListGroup>

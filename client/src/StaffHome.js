@@ -92,7 +92,7 @@ const StaffHome = () => {
 				{message}
 			</Alert>
 			<Alert
-				className = "col-12"
+				className="col-12"
 				variant="warning"
 				show={showNotification}
 				onClose={() => {
@@ -175,6 +175,7 @@ const StaffHome = () => {
 							department={profile.departmentId}
 							location={profile.officeLocationId}
 							faculty={profile.facultyId}
+							dayOff={profile.dayOff}
 						></Profile>
 					)}
 				</Modal.Body>
