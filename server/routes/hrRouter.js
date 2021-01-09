@@ -34,12 +34,7 @@ router
   .post(auth, async (req, res) => {
     try {
       let t = req.body.type;
-      if (
-        t == "lab" ||
-        t == " tutorial room" ||
-        t == "lecture hall" ||
-        t == "office"
-      ) {
+      if (t === "lab" || t === "room" || t === "hall" || t === "office") {
         const x = await Location.findOne({
           name: req.body.name,
         });
@@ -47,10 +42,10 @@ router
           if (req.body.maxCapacity) {
             const u = parseInt(req.body.maxCapacity);
             if (isNaN(u)) {
-              return res.status(454).send("not a valid number");
+              return res.status(454).json("not a valid number");
             }
           } else {
-            res.status.send("please enter maxCapacity");
+            res.status.json("please enter maxCapacity");
           }
           let loc = new Location({
             name: req.body.name,
@@ -58,15 +53,15 @@ router
             type: req.body.type,
           });
           await loc.save();
-		  const w=await Location.find()
-		  res.json(w)
+          const w = await Location.find();
+          res.json(w);
         } else {
           res
             .status(403)
-            .send("Cannot use This location name as it already exists");
+            .json("Cannot use This location name as it already exists");
         }
       } else {
-        res.send(
+        res.json(
           "location type should only be lab,tutorial room, lecture hall or office"
         );
       }
@@ -117,8 +112,8 @@ router
           }
         );
         await temp.save();
-		const w=await Location.find()
-		res.json(w)
+        const w = await Location.find();
+        res.json(w);
       } else {
         res.status(403).send("this location does not exist");
       }
@@ -155,7 +150,6 @@ router.route("/hr/viewAllStaffMembers").get(async (req, res) => {
     const result = h.concat(a);
 
     res.json(result);
-    //res.json([])
   } catch (err) {
     res.json(err);
   }
@@ -164,9 +158,7 @@ router.route("/hr/viewAllStaffMembers").get(async (req, res) => {
 router.route("/hr/viewAllLocations").get(async (req, res) => {
   try {
     const l = await Location.find();
-
     res.json(l);
-    //res.json([])
   } catch (err) {
     res.json(err);
   }
@@ -177,7 +169,6 @@ router.route("/hr/viewAllFaculties").get(async (req, res) => {
     const f = await Faculty.find();
 
     res.json(f);
-    //res.json([])
   } catch (err) {
     res.json(err);
   }
@@ -188,7 +179,6 @@ router.route("/hr/viewAllDepartments").get(async (req, res) => {
     const d = await Department.find();
 
     res.json(d);
-    //res.json([])
   } catch (err) {
     res.json(err);
   }
@@ -199,7 +189,6 @@ router.route("/hr/viewAllCourses").get(async (req, res) => {
     const c = await Course.find();
 
     res.json(c);
-    //res.json([])
   } catch (err) {
     res.json(err);
   }
@@ -207,12 +196,11 @@ router.route("/hr/viewAllCourses").get(async (req, res) => {
 
 router.route("/hr/registerMember").post(auth, async (req, res) => {
   try {
-	console.log("here")
-	console.log(req.body.name)
-	console.log(req.body.salary)
-	console.log(req.body.officeLocation)
-	console.log(req.body.email)
-	console.log(req.body.type)
+    console.log(req.body.name);
+    console.log(req.body.salary);
+    console.log(req.body.officeLocation);
+    console.log(req.body.email);
+    console.log(req.body.type);
     //should remove id as it should be done automatically
     if (
       !req.body.name ||
@@ -222,23 +210,23 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
     ) {
       return res
         .status(408)
-        .send(
-          "each member should have name, salary, email, office location and id"
+        .json(
+          "each member should have name, salary, email, and office location"
         );
     } else {
       const u = parseInt(req.body.salary);
       if (isNaN(u)) {
-        return res.status(456).send("not a valid number");
+        return res.status(456).json("not a valid number");
       }
       const temp = await Location.findOne({ name: req.body.officeLocation });
       if (!temp) {
-        return res.status(409).send("this location does not exist");
+        return res.status(409).json("this location does not exist");
       }
       if (temp.type !== "office") {
-        return res.status(410).send("this location is not an office");
+        return res.status(410).json("this location is not an office");
       }
       if (temp.maxCapacity == temp.currCapacity) {
-        return res.status(411).send("this location is full");
+        return res.status(411).json("this location is full");
       }
       const loc = await Location.findOne({ name: req.body.officeLocation });
       if (req.body.type === "hr") {
@@ -254,7 +242,7 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
           password: await bcrypt.hash("123456", await bcrypt.genSalt(10)),
         });
 
-		await x.save();
+        await x.save();
       }
       if (req.body.type === "academic") {
         const x = new Academic({
@@ -268,13 +256,12 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
           personalInfo: req.body.personalInfo,
           password: await bcrypt.hash("123456", await bcrypt.genSalt(10)),
         });
-		await x.save();
-	  }
-	 
+        await x.save();
+      }
+
       const h = await HR.find();
       const a = await Academic.find();
-	  const result = h.concat(a);
-	  console.log("here")
+      const result = h.concat(a);
 
       res.json(result);
     }
@@ -291,9 +278,9 @@ router.route("/hr/addFaculty").post(auth, async (req, res) => {
     if (!x) {
       const f = new Faculty({ name: req.body.name });
       await f.save();
-	  const w=await Faculty.find()
-	  console.log(w)
-	  res.json(w)
+      const w = await Faculty.find();
+      console.log(w);
+      res.json(w);
     } else {
       res.status(403).send("this faculty already exist");
     }
@@ -313,8 +300,8 @@ router.route("/hr/updateFaculty").put(auth, async (req, res) => {
         { name: req.body.newName },
         { new: true }
       );
-      const w=await Faculty.find()
-	  res.json(w)
+      const w = await Faculty.find();
+      res.json(w);
     } else {
       res.status(403).send("this faculty does not exist");
     }
@@ -363,16 +350,17 @@ router.route("/hr/addDepartment").post(auth, async (req, res) => {
         const d = new Department({ name: req.body.name });
         await d.save();
         const o = await Department.find();
-		res.json(o);
+        res.json(o);
       } else {
         const f = await Faculty.findOne({ name: req.body.faculty });
+        if (!f) return res.status(403).json("no faculty with such name");
         const d = new Department({ name: req.body.name, facultyId: f._id });
         await d.save();
-		const o = await Department.find();
-		res.json(o);
+        const o = await Department.find();
+        res.json(o);
       }
     } else {
-      res.status(403).send("this department already exist");
+      res.status(403).json("this department already exist");
     }
   } catch (err) {
     console.log(err);
@@ -393,6 +381,8 @@ router.route("/hr/updateDepartment").put(auth, async (req, res) => {
         const f = await Faculty.findOne({ name: req.body.newFaculty });
         if (f) {
           x.facultyId = f._id;
+        } else {
+          return res.status(403).json("this faculty does not exist");
         }
       }
 
@@ -400,10 +390,10 @@ router.route("/hr/updateDepartment").put(auth, async (req, res) => {
         new: true,
       });
 
-	  const o = await Department.find();
+      const o = await Department.find();
       res.json(o);
     } else {
-      res.status(403).send("this faculty does not exist");
+      res.status(403).json("this department already exists");
     }
   } catch (err) {
     console.log(err);
@@ -445,14 +435,14 @@ router.route("/hr/addCourse").post(async (req, res) => {
       name: req.body.name,
     });
     if (x) {
-      return res.status(403).send("this course already exist");
+      return res.status(403).json("this course already exist");
     } else {
       if (!req.body.department) {
-        return res.status(403).send("please enter a department");
+        return res.status(403).json("please enter a department");
       } else {
         const d = await Department.findOne({ name: req.body.department });
         if (!d) {
-          return res.status(403).send("please enter a correct department");
+          return res.status(403).json("please enter a correct department");
         }
 
         const hodId = d.hodId ? d.hodId : undefined;
@@ -462,8 +452,8 @@ router.route("/hr/addCourse").post(async (req, res) => {
           facultyId: d.facultyId,
           hodId: hodId,
         });
-		await c.save();
-		const w=await Course.find()
+        await c.save();
+        const w = await Course.find();
         res.json(w);
       }
     }
@@ -474,12 +464,12 @@ router.route("/hr/addCourse").post(async (req, res) => {
 
 router.route("/hr/updateCourse").put(async (req, res) => {
   try {
-	  console.log(req.body.department)
+    console.log(req.body.department);
     const x = await Course.findOne({
       name: req.body.name,
     });
     if (!x) {
-      return res.status(403).send("this course does not exist");
+      return res.status(403).json("this course does not exist");
     } else {
       if (req.body.department) {
         const d = await Department.findOne({ name: req.body.department });
@@ -496,8 +486,8 @@ router.route("/hr/updateCourse").put(async (req, res) => {
       await Course.findOneAndUpdate({ name: req.body.name }, x, {
         new: true,
       });
-	  const w=await Course.find()
-	  res.json(w);
+      const w = await Course.find();
+      res.json(w);
     }
   } catch (err) {
     console.log(err);
@@ -510,7 +500,7 @@ router.route("/hr/deleteCourse").delete(async (req, res) => {
       name: req.body.name,
     });
     if (!x) {
-      return res.status(403).send("this course does not exist");
+      return res.status(403).json("this course does not exist");
     } else {
       //delete replacement requests for this course
       const r = await Requests.find({ type: "replacement" });
@@ -576,7 +566,6 @@ router.route("/hr/deleteCourse").delete(async (req, res) => {
 
 router.route("/hr/updateStaffMember").put(async (req, res) => {
   try {
-	  console.log("reached router 1 "+req.body.email)
     const h = await HR.findOne({
       id: req.body.id,
     });
@@ -585,16 +574,14 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
         id: req.body.id,
       });
       if (!a) {
-        return res.status(403).send("this user does not exist");
+        return res.status(403).json("this user does not exist");
       } else {
         if (req.body.name) {
           a.name = req.body.name;
         }
         if (req.body.email) {
-		console.log("if1")
           const temp = await Academic.findOne({ email: req.body.email });
           if (!temp) {
-			  console.log("if2")
             a.email = req.body.email;
           }
         }
@@ -604,14 +591,14 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
             name: req.body.officeLocation,
           });
           if (!temp) {
-            return res.status(403).send("this location does not exist");
+            return res.status(403).json("this location does not exist");
           }
 
           if (temp.type !== "office") {
-            return res.status(403).send("this location is not an office");
+            return res.status(403).json("this location is not an office");
           }
           if (temp.capacity == temp.currCapacity) {
-            return res.status(403).send("this location is full");
+            return res.status(403).json("this location is full");
           }
           const loc = await Location.findOne({ name: req.body.officeLocation });
           a.officeLocationId = loc._id;
@@ -620,7 +607,7 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
         if (req.body.salary) {
           const z = parseInt(req.body.salary);
           if (isNaN(z)) {
-            return res.status(457).send("not a valid number");
+            return res.status(457).json("not a valid number");
           }
           a.salary = req.body.salary;
         }
@@ -630,21 +617,20 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
         });
 
         const z = await HR.find();
-      	const w = await Academic.find();
-		  const result = z.concat(w);
-		  console.log("reached router 2")
-		  res.json(result);
-		  
+        const w = await Academic.find();
+        const result = z.concat(w);
+        console.log("reached router 2");
+        res.json(result);
       }
     } else {
       if (req.body.name) {
         h.name = req.body.name;
       }
       if (req.body.email) {
-		console.log("if1")
+        console.log("if1");
         const temp = await HR.findOne({ email: req.body.email });
         if (!temp) {
-			console.log("if2")
+          console.log("if2");
           h.email = req.body.email;
         }
       }
@@ -652,13 +638,13 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
       if (req.body.officeLocation) {
         const temp = await Location.findOne({ name: req.body.officeLocation });
         if (!temp) {
-          return res.status(403).send("this location does not exist");
+          return res.status(403).json("this location does not exist");
         }
         if (temp.type !== "office") {
-          return res.status(403).send("this location is not an office");
+          return res.status(403).json("this location is not an office");
         }
         if (temp.capacity == temp.currCapacity) {
-          return res.status(403).send("this location is full");
+          return res.status(403).json("this location is full");
         }
 
         const loc = await Location.findOne({ name: req.body.officeLocation });
@@ -671,10 +657,9 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
       await HR.findOneAndUpdate({ id: req.body.id }, h, { new: true });
       const z = await HR.find();
       const w = await Academic.find();
-	  const result = z.concat(w);
-	  console.log("reached router 2")
-	  res.json(result);
-	  
+      const result = z.concat(w);
+      console.log("reached router 2");
+      res.json(result);
     }
   } catch (err) {
     console.log(err);
