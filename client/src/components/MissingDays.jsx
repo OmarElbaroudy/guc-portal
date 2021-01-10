@@ -8,60 +8,62 @@ import Profile from "./Profile";
 import NavBar from "./NavBar";
 
 const MissingDays = () => {
-	const { user } = GetUser();
-	const [profiles, setProfiles] = useState([]);
+  const { user } = GetUser();
+  const [profiles, setProfiles] = useState([]);
 
-	useEffect(() => {
-		const data = async () => {
-			const ret = await hrFetcher.viewMissingDays(user.token);
-			setProfiles(ret);
-		};
-		data();
-	}, [profiles, user.token]);
+  useEffect(() => {
+    const data = async () => {
+      const ret = await hrFetcher.viewMissingDays(user.token);
+      setProfiles(ret);
+    };
+    data();
+  }, [profiles, user.token]);
 
-	return (
-		<div>
-			<NavBar sticky="top" />
-			<h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
-				Staff Members With Missing Days
-			</h1>
-			{profiles.map((profile) => {
-				return (
-					<div style={{ marginTop: 15 }} className="container row offset-1">
-						<div className="col-xl-12">
-							<Accordion defaultActiveKey="1">
-								<Card>
-									<Accordion.Toggle as={Card.Header} eventKey="0">
-										<span style={{ fontWeight: "bold" }}>
-											{profile.name}({profile.id})
-										</span>
-									</Accordion.Toggle>
-									<Accordion.Collapse eventKey="0">
-										<Card.Body>
-											<Profile
-												name={profile.name}
-												email={profile.email}
-												salary={profile.salary}
-												id={profile.id}
-												accidentalLeaveBalance={profile.accidentalLeaveBalance.balance}
-												annualLeaveBalance={profile.annualLeaveBalance.balance}
-												gender={profile.gender}
-												personalInfo={profile.personalInfo}
-												department={profile.departmentId}
-												location={profile.officeLocationId}
-												faculty={profile.facultyId}
-												dayOff={profile.dayOff}
-											></Profile>
-										</Card.Body>
-									</Accordion.Collapse>
-								</Card>
-							</Accordion>
-						</div>
-					</div>
-				);
-			})}
-		</div>
-	);
+  return (
+    <div style={{ marginTop: 100 }}>
+      <NavBar sticky="top" />
+      <h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
+        Staff Members With Missing Days
+      </h1>
+      {profiles.map((profile) => {
+        return (
+          <div style={{ marginTop: 15 }} className="container row offset-1">
+            <div className="col-xl-12">
+              <Accordion defaultActiveKey="1">
+                <Card>
+                  <Accordion.Toggle as={Card.Header} eventKey="0">
+                    <span style={{ fontWeight: "bold" }}>
+                      {profile.name}({profile.id})
+                    </span>
+                  </Accordion.Toggle>
+                  <Accordion.Collapse eventKey="0">
+                    <Card.Body>
+                      <Profile
+                        name={profile.name}
+                        email={profile.email}
+                        salary={profile.salary}
+                        id={profile.id}
+                        accidentalLeaveBalance={
+                          profile.accidentalLeaveBalance.balance
+                        }
+                        annualLeaveBalance={profile.annualLeaveBalance.balance}
+                        gender={profile.gender}
+                        personalInfo={profile.personalInfo}
+                        department={profile.departmentId}
+                        location={profile.officeLocationId}
+                        faculty={profile.facultyId}
+                        dayOff={profile.dayOff}
+                      ></Profile>
+                    </Card.Body>
+                  </Accordion.Collapse>
+                </Card>
+              </Accordion>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 };
 
 export default MissingDays;
