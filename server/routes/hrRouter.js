@@ -876,12 +876,12 @@ router.post("/hr/viewAttendanceRecords", auth, async (req, res) => {
 		});
 
 		if (!doc) {
-			return res.status(430).send("not a valid id");
+			return res.json("not a valid id");
 		}
 		const curMonth = new Date(Date.UTC()).getMonth();
 		const arr = calc.viewAttendanceRecords(curMonth, doc);
 
-		res.send(arr);
+		res.json(arr);
 	} catch (err) {
 		console.log(err);
 	}
@@ -897,7 +897,7 @@ router.get("/hr/viewMissingHoursMembers", auth, async (req, res) => {
 			missingHours: { $gt: 0 },
 		});
 
-		res.send(ac.concat(hr));
+		res.json(ac.concat(hr));
 	} catch (err) {
 		console.log(err);
 	}
@@ -913,7 +913,7 @@ router.get("/hr/viewMissingDaysMembers", auth, async (req, res) => {
 			missingDays: { $gt: 0 },
 		});
 
-		res.send(ac.concat(hr));
+		res.json(ac.concat(hr));
 	} catch (err) {
 		console.log(err);
 	}

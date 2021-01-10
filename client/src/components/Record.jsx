@@ -28,6 +28,19 @@ const Record = (props) => {
 		const utc = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDay()));
 		return utc.getDate() + "/" + (utc.getMonth() + 1) + "/" + utc.getFullYear();
 	};
+
+	const getTime = () => {
+		const hours = Math.floor(props.totalTime / (1000 * 60 * 60));
+		const minutes = Math.floor(props.totalTime / (1000 * 60));
+
+		return (
+			<h6>
+				total time spent is {hours} <strong>hours</strong> and {minutes}{" "}
+				<strong>minutes</strong>
+			</h6>
+		);
+	};
+
 	return (
 		<div style={{ marginTop: 15 }} className="container row">
 			<div className="col-xl-12">
@@ -44,6 +57,7 @@ const Record = (props) => {
 									<strong>attendance date</strong> : {getDay(props.weekDay)} {getDate()}
 								</h6>
 								{props.compensation && <h6>this day is considered as compensation</h6>}
+								{getTime()}
 							</Card.Body>
 						</Accordion.Collapse>
 					</Card>
