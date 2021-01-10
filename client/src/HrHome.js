@@ -160,7 +160,11 @@ const HrHome = () => {
 				</div>
 
 				<div style={{ marginTop: 75 }} class="col-md-4 containerIntro">
-					<button onClick={handleShow} type="button" class="btn">
+					<button
+						onClick={() => setRedirect("/hr/missingDays")}
+						type="button"
+						class="btn"
+					>
 						<span class="fas fa-calendar-times fa-3x"> </span>
 					</button>
 					<p>Missing Days</p>
@@ -174,9 +178,8 @@ const HrHome = () => {
 
 				<div style={{ marginTop: 75 }} class="col-md-4 containerIntro">
 					<button
-						onClick={() => setRedirect("/hr/StaffMembers")}
+						onClick={() => setRedirect("/hr/missingHours")}
 						type="button"
-						href="/hr/StaffMembers"
 						class="btn"
 					>
 						<span class="fas fa-user-clock fa-3x"> </span>
