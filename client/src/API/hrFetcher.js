@@ -472,7 +472,7 @@ export class hrFetcher {
 
 	static async signInOut(id, signIn, signOut, token) {
 		try {
-			const params = { signIn: signIn, signOut: signOut, id : id};
+			const params = { signIn: signIn, signOut: signOut, id: id };
 			const res = await fetch("http://localhost:3000/hr/addSignInOut", {
 				method: "POST",
 				body: JSON.stringify(params),
@@ -482,11 +482,67 @@ export class hrFetcher {
 					"Content-Type": "application/json",
 					Accept: "application/json",
 				},
-      });
-      
-			const data = await res.json();
-      return data;
+			});
 
+			const data = await res.json();
+			return data;
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	static async viewMissingHours(token) {
+		try {
+			const res = await fetch("http://localhost:3000/hr/viewMissingHoursMembers", {
+				method: "GET",
+				headers: {
+					Authorization: "",
+					"auth-token": token,
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+			});
+			const data = await res.json();
+			return data;
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	static async viewMissingDays(token) {
+		try {
+			const res = await fetch("http://localhost:3000/hr/viewMissingDaysMembers", {
+				method: "GET",
+				headers: {
+					Authorization: "",
+					"auth-token": token,
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+			});
+			const data = await res.json();
+			return data;
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	static async viewAttendanceRecords(id, token) {
+		try {
+			const params = { id: id };
+			const res = await fetch("http://localhost:3000/hr/viewAttendanceRecords", {
+				method: "POST",
+				body: JSON.stringify(params),
+				headers: {
+					Authorization: "",
+					"auth-token": token,
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+			});
+
+			const data = await res.json();
+			return data;
 		} catch (error) {
 			console.log(error);
 		}

@@ -66,6 +66,7 @@ const AttendanceRecord = () => {
 						day={e.day}
 						weekDay={e.weekDay}
 						compensation={e.compensation}
+						totalTime = {e.totalTime}
 					></Record>
 				);
 			})}
