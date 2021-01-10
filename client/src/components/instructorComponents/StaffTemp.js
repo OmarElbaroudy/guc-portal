@@ -378,6 +378,7 @@ const Temp = (props) => {
             variant="secondary"
             onClick={() => {
               props.setShowAlert(false);
+
               handleClose2();
             }}
           >

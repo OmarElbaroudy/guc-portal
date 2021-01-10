@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 import { getterFetcher } from "../API/getterFetcher";
 import { GetUser } from "./GlobalState";
 
-const Request = (props) => {
+const ReqTemp = (props) => {
   const { user } = GetUser();
   const [showAccept, setShowAccept] = useState(false);
   const [showReject, setShowReject] = useState(false);
@@ -16,10 +16,8 @@ const Request = (props) => {
   const [staff, setStaff] = useState("");
   const [course, setCourse] = useState("");
   const [location, setLocation] = useState("");
-
   const handleClose1 = () => setShowAccept(false);
   const handleShow1 = () => setShowAccept(true);
-
   const handleClose2 = () => setShowReject(false);
   const handleShow2 = () => setShowReject(true);
 
@@ -50,6 +48,8 @@ const Request = (props) => {
           props.slotLinking.locationId,
           user.token
         );
+        console.log(c);
+        console.log(l);
         setCourse(c);
         setLocation(l);
       }
@@ -57,7 +57,6 @@ const Request = (props) => {
     staff();
     courseAndLocation();
   }, []);
-
   const getDay = (num) => {
     switch (num) {
       case 0:
@@ -76,26 +75,13 @@ const Request = (props) => {
         return "Saturday";
     }
   };
-
   const disable = () => {
     if (props.status !== "pending") return true;
     return false;
   };
-
   const renderReplacment = () => {
     console.log(props.replacement);
-    if (props.type === "replacement") {
-      return (
-        <ul class="list-group">
-          <li class="list-group-item">{course}</li>
-          <li class="list-group-item">{props.replacement.slotDate}</li>
-          <li class="list-group-item">{props.replacement.slot}</li>
-          <li class="list-group-item">{location.name}</li>
-          <li class="list-group-item">{props.replacement.academicResponse}</li>
-        </ul>
-      );
-    }
-    if (props.type === "slotLinking") {
+    if (props.type === "slotLinking")
       return (
         <ul class="list-group">
           <li class="list-group-item">{course}</li>
@@ -104,7 +90,6 @@ const Request = (props) => {
           <li class="list-group-item">{location.name}</li>
         </ul>
       );
-    }
     return;
   };
 
@@ -122,22 +107,6 @@ const Request = (props) => {
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
                   <dl class="row">
-                    {props.type === "sick" ||
-                      props.type === "maternity" ||
-                      (props.type === "accidental" && (
-                        <React.Fragment>
-                          <dt class="col-sm-3">Target day</dt>
-                          <dd class="col-sm-9">{props.targetDay}</dd>
-                        </React.Fragment>
-                      ))}
-
-                    {props.type === "changeDayOff" && (
-                      <React.Fragment>
-                        <dt class="col-sm-3">New day off</dt>
-                        <dd class="col-sm-9">{getDay(props.newDayOff)}</dd>
-                      </React.Fragment>
-                    )}
-
                     <dt class="col-sm-3">Issue date</dt>
                     <dd class="col-sm-9">{props.issueDate}</dd>
 
@@ -149,16 +118,6 @@ const Request = (props) => {
                       </React.Fragment>
                     )}
 
-                    {props.type === "compensation" && (
-                      <React.Fragment>
-                        <dt class="col-sm-3">Compensated</dt>
-                        <dd class="col-sm-9">
-                          {props.compensated
-                            ? props.compensated.type
-                            : "-not sent-"}
-                        </dd>
-                      </React.Fragment>
-                    )}
                     <dt class="col-sm-3">sender comment</dt>
                     <dd class="col-sm-9">
                       {props.senderComment
@@ -266,4 +225,4 @@ const Request = (props) => {
     </div>
   );
 };
-export default Request;
+export default ReqTemp;

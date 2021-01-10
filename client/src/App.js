@@ -14,7 +14,9 @@ import HrDepartment from "./components/HrDepartment";
 import HrFaculty from "./components/HrFaculty";
 import InstructorHome from "./instHome";
 import HrCourse from "./components/HrCourse";
+import CoordinatorReq from "./components/coordinatorReq";
 import AcademicHome from "./AcademicHome";
+import CoordinatorHome from "./CoordinatorHome";
 import ViewReplacementRequests from "./components/ViewReplacementRequests";
 import ViewSubmittedRequests from "./components/ViewSubmittedRequests";
 import InstructorCourses from "./components/instructorComponents/instCourseCoverage";
@@ -39,7 +41,8 @@ function App() {
           <Route exact path="/hr/Departments" component={HrDepartment} />
           <Route exact path="/hr/Faculties" component={HrFaculty} />
           <Route exact path="/hr/Courses" component={HrCourse} />
-          <Route exact path="/hr/Courses" component={HrCourse} />
+          <Route exact path="/coordinatorHome" component={CoordinatorHome} />
+          <Route exact path="/coordinator/request" component={CoordinatorReq} />
           <Route
             exact
             path="/academicHome/replacementRequests"
