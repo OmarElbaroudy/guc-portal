@@ -2,27 +2,26 @@ import React from "react";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 
-const getDay = (num) => {
-  switch (num) {
-    case 0:
-      return "Sunday";
-    case 1:
-      return "Monday";
-    case 2:
-      return "Tuesday";
-    case 3:
-      return "Wednesday";
-    case 4:
-      return "Thursday";
-    case 5:
-      return "Friday";
-    case 6:
-      return "Saturday";
-    default:
-  }
-};
-
 const Record = (props) => {
+  const getDay = (num) => {
+    switch (num) {
+      case 0:
+        return "Sunday";
+      case 1:
+        return "Monday";
+      case 2:
+        return "Tuesday";
+      case 3:
+        return "Wednesday";
+      case 4:
+        return "Thursday";
+      case 5:
+        return "Friday";
+      case 6:
+        return "Saturday";
+      default:
+    }
+  };
   const getDate = () => {
     const d = new Date(props.day);
     const utc = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDay()));
@@ -42,7 +41,7 @@ const Record = (props) => {
   };
 
   return (
-    <div style={{ marginTop: 115 }} className="container row">
+    <div style={{ marginTop: 15 }} className="container row">
       <div className="col-xl-12">
         <Accordion defaultActiveKey="1">
           <Card>

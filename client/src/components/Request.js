@@ -203,6 +203,7 @@ const Request = (props) => {
               setComment(event.target.value);
             }}
             rows="3"
+            as="textarea"
             type="comment"
             placeholder="Enter comment"
           />
@@ -240,6 +241,7 @@ const Request = (props) => {
             onChange={(event) => {
               setComment(event.target.value);
             }}
+            as="textarea"
             rows="3"
             type="comment"
             placeholder="Enter comment"

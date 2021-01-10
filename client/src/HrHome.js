@@ -35,6 +35,19 @@ const HrHome = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <Modal size="lg" show={showA} onHide={handleCloseA}>
+        <Modal.Header closeButton>
+          <Modal.Title>View Staff Member Attendance Records</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ViewAttendanceRecord></ViewAttendanceRecord>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseA}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div class="row center offset-1">
         <div class="col-md-4 containerIntro">
           <button

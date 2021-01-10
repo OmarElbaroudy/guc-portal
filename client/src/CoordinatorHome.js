@@ -115,7 +115,7 @@ const CoordinatorHome = () => {
       <NavBar />
       <div class="col col-12 head containerIntro">
         <h1>Home</h1>
-        <span className="m-2">Welcome as an instructor</span>
+        <span className="m-2">Welcome as a coordinator</span>
       </div>
       <div class="row center offset-1">
         <div style={{ marginLeft: 200 }} class="col-md-5 containerIntro">

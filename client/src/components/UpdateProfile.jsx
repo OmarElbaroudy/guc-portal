@@ -52,7 +52,7 @@ const UpdateProfile = (props) => {
       </Form.Group>
       <Form.Group as={Row}>
         <Form.Label column="md" md={4}>
-          <strong>comment:</strong>
+          <strong>personalInfo:</strong>
         </Form.Label>
         <Form.Control
           as="textarea"

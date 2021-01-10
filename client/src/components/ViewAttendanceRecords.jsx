@@ -27,7 +27,7 @@ const ViewAttendanceRecord = () => {
   };
 
   return (
-    <div style={{ marginTop: 100 }}>
+    <div>
       <Alert
         variant="danger"
         show={showAlert}

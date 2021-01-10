@@ -68,23 +68,30 @@ router.route("/instructor/viewAssignedSlots").get(auth, async (req, res) => {
     const output = await courses.findOne({
       _id: entry.courseId,
     });
-    //console.log(output.schedule[0].instructor)
+
     if (output) {
-      //let assigned = output.schedule.filter(instructorUndefined)
-      //if(assigned.length>0)
-      response.push({ course: output.name, AssignedSlots: output.schedule });
+      let schedule = [];
+      for (const entry of output.schedule) {
+        const courseInst = await courses.findOne({
+          _id: entry.instructorId,
+        });
+
+        const courseName = courseInst.name + "(" + courseInst.id + ")";
+        let session = {
+          course: courseName,
+          location: await getter.getLocationNameById(entry.locationId),
+          type: entry.type,
+        };
+        schedule.push(session);
+      }
+
+      response.push({ course: output.name, AssignedSlots: schedule });
     }
   }
 
-  /*let x = [ {locationId:"blablabla" , weekDay:"blablabla" , slot: "blablabla"} , 
-          {locationId:"blablabla" , weekDay:"blablabla" , slot: "blablabla"},
-          {instructorId : "blabla", locationId:"blablabla" , weekDay:"blablabla" , slot: "blablabla"}]
-
-            let assigned = numOfNotUndefined(x)
-            console.log(assigned)*/
-
   res.json(response);
 });
+
 router
   .route("/instructor/viewCourseOrDepartmentStaff")
   .post(auth, async (req, res) => {

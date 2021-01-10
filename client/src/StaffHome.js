@@ -80,7 +80,7 @@ const StaffHome = () => {
   };
 
   return (
-    <div style={{ marginTop: 100 }}>
+    <div>
       <NavBar />
       <Alert
         class=".col-6"

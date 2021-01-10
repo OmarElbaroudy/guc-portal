@@ -161,6 +161,7 @@ const ReqTemp = (props) => {
             onChange={(event) => {
               setComment(event.target.value);
             }}
+            as="textarea"
             rows="3"
             type="comment"
             placeholder="Enter comment"
@@ -199,6 +200,7 @@ const ReqTemp = (props) => {
             onChange={(event) => {
               setComment(event.target.value);
             }}
+            as="textarea"
             rows="3"
             type="comment"
             placeholder="Enter comment"

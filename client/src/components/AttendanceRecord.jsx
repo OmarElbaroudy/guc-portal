@@ -37,7 +37,7 @@ const AttendanceRecord = () => {
   }, [month, user.token]);
 
   return (
-    <div style={{ marginTop: 100 }}>
+    <div>
       <Form.Group as={Row}>
         <Form.Label column="lg" lg={2}>
           Month:
