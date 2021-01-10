@@ -62,82 +62,91 @@ function NavBar() {
         <a href="/contact">Contact</a>
       </div>
 
-      <div id="main">
-        <nav className="col-12 row container-fluid navbar navbar-expand-lg navbar-dark bg-dark">
+      <nav
+        id="main"
+        class="navbar navbar-expand-md navbar-dark bg-dark fixed-top"
+      >
+        <button
+          class="navbar-toggler"
+          data-toggle="collapse"
+          data-target="#collapse-target"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapse-target">
           <div className="navbar-brand">
             <button type="button" href="#" onClick={openNav} className="btn">
               <span className="navbar-toggler-icon"></span>
             </button>
             GUC
           </div>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              {
-                <li className="nav-item">
-                  <a
-                    className="nav-link active"
-                    aria-current="page"
-                    href="http://localhost:3001/staffHome/"
-                  >
-                    Home
-                  </a>
-                </li>
-              }
-              <NavDropdown title="preferences" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1" onClick={handleShowA}>
-                  Update profile
-                </NavDropdown.Item>
-                <NavDropdown.Item onClick={handleShow1} href="#action/3.2">
-                  Reset password
-                </NavDropdown.Item>
-              </NavDropdown>
-              {user.type === "academic" && (
-                <NavDropdown title="navigate" id="basic-nav-dropdown">
-                  {user.hod && (
-                    <NavDropdown.Item href="/hodHome">
-                      Head of Department
-                    </NavDropdown.Item>
-                  )}
-
-                  {user.instructor && (
-                    <NavDropdown.Item href="/instructorHome">
-                      Instructor
-                    </NavDropdown.Item>
-                  )}
-
-                  {user.academic && (
-                    <NavDropdown.Item href="/academicHome">
-                      Academic
-                    </NavDropdown.Item>
-                  )}
-                  {user.coordinator && (
-                    <NavDropdown.Item href="/coordinatorHome">
-                      Coordinator
-                    </NavDropdown.Item>
-                  )}
-                </NavDropdown>
-              )}
-              {user.type === "Hr" && (
-                <NavDropdown title="navigate" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/hrHome">
-                    Human Resource
-                  </NavDropdown.Item>
-                </NavDropdown>
-              )}
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            {
               <li className="nav-item">
                 <a
                   className="nav-link active"
                   aria-current="page"
-                  href="/"
-                  onClick={logOut}
+                  href="http://localhost:3001/staffHome/"
                 >
-                  Log out
+                  Home
                 </a>
               </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
+            }
+            <NavDropdown title="preferences" id="basic-nav-dropdown">
+              <NavDropdown.Item href="#action/3.1" onClick={handleShowA}>
+                Update profile
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={handleShow1} href="#action/3.2">
+                Reset password
+              </NavDropdown.Item>
+            </NavDropdown>
+            {user.type === "academic" && (
+              <NavDropdown title="navigate" id="basic-nav-dropdown">
+                {user.hod && (
+                  <NavDropdown.Item href="/hodHome">
+                    Head of Department
+                  </NavDropdown.Item>
+                )}
+
+                {user.instructor && (
+                  <NavDropdown.Item href="/instructorHome">
+                    Instructor
+                  </NavDropdown.Item>
+                )}
+
+                {user.academic && (
+                  <NavDropdown.Item href="/academicHome">
+                    Academic
+                  </NavDropdown.Item>
+                )}
+                {user.coordinator && (
+                  <NavDropdown.Item href="/coordinatorHome">
+                    Coordinator
+                  </NavDropdown.Item>
+                )}
+              </NavDropdown>
+            )}
+            {user.type === "Hr" && (
+              <NavDropdown title="navigate" id="basic-nav-dropdown">
+                <NavDropdown.Item href="/hrHome">
+                  Human Resource
+                </NavDropdown.Item>
+              </NavDropdown>
+            )}
+            <li className="nav-item">
+              <a
+                className="nav-link active"
+                aria-current="page"
+                href="/"
+                onClick={logOut}
+              >
+                Log out
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
       <Modal
         show={showAccept}
         onHide={handleClose1}

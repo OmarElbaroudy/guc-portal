@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { GetUser } from "./GlobalState";
 import "bootstrap/dist/css/bootstrap.min.css";
-import StaffMember from "./StaffMember";
 import NavBar from "./NavBar";
 import { hodFetcher } from "../API/hodFetcher";
-import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Schedule from "./Schedule";
@@ -39,7 +37,7 @@ const CourseCoverage = () => {
   };
 
   return (
-    <React.Fragment>
+    <div style={{ marginTop: 100 }}>
       <NavBar />
       <h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
         Courses coverage
@@ -103,7 +101,7 @@ const CourseCoverage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </React.Fragment>
+    </div>
   );
 };
 export default CourseCoverage;

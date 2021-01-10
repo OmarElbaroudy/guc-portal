@@ -1,5 +1,5 @@
 import NavBar from "./NavBar";
-import React, { component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { hrFetcher } from "../API/hrFetcher";
 import { GetUser } from "./GlobalState";
 import "bootstrap/dist/css/bootstrap.css";
@@ -117,7 +117,7 @@ const HrStaffMember = () => {
     }
   };
   return (
-    <div>
+    <div style={{ marginTop: 100 }}>
       <NavBar />
       <h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
         Staff Members

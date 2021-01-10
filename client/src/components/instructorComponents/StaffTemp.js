@@ -5,8 +5,6 @@ import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
 import { getterFetcher } from "../../API/getterFetcher";
 import { GetUser } from "../GlobalState";
 import Spinner from "react-bootstrap/Spinner";

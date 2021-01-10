@@ -1,5 +1,4 @@
-import NavBar from "./NavBar";
-import React, { component, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GetUser } from "./GlobalState";
 import "bootstrap/dist/css/bootstrap.css";
 import Accordion from "react-bootstrap/Accordion";
@@ -11,7 +10,6 @@ import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 
 const HrLocationTemp = (props) => {
-  const { user } = GetUser();
   const [showAdd, setShowAdd] = useState(false);
   const [name, setName] = useState(null);
   const [type, setType] = useState("office");

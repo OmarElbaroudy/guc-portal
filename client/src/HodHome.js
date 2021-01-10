@@ -19,7 +19,7 @@ function HodHome() {
   if (redirect) return <Redirect to={redirect} />;
 
   return (
-    <div class="container-fluid">
+    <div style={{ marginTop: 100 }} class="container-fluid">
       <NavBar />
       <div class="col col-12 head containerIntro">
         <h1>Home</h1>

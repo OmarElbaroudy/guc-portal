@@ -3,12 +3,7 @@ import { GetUser } from "../GlobalState";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavBar from "../NavBar";
 import { instructorFetcher } from "../../API/instructorFetcher";
-// import Schedule from "../Schedule";
-// import Modal from "react-bootstrap/Modal";
-// import Button from "react-bootstrap/Button";
 import StaffTemp from "./StaffTemp";
-// import DropdownButton from "react-bootstrap/DropdownButton";
-// import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 
@@ -170,7 +165,7 @@ const ViewStaff = () => {
     setSpinner4(false);
   };
   return (
-    <div>
+    <div style={{ marginTop: 100 }}>
       <NavBar />
       <h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
         Staff Members

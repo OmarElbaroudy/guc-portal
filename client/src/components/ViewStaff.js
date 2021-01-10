@@ -6,7 +6,6 @@ import NavBar from "./NavBar";
 import { hodFetcher } from "../API/hodFetcher";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
-import Alert from "react-bootstrap/Alert";
 
 const ViewStaff = () => {
   const { user } = GetUser();
@@ -94,7 +93,7 @@ const ViewStaff = () => {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: 100 }}>
       <NavBar sticky="top" />
       <h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
         Staff Members

@@ -1,6 +1,6 @@
 import NavBar from "./components/NavBar";
-import React, { component, useState } from "react";
-import { Link, Redirect } from "react-router-dom";
+import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -8,13 +8,8 @@ const HrHome = () => {
   const [redirect, setRedirect] = useState(null);
   if (redirect) return <Redirect to={redirect} />;
 
-  const openNav = () => {
-    document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-  };
-
   return (
-    <div>
+    <div style={{ marginTop: 100 }}>
       <NavBar />
       <div class="row center offset-1">
         <div

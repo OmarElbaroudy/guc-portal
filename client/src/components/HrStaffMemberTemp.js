@@ -1,5 +1,4 @@
-import NavBar from "./NavBar";
-import React, { component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GetUser } from "./GlobalState";
 import "bootstrap/dist/css/bootstrap.css";
 import Accordion from "react-bootstrap/Accordion";
@@ -33,7 +32,7 @@ const HrStaffMemberTemp = (props) => {
       setOffice(y);
     };
     x();
-  }, [props.office]);
+  }, [props.office, user.token]);
 
   return (
     <div className="col-xl-10 offset-3" style={{ marginTop: 10 }}>

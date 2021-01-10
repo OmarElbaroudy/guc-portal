@@ -111,7 +111,7 @@ const CoordinatorHome = () => {
   if (redirect) return <Redirect to={redirect} />;
 
   return (
-    <div>
+    <div style={{ marginTop: 100 }}>
       <NavBar />
       <div class="col col-12 head containerIntro">
         <h1>Home</h1>

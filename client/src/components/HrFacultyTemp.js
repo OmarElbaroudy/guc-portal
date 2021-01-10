@@ -1,5 +1,4 @@
-import NavBar from "./NavBar";
-import React, { component, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GetUser } from "./GlobalState";
 import "bootstrap/dist/css/bootstrap.css";
 import Accordion from "react-bootstrap/Accordion";
@@ -10,7 +9,6 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 
 const HrFacultyTemp = (props) => {
-  const { user } = GetUser();
   const [showAdd, setShowAdd] = useState(false);
   const [name, setName] = useState(null);
 
