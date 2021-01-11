@@ -3,9 +3,11 @@ const academic = require("../models/academic");
 const courses = require("../models/course");
 const locations = require("../models/locations");
 const jwt_decode = require("jwt-decode");
+const getterRoutes = require("../components/getterRoutes");
 const router = express.Router();
+const getter = new getterRoutes();
+
 const app = express();
-app.use(express.json());
 let ac = "";
 
 const numOfDefined = (array) => {
@@ -72,13 +74,15 @@ router.route("/instructor/viewAssignedSlots").get(auth, async (req, res) => {
     if (output) {
       let schedule = [];
       for (const entry of output.schedule) {
-        const courseInst = await courses.findOne({
+        const courseInst = await academic.findOne({
           _id: entry.instructorId,
         });
-
+        
         const courseName = courseInst.name + "(" + courseInst.id + ")";
         let session = {
           course: courseName,
+          weekDay: entry.weekDay,
+          slot : entry.slot,
           location: await getter.getLocationNameById(entry.locationId),
           type: entry.type,
         };

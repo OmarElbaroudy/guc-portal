@@ -1,30 +1,30 @@
-import "./App.css";
-import React from "react";
-import HodHome from "./HodHome";
-import HrHome from "./HrHome";
-import { UserProvider } from "./components/GlobalState";
-import Login from "./components/Login";
-import ViewStaff from "./components/ViewStaff";
-import ViewRequest from "./components/ViewRequests";
-import CourseCoverage from "./components/CourseCoverage";
-import StaffHome from "./StaffHome";
-import HrStaffMember from "./components/HrStaffMember";
-import HrLocation from "./components/HrLocation";
-import HrDepartment from "./components/HrDepartment";
-import HrFaculty from "./components/HrFaculty";
-import InstructorHome from "./instHome";
-import HrCourse from "./components/HrCourse";
-import CoordinatorReq from "./components/coordinatorReq";
-import AcademicHome from "./AcademicHome";
-import CoordinatorHome from "./CoordinatorHome";
-import ViewReplacementRequests from "./components/ViewReplacementRequests";
-import ViewSubmittedRequests from "./components/ViewSubmittedRequests";
-import InstructorCourses from "./components/instructorComponents/instCourseCoverage";
-import InstructorStaff from "./components/instructorComponents/instStaffMem";
-import MissingHours from "./components/MissingHours";
-import MissingDays from "./components/MissingDays";
-
+import HodHome from "./components/home/HodHome";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { UserProvider } from "./components/common/GlobalState";
+import Login from "./components/misc/Login";
+import StaffHome from "./components/home/StaffHome";
+import HrHome from "./components/home/HrHome";
+import AcademicHome from "./components/home/AcademicHome";
+import ViewRequest from "./components/hod/ViewRequests";
+import ViewStaff from "./components/hod/ViewStaff";
+import HrStaffMember from "./components/hr/HrStaffMember";
+import HrLocation from "./components/hr/HrLocation";
+import HrDepartment from "./components/hr/HrDepartment";
+import HrFaculty from "./components/hr/HrFaculty";
+import HrCourse from "./components/hr/HrCourse";
+import MissingDays from "./components/staff/MissingDays";
+import MissingHours from "./components/staff/MissingHours";
+import CoordinatorHome from "./components/home/CoordinatorHome";
+import ViewReplacementRequests from "./components/academic/ViewReplacementRequests";
+import ViewSubmittedRequests from "./components/academic/ViewSubmittedRequests";
+import CourseCoverage from "./components/common/CourseCoverage";
+import CoordinatorReq from "./components/coordinator/CoordinatorReq";
+import InstructorHome from "./components/home/InstHome";
+import InstructorStaff from "./components/instructor/InstStaffMem";
+import InstructorCourses from "./components/instructor/InstCourseCoverage";
+import About from "./components/misc/About";
+import React from "react";
+import "./views/App.css";
 
 function App() {
 	return (
@@ -61,6 +61,7 @@ function App() {
 					<Route exact path="/instructorHome" component={InstructorHome} />
 					<Route exact path="/instructor/staffMembers" component={InstructorStaff} />
 					<Route exact path="/instructor/courses" component={InstructorCourses} />
+					<Route exact path="/about" component={About} />
 				</Switch>
 			</Router>
 		</UserProvider>

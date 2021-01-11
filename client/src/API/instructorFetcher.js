@@ -1,7 +1,6 @@
 export class instructorFetcher {
   static async viewCourseCoverage(token) {
     try {
-      console.log(token);
       const res = await fetch(
         "http://localhost:3000/instructor/viewCoursesCoverage",
         {
@@ -23,9 +22,8 @@ export class instructorFetcher {
 
   static async viewCourseAss(token) {
     try {
-      console.log(token);
       const res = await fetch(
-        "http://localhost:3000/instructor/viewCoursesCoverage",
+        "http://localhost:3000/instructor/viewAssignedSlots",
         {
           method: "GET",
           headers: {
@@ -46,7 +44,6 @@ export class instructorFetcher {
   static async viewStaff(type, token) {
     try {
       const params = { input: type };
-      console.log(token);
       const res = await fetch(
         "http://localhost:3000/instructor/viewCourseOrDepartmentStaff",
         {
@@ -85,7 +82,6 @@ export class instructorFetcher {
         slot: slot,
         type: type,
       };
-      console.log(token);
       const res = await fetch(
         "http://localhost:3000/instructor/assignSlotToAcademic",
         {
@@ -124,7 +120,6 @@ export class instructorFetcher {
         slot: slot,
         type: type,
       };
-      console.log(token);
       const res = await fetch(
         "http://localhost:3000/instructor/deleteSlotAssignment",
         {
@@ -165,7 +160,6 @@ export class instructorFetcher {
         slot: slot,
         type: type,
       };
-      console.log(token);
       const res = await fetch(
         "http://localhost:3000/instructor/updateSlotAssignment",
         {

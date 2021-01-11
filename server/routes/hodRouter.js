@@ -421,27 +421,34 @@ router.route("/HOD/view_course_schedule").post(auth, async (req, res) => {
       const c = await course.findOne({
         name: req.body.courseName,
       });
+      
       if (c) {
         if (c.departmentId.equals(cur.departmentId)) {
           let schedule = [];
+          
           for (const entry of c.schedule) {
-            const courseInst = await course.findOne({
+            const courseInst = await academic.findOne({
               _id: entry.instructorId,
             });
+            
             const courseName = courseInst.name + "(" + courseInst.id + ")";
             let session = {
               course: courseName,
+              weekDay: entry.weekDay,
+              slot : entry.slot,
               location: await getter.getLocationNameById(entry.locationId),
               type: entry.type,
             };
             schedule.push(session);
           }
-          res.json(schedule);
+          
+          return res.json(schedule);
         }
+
       }
     }
-  } catch {
-    res.send("err");
+  } catch(e) {
+    console.log(e);
   }
 });
 router.route("/HOD/accept_requests").put(auth, async (req, res) => {
