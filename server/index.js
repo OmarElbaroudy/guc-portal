@@ -64,20 +64,6 @@ mongoose
       }
     }
 
-    app.get("/createHr", async (req, res) => {
-      const hr = new hrs({
-        name: "Ashry",
-        email: "ashry@gmail.com",
-        password: await bcrypt.hash("123456", await bcrypt.genSalt(10)),
-        gender: "male",
-        salary: "5000",
-        dayOff: 6,
-      });
-
-      await hr.save();
-      res.send("hr added successfully");
-    });
-
     app.use("", loginRouter);
     app.use(authenticate);
     app.use("", hrRouter);

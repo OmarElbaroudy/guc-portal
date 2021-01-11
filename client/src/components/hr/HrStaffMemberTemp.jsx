@@ -17,10 +17,15 @@ const HrStaffMemberTemp = (props) => {
   const [name, setName] = useState(null);
   const [officeLocation, setOfficeLocation] = useState(null);
   const [salary, setSalary] = useState(null);
+  const [department, setDepartment] = useState("");
   const [showAdd, setShowAdd] = useState(false);
+  const [showDep, setShowDep] = useState(false);
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
+  const handleClose2 = () => setShowDep(false);
+  const handleShow2 = () => setShowDep(true);
   const [office, setOffice] = useState("");
+  const [newDep, setNewDep] = useState("");
 
   useEffect(() => {
     const x = async () => {
@@ -31,8 +36,23 @@ const HrStaffMemberTemp = (props) => {
       //console.log(y)
       setOffice(y);
     };
+    const depName = async () => {
+      const d = await getterFetcher.getDepNameById(
+        props.department,
+        user.token
+      );
+      console.log("user " + user.type);
+      if (d) setDepartment(d);
+      else setDepartment("-no department assigned");
+    };
     x();
-  }, [props.office, user.token]);
+    depName();
+  }, [props.department, props.office, user.token]);
+
+  const disable = () => {
+    if (props.department) return true;
+    return false;
+  };
 
   return (
     <div className="col-xl-10 offset-3" style={{ marginTop: 10 }}>
@@ -52,6 +72,11 @@ const HrStaffMemberTemp = (props) => {
                 <dt class="col-sm-3">salary</dt>
                 <dd class="col-sm-9">{props.salary}</dd>
 
+                <React.Fragment>
+                  <dt class="col-sm-3">Department</dt>
+                  <dd class="col-sm-9">{department}</dd>
+                </React.Fragment>
+
                 <dt class="col-sm-3 text-truncate">Office location</dt>
                 <dd class="col-sm-9">
                   {office.name ? office.name : "-no office yet-"}
@@ -62,7 +87,7 @@ const HrStaffMemberTemp = (props) => {
                   props.handleDelete(props.id);
                 }}
                 className="col col-6"
-                variant="light"
+                variant="danger"
               >
                 {props.spinner ? (
                   <Spinner
@@ -78,9 +103,17 @@ const HrStaffMemberTemp = (props) => {
               <Button
                 onClick={() => handleShow1()}
                 className="col col-6"
-                variant="light"
+                variant="warning"
               >
                 update user
+              </Button>
+              <Button
+                onClick={() => handleShow2()}
+                className="col col-12"
+                variant="light"
+                disabled={disable()}
+              >
+                Assign dep
               </Button>
             </Card.Body>
           </Accordion.Collapse>
@@ -174,6 +207,64 @@ const HrStaffMemberTemp = (props) => {
               />
             ) : null}
             Update
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        show={showDep}
+        onHide={handleClose2}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Assign department</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group as={Col} controlId="formGridEmail">
+              <Form.Label>Department</Form.Label>
+              <Form.Control
+                placeholder="Department name"
+                onChange={(event) => {
+                  setNewDep(event.target.value);
+                }}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Alert
+          variant="danger"
+          show={props.showAlert}
+          onClose={() => props.setShowAlert(false)}
+          dismissible
+        >
+          {props.message}
+        </Alert>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              handleClose2();
+              props.setShowAlert(false);
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            variant="success"
+            onClick={() => props.handleAssignDep(props.id, newDep)}
+          >
+            {props.spinner3 ? (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            ) : null}
+            Assign
           </Button>
         </Modal.Footer>
       </Modal>

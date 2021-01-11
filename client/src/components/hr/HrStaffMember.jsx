@@ -28,6 +28,7 @@ const HrStaffMember = () => {
   const [spinner, setSpinner] = useState(false);
   const [spinner1, setSpinner1] = useState(false);
   const [spinner2, setSpinner2] = useState(false);
+  const [spinner3, setSpinner3] = useState(false);
 
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
@@ -43,6 +44,23 @@ const HrStaffMember = () => {
     };
     data();
   }, [user.token]);
+
+  const assignDep = async (name, dep) => {
+    setSpinner3(true);
+    const res = await hrFetcher.assignDep(name, dep, user.token);
+
+    if (res === "invalid academic id" || res === "invalid department name") {
+      setSpinner3(false);
+      setMessage(res);
+      setShowAlert(true);
+      return;
+    }
+    var newStaff = [...staff];
+    var foundIndex = newStaff.findIndex((x) => x.id === res.id);
+    newStaff[foundIndex] = res;
+    setStaff(newStaff);
+    setSpinner3(false);
+  };
 
   const deleteStaff = async (id) => {
     setSpinner1(true);
@@ -87,6 +105,7 @@ const HrStaffMember = () => {
   const addStaff = async () => {
     try {
       setSpinner(true);
+      console.log("office" + officeLocation);
       const res = await hrFetcher.addStaffMember(
         user.token,
         name,
@@ -140,10 +159,13 @@ const HrStaffMember = () => {
               email={obj.email}
               salary={obj.salary}
               office={obj.officeLocationId}
+              department={obj.departmentId}
               handleDelete={deleteStaff}
               handleUpdate={updateStaff}
+              handleAssignDep={assignDep}
               spinner={spinner1}
               spinner2={spinner2}
+              spinner3={spinner3}
               setShowAlert={setShowAlert}
               showAlert={showAlert}
               message={message}

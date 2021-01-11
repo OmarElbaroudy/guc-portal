@@ -22,6 +22,7 @@ const HrDepartment = () => {
   const [spinner, setSpinner] = useState(false);
   const [spinner1, setSpinner1] = useState(false);
   const [spinner2, setSpinner2] = useState(false);
+  const [spinner3, setSpinner3] = useState(false);
 
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
@@ -95,6 +96,28 @@ const HrDepartment = () => {
       console.log(err);
     }
   };
+
+  const assignHod = async (id, department) => {
+    setSpinner3(true);
+    const res = await hrFetcher.assignHod(id, department, user.token);
+    if (
+      res === "invalid hod id" ||
+      res === "invalid department name" ||
+      res === "this staff member is not in this department" ||
+      res === "this department already has hod"
+    ) {
+      setSpinner3(false);
+      setMessage(res);
+      setShowAlert(true);
+      return;
+    }
+    var newDepartment = [...department];
+    var foundIndex = newDepartment.findIndex((x) => x.id === res.id);
+    newDepartment[foundIndex] = res;
+    setDepartment(newDepartment);
+    setSpinner3(false);
+  };
+
   return (
     <div>
       <NavBar />
@@ -120,8 +143,10 @@ const HrDepartment = () => {
               coordinator={obj.coordinatorId}
               handleDelete={deleteDepartment}
               handleUpdate={updateDepartment}
+              handleAssignHod={assignHod}
               spinner={spinner1}
               spinner2={spinner2}
+              spinner3={spinner3}
               setShowAlert={setShowAlert}
               showAlert={showAlert}
               message={message}
@@ -181,7 +206,7 @@ const HrDepartment = () => {
           >
             Close
           </Button>
-          <Button variant="primary" onClick={() => addDepartment()}>
+          <Button variant="success" onClick={() => addDepartment()}>
             {spinner ? (
               <Spinner
                 as="span"

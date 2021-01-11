@@ -14,14 +14,18 @@ import Alert from "react-bootstrap/Alert";
 const HrDepartmentTemp = (props) => {
   const { user } = GetUser();
   const [showAdd, setShowAdd] = useState(false);
+  const [showAssign, setShowAssign] = useState(false);
   const [name, setName] = useState(null);
   const [faculty, setFaculty] = useState(null);
   const [facultyName, setFacultyName] = useState("");
   const [hod, setHod] = useState("");
+  const [newHod, setNewHod] = useState("");
   const [coordinator, setCoordinator] = useState("");
 
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
+  const handleClose2 = () => setShowAssign(false);
+  const handleShow2 = () => setShowAssign(true);
 
   useEffect(() => {
     const facultyNameFunc = async () => {
@@ -56,6 +60,11 @@ const HrDepartmentTemp = (props) => {
     facultyNameFunc();
     hod();
   }, [props.faculty, props.hod, props.coordinator, user.token]);
+
+  const disable = () => {
+    if (props.hod) return true;
+    return false;
+  };
 
   return (
     <div className="col-xl-10 offset-3">
@@ -109,6 +118,14 @@ const HrDepartmentTemp = (props) => {
                 variant="light"
               >
                 update department
+              </Button>
+              <Button
+                onClick={() => handleShow2()}
+                className="col col-12"
+                variant="light"
+                disabled={disable()}
+              >
+                Assign head of department
               </Button>
             </Card.Body>
           </Accordion.Collapse>
@@ -167,7 +184,7 @@ const HrDepartmentTemp = (props) => {
             Close
           </Button>
           <Button
-            variant="primary"
+            variant="warning"
             onClick={() => props.handleUpdate(props.name, name, faculty)}
           >
             {props.spinner ? (
@@ -180,6 +197,64 @@ const HrDepartmentTemp = (props) => {
               />
             ) : null}
             Update
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        show={showAssign}
+        onHide={handleClose2}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>update Department</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group as={Col} controlId="formGridEmail">
+              <Form.Label>Head of department ID</Form.Label>
+              <Form.Control
+                placeholder="ex:ac-2"
+                onChange={(event) => {
+                  setNewHod(event.target.value);
+                }}
+              />
+            </Form.Group>
+          </Form>
+          <Alert
+            variant="danger"
+            show={props.showAlert}
+            onClose={() => props.setShowAlert(false)}
+            dismissible
+          >
+            {props.message}
+          </Alert>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              handleClose2();
+              props.setShowAlert(false);
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            variant="success"
+            onClick={() => props.handleAssignHod(newHod, props.name)}
+          >
+            {props.spinner3 ? (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            ) : null}
+            Add
           </Button>
         </Modal.Footer>
       </Modal>
