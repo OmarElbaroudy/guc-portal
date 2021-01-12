@@ -110,8 +110,8 @@ router.get("/myProfile/signOut", async (req, res) => {
 		}
 
 		await calc.signOut(doc);
-		doc.missingHours = calc.calculateMissingHours(doc);
-		doc.missingDays = calc.calculateMissingDays(doc);
+		doc.missingHours = await calc.calculateMissingHours(doc);
+		doc.missingDays = await calc.calculateMissingDays(doc);
 
 		await doc.save();
 		return res.json({ message: "signed out successfully", variant: "success" });
@@ -148,7 +148,7 @@ router.get("/myProfile/viewMissingDays", async (req, res) => {
 		doc = await academic.findById(decoded.id);
 	}
 
-	doc.missingDays = calc.calculateMissingDays(doc);
+	doc.missingDays = await calc.calculateMissingDays(doc);
 	await doc.save();
 
 	res.json(doc.missingDays);
@@ -165,7 +165,7 @@ router.get("/myProfile/viewMissingHours", async (req, res) => {
 		doc = await academic.findById(decoded.id);
 	}
 
-	doc.missingHours = calc.calculateMissingHours(doc);
+	doc.missingHours = await calc.calculateMissingHours(doc);
 	await doc.save();
 
 	res.json(doc.missingHours);

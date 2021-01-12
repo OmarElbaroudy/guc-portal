@@ -65,8 +65,8 @@ export class academicFetcher {
 	static async slotLink(courseName, weekDay, slot, location, token) {
 		const params = {
 			courseName: courseName,
-			weekDay: weekDay,
-			slot: slot,
+			weekDay: parseInt(weekDay),
+			slot: parseInt(slot),
 			location: location,
 		};
 

@@ -28,8 +28,8 @@ router.post("/login", async (req, res) => {
   const token = jwt.sign(payload, key);
 
   calc.update(user);
-  user.missingHours = calc.calculateMissingHours(user);
-  user.missingDays = calc.calculateMissingDays(user);
+  user.missingHours = await calc.calculateMissingHours(user);
+  user.missingDays = await calc.calculateMissingDays(user);
   await user.save();
 
   res.header("auth-token", token);

@@ -466,6 +466,7 @@ router.route("/HOD/accept_requests").put(auth, async (req, res) => {
         request.receiverComment = req.body.comment;
         const sender = await academic.findById(request.senderId);
         sender.notifications.push(request._id);
+        
         await request.save();
         await sender.save();
 
@@ -529,16 +530,17 @@ router.route("/HOD/accept_requests").put(auth, async (req, res) => {
           }
 
           request.status = "accepted";
-          request.save();
-          sender.save();
-          res.json(request);
+          await request.save();
+          await sender.save();
         }
+        
+        return res.json(request);
       } else {
-        res.send("this request is already accepted/rejected");
+        return res.json("this request is already accepted/rejected");
       }
     }
-  } catch {
-    res.send("err");
+  } catch(e) {
+    console.log(e);
   }
 });
 router.route("/HOD/reject_requests").put(auth, async (req, res) => {

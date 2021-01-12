@@ -24,7 +24,7 @@ const ViewRequest = () => {
 	const acceptReq = async (id, comment) => {
 		const res = await hodFetcher.acceptRequests(id, user.token, comment);
 		var newRequests = [...requests];
-		var foundIndex = await newRequests.findIndex((x) => x._id === res._id);
+		var foundIndex = newRequests.findIndex((x) => x._id === res._id);
 		newRequests[foundIndex] = res;
 		setRequests(newRequests);
 	};
@@ -33,7 +33,7 @@ const ViewRequest = () => {
 		const res = await hodFetcher.rejectRequests(id, user.token, comment);
 		var newRequests = [...requests];
 		console.log("newRequests " + newRequests[0]);
-		var foundIndex = await newRequests.findIndex((x) => x._id === res._id);
+		var foundIndex = newRequests.findIndex((x) => x._id === res._id);
 		newRequests[foundIndex] = res;
 		setRequests(newRequests);
 	};

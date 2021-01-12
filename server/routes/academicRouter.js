@@ -61,7 +61,6 @@ router.get("/ac/viewSchedule", auth, async (req, res) => {
 	const decoded = jwt_decode(token);
 	try {
 		const cur = await academics.findById(decoded.id);
-
 		let sessions = [];
 		let curDate = getCurDate();
 
@@ -74,7 +73,7 @@ router.get("/ac/viewSchedule", auth, async (req, res) => {
 				request &&
 				request.type === "replacement" &&
 				request.status === "accepted" &&
-				request.replacement.status === "accepted" &&
+				request.replacement.academicResponse === "accepted" &&
 				dateDiff(request.replacement.slotDate, curDate) < 7 &&
 				dateDiff(request.replacement.slotDate, curDate) >= 0
 			) {
@@ -100,7 +99,8 @@ router.get("/ac/viewSchedule", auth, async (req, res) => {
 			});
 		}
 
-		res.json(sessions);
+		console.log(sessions);
+		return res.json(sessions);
 	} catch (err) {
 		console.log(err);
 	}
@@ -172,7 +172,7 @@ router
 						slot: input.slot,
 						locationId: await getLocationIdByName(input.location),
 						slotDate: slotDate,
-						academicResponse: "pending",
+						academicResponse: "accepted",
 					},
 				};
 			} else {
@@ -187,7 +187,7 @@ router
 						slot: input.slot,
 						locationId: await getLocationIdByName(input.location),
 						slotDate: slotDate,
-						academicResponse: "pending",
+						academicResponse: "accepted",
 					},
 				};
 			}
@@ -269,7 +269,7 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 			name: input.courseName,
 		});
 
-		if (!course) res.status(211).json("invalid course");
+		if (!course) return res.status(211).json("invalid course");
 		if (!flag) return res.json("you don't teach this course");
 
 		flag = false;
@@ -281,12 +281,12 @@ router.post("/ac/slotLinkingRequest", auth, async (req, res) => {
 				session.locationId.equals(loc._id);
 		}
 
-		if (!flag) res.status(217).json("slot is not available for linkage");
+		if (!flag) return res.status(217).json("slot is not available for linkage");
 
 		const coordinatorId = course.coordinatorId;
 		const coordinator = await academics.findById(coordinatorId);
 		if (!coordinator)
-			res.status(217).json("no coordinator available for the course");
+			return res.status(217).json("no coordinator available for the course");
 
 		const request = {
 			status: "pending",
@@ -386,6 +386,7 @@ router.post("/ac/leaveRequest", auth, async (req, res) => {
 
 		if (!departmentId)
 			return res.json("you need to be in a department to send this request");
+		
 		const hodId = (await departments.findById(departmentId)).hodId;
 		const hod = await academics.findById(hodId);
 

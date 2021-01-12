@@ -78,18 +78,32 @@ class timeCalculations {
 		return new Date(Date.UTC(year, month, 10));
 	}
 
-	calculateTotalInMonth(startDate, endDate, dayOff, flag) {
+	async calculateTotalInMonth(doc, startDate, endDate, dayOff, flag) {
 		let ret = 0;
 		let inc = flag ? 8 * 60 + 24 : 1;
+
+		let reqs = await requests.find({
+			status: "accepted",
+			type: { $in: ["maternity", "sick", "accidental", "annual"] },
+			senderId: doc._id,
+		});
+
 		for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
 			if (d.getDay() === 5 || d.getDay() === dayOff) continue;
 			ret += inc;
+
+			for (const req of reqs) {
+				if (req.targetDate.getTime() === d.getTime()) {
+					ret -= 2 * inc;
+					break;
+				}
+			}
 		}
 
 		return ret;
 	}
 
-	calculateMissingHours(doc) {
+	async calculateMissingHours(doc) {
 		const now = this.getCurDate();
 		let sum = 0;
 		for (let d = this.getStartDate(now); d <= now; d.setDate(d.getDate() + 1)) {
@@ -101,7 +115,8 @@ class timeCalculations {
 			}
 		}
 
-		const totalTimeInMonth = this.calculateTotalInMonth(
+		const totalTimeInMonth = await this.calculateTotalInMonth(
+			doc,
 			this.getStartDate(now),
 			this.getEndDate(this.getStartDate(now)),
 			doc.dayOff,
@@ -110,7 +125,7 @@ class timeCalculations {
 		return totalTimeInMonth / 60 - sum;
 	}
 
-	calculateMissingDays(doc) {
+	async calculateMissingDays(doc) {
 		const now = this.getCurDate();
 		let sum = 0;
 		for (let d = this.getStartDate(now); d <= now; d.setDate(d.getDate() + 1)) {
@@ -125,7 +140,8 @@ class timeCalculations {
 				sum += 1;
 			}
 		}
-		const totalDaysInMonth = this.calculateTotalInMonth(
+		const totalDaysInMonth = await this.calculateTotalInMonth(
+			doc,
 			this.getStartDate(now),
 			this.getEndDate(this.getStartDate(now)),
 			doc.dayOff,
