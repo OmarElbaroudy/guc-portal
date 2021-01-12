@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 
 const InstStaffMem = () => {
-	const { user } = GetUser();
+	const { user, setUser } = GetUser();
 	const [type, setType] = useState("department");
 	const [staff, setStaff] = useState([]);
 	const [alertColor, setAlertColor] = useState("danger");
@@ -147,7 +147,7 @@ const InstStaffMem = () => {
 			course,
 			user.token
 		);
-		console.log("hoa da " + res);
+
 		if (
 			res === "this course doesn't exist" ||
 			res === "You are not the instructor of this course" ||
@@ -158,12 +158,26 @@ const InstStaffMem = () => {
 			setMessage(res);
 			return;
 		}
+		
+		if (user.email === res.email) {
+			setUser({
+				token: user.token,
+				email: user.email,
+				hod: user.hod,
+				academic: user.academic,
+				instructor: user.instructor,
+				coordinator: true,
+				type: "academic",
+			});
+		}
+
 		var newStaff = [...staff];
 		var foundIndex = newStaff.findIndex((x) => x.id === res.id);
 		newStaff[foundIndex] = res;
 		setStaff(newStaff);
 		setSpinner4(false);
 	};
+	
 	return (
 		<div>
 			<NavBar />
