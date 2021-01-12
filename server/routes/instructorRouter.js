@@ -77,8 +77,9 @@ router.route("/instructor/viewAssignedSlots").get(auth, async (req, res) => {
         const courseInst = await academic.findOne({
           _id: entry.instructorId,
         });
-
-        const courseName = courseInst.name + "(" + courseInst.id + ")";
+        let courseName = "no instructor";
+        if (courseInst)
+          courseName = courseInst.name + "(" + courseInst.id + ")";
         let session = {
           course: courseName,
           weekDay: entry.weekDay,
@@ -146,6 +147,8 @@ router
         "courses.courseId": courseId,
         _id: await getAcademicIdById(req.body.academic),
       });
+      if (academicMember.dayOff === req.body.weekDay)
+        return res.json("can't assign a slot on the staff member day off");
       if (!academicMember) {
         res.json(
           "This academic either doesn't exist or doesn't teach this course"
@@ -518,7 +521,7 @@ router.route("/instructor/deleteSlotAssignment").put(auth, async (req, res) => {
         entry.slot === req.body.slot &&
         entry.type === req.body.type
       ) {
-        entry.instructorId = null;
+        entry.instructorId = undefined;
         await location.save();
         break;
       }
@@ -533,7 +536,7 @@ router.route("/instructor/deleteSlotAssignment").put(auth, async (req, res) => {
         entry.slot === req.body.slot &&
         entry.type === req.body.type
       ) {
-        entry.instructorId = null;
+        entry.instructorId = undefined;
         await slot.save();
         break;
       }
@@ -682,18 +685,22 @@ router
       course.coordinatorId = academicMember._id;
       await course.save();
 
-      for (const entry of academicMember.courses) {
-        if (entry.courseId.equals(courseId)) {
-          if (entry.position !== "coordinator") {
-            entry.position = "coordinator";
-            await academicMember.save();
-            break;
-          } else {
-            res.json(academicMember);
-          }
-        }
-      }
-
+      // for (const entry of academicMember.courses) {
+      //   if (entry.courseId.equals(courseId)) {
+      //     if (entry.position !== "coordinator") {
+      //       entry.position = "coordinator";
+      //       await academicMember.save();
+      //       break;
+      //     } else {
+      //       res.json(academicMember);
+      //     }
+      //   }
+      // }
+      academicMember.courses.push({
+        courseId: courseId,
+        position: "coordinator",
+      });
+      await academicMember.save();
       res.json(academicMember);
     } catch (err) {
       console.log(err);

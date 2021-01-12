@@ -25,10 +25,8 @@ const InstCourseCoverage = () => {
       }
     };
     data();
-    
-
   }, [user.token]);
-  
+
   const handleSchedule = async (name) => {
     const res = await instructorFetcher.viewCourseAss(user.token);
     for (const entry of res) {
@@ -65,7 +63,7 @@ const InstCourseCoverage = () => {
                   <td class="col-2">
                     <button
                       onClick={() => {
-                        handleSchedule(obj.course)
+                        handleSchedule(obj.course);
                       }}
                     >
                       {" "}
@@ -83,6 +81,7 @@ const InstCourseCoverage = () => {
         onHide={handleClose1}
         backdrop="static"
         keyboard={false}
+        size="lg"
       >
         <Modal.Header closeButton>
           <Modal.Title>schedule</Modal.Title>
