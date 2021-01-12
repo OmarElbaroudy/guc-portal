@@ -78,17 +78,17 @@ const HrDepartmentTemp = (props) => {
               <dl class="row">
                 <dt class="col-sm-3">Faculty </dt>
                 <dd class="col-sm-9">
-                  {props.faculty ? facultyName.name : "-no faculty-"}
+                  {faculty ? facultyName.name : "-no faculty-"}
                 </dd>
 
                 <dt class="col-sm-3">Head of department </dt>
                 <dd class="col-sm-9">
-                  {props.hod ? hod.name : "-no Head of department yet-"}
+                  {hod ? hod.name : "-no Head of department yet-"}
                 </dd>
 
                 <dt class="col-sm-3">Coordinator </dt>
                 <dd class="col-sm-9">
-                  {props.coordinator
+                  { coordinator
                     ? coordinator.name
                     : "-no coordinator of department yet-"}
                 </dd>

@@ -92,7 +92,7 @@ router.get("/myProfile/signIn", async (req, res) => {
 
 		await calc.signIn(doc);
 		await doc.save();
-		res.json({ message: "signed in successfully", variant: "success" });
+		res.json({ message: "signed in successfully", variant: "success"});
 	} catch (e) {
 		res.json({ message: "you can't sign in on a friday", variant: "danger" });
 	}
@@ -114,7 +114,7 @@ router.get("/myProfile/signOut", async (req, res) => {
 		doc.missingDays = calc.calculateMissingDays(doc);
 
 		await doc.save();
-		res.json({ message: "signed out successfully", variant: "success" });
+		return res.json({ message: "signed out successfully", variant: "success" });
 	} catch (e) {
 		res.json({ message: "you can't sign out on a friday", variant: "danger" });
 	}

@@ -136,10 +136,12 @@ class timeCalculations {
 	}
 
 	async updateAttendance(doc, idx, curDate) {
-		doc.attendanceRecords[idx].totalTime = this.calculateTotalTime(
+		const tot = this.calculateTotalTime(
 			doc.attendanceRecords[idx].signIn,
 			doc.attendanceRecords[idx].signOut
 		);
+
+		doc.attendanceRecords[idx].totalTime = tot;
 
 		if (
 			curDate.getDay() === doc.dayOff &&
@@ -222,7 +224,6 @@ class timeCalculations {
 			let idx = this.idxOfRecord(d, doc);
 			if (idx > -1) arr.push(doc.attendanceRecords[idx]);
 		}
-
 		return arr;
 	}
 

@@ -47,7 +47,7 @@ const HrStaffMemberTemp = (props) => {
     };
     x();
     depName();
-  }, [props.department, props.office, user.token]);
+  }, [props.department, props.office, user.token, user.type]);
 
   const disable = () => {
     if (props.department) return true;

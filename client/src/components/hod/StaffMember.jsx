@@ -78,7 +78,7 @@ const ViewStaff = (props) => {
     dayOffFun();
     courseName();
     officeName();
-  }, [props.courses]);
+  }, [props.courses, props, user.token]);
 
   const getDay = (num) => {
     switch (num) {

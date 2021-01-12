@@ -50,7 +50,7 @@ const HrFacultyTemp = (props) => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>update Course</Modal.Title>
+          <Modal.Title>Update Faculty</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -68,7 +68,7 @@ const HrFacultyTemp = (props) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => handleClose1}>
+          <Button variant="secondary" onClick={() => handleClose1()}>
             Close
           </Button>
           <Button

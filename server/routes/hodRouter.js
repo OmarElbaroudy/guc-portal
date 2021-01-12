@@ -179,7 +179,7 @@ router.route("/HOD/view_staff").post(auth, async (req, res) => {
         }
 
         let arr = c.instructorId;
-        arr.concat(c.academicId);
+        arr = arr.concat(c.academicId);
         academic
           .find({ _id: { $in: arr } })
           .then((doc) => {

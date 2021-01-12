@@ -130,8 +130,7 @@ router.route("/hr/deleteLocation").delete(auth, async (req, res) => {
     const u = await Academic.findOne({ officeLocationId: x._id });
     if (u || x.schedule.length !== 0) {
       return res
-        .status(403)
-        .send(
+        .json(
           "cannot delete this location as it is occupied by an instructor/session"
         );
     } else {
@@ -154,7 +153,8 @@ router.route("/hr/viewAllStaffMembers").get(async (req, res) => {
     const h = await HR.find();
     const a = await Academic.find();
     let result = h.concat(a);
-    result.filter((element) => {
+    
+    result = result.filter((element) => {
       return element.id !== me.id;
     });
 
@@ -205,11 +205,6 @@ router.route("/hr/viewAllCourses").get(async (req, res) => {
 
 router.route("/hr/registerMember").post(auth, async (req, res) => {
   try {
-    console.log(req.body.name);
-    console.log(req.body.salary);
-    console.log(req.body.officeLocation);
-    console.log(req.body.email);
-    console.log(req.body.type);
     //should remove id as it should be done automatically
     if (
       !req.body.name ||
@@ -237,6 +232,15 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
       if (temp.maxCapacity == temp.currCapacity) {
         return res.status(411).json("this location is full");
       }
+      
+      let flag = false;
+      flag |= (await HR.find({email : req.body.email})).length > 0;
+      flag |= (await Academic.find({email : req.body.email})).length > 0;
+
+      if(flag){
+        return res.json("email already exists");
+      }
+
       const loc = await Location.findOne({ name: req.body.officeLocation });
       if (req.body.type === "hr") {
         const x = new HR({
@@ -330,18 +334,20 @@ router.route("/hr/deleteFaculty").delete(auth, async (req, res) => {
         facultyId: x._id,
       });
 
-      while (dep) {
+      if (dep) {
         const dep = await Department.findOneAndUpdate(
           { facultyId: x._id },
           { facultyId: undefined },
           { new: true }
         );
+
         await dep.save();
       }
+
       const o = await Faculty.find();
       res.json(o);
     } else {
-      res.status(403).send("this faculty does not exist");
+      res.status(403).json("this faculty does not exist");
     }
   } catch (err) {
     console.log(err);
@@ -590,8 +596,11 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
         }
         if (req.body.email) {
           const temp = await Academic.findOne({ email: req.body.email });
-          if (!temp) {
+          const temp2 = await HR.findOne({email : req.body.email});
+          if (!temp && !temp2) {
             a.email = req.body.email;
+          }else{
+            return res.json("email already exists")
           }
         }
 
@@ -688,7 +697,7 @@ router.route("/hr/deleteStaffMember").put(async (req, res) => {
       });
 
       if (!x) {
-        return res.status(403).return("this staff member does not exist");
+        return res.status(403).json("this staff member does not exist");
       }
 
       acad = true;
@@ -895,6 +904,7 @@ router.post("/hr/viewAttendanceRecords", auth, async (req, res) => {
     if (!doc) {
       return res.json("not a valid id");
     }
+
     const curMonth = new Date(Date.UTC()).getMonth();
     const arr = calc.viewAttendanceRecords(curMonth, doc);
 

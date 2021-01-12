@@ -43,23 +43,24 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/createHr", async (req, res) => {
-  const a = academic.find();
-  const h = hr.find();
+  const a = await academic.find();
+  const h = await hr.find();
   if (a.length === 0 && h.length === 0) {
-    const hr = new hrs({
+    const cur = new hr({
       name: "Ashry",
       email: "ashry@gmail.com",
+      id: "hr-1",
       password: await bcrypt.hash("123456", await bcrypt.genSalt(10)),
       gender: "male",
       salary: "5000",
       dayOff: 6,
     });
 
-    await hr.save();
+    await cur.save();
 
     return res.json("email:ashry@gmail.com, password:123456");
   } else {
-    return res.json("the data base already filled");
+    return res.json("the data base contains at least a user");
   }
 });
 

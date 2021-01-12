@@ -5,18 +5,23 @@ const attendanceRecord = new schema({
 	day: Date, //yyyy mm dd in utc
 	signIn: Array, //milliseconds utc
 	signOut: Array, //milliseconds utc
+	totalTime: {
+	  type: Number,
+	  default: 0,
+	}, //milliseconds utc
 	weekDay: {
-		//corresponding weekday
-		type: Number,
-		enum: [0, 1, 2, 3, 4, 6], //0 for sunday
+	  //corresponding weekday
+	  type: Number,
+	  enum: [0, 1, 2, 3, 4, 6], //0 for sunday
 	},
 	compensation: {
-		//true if weekday is the day off and compensation
-		//leave has been accepted (must be within the same month)
-		type: Boolean,
-		default: false,
+	  //true if weekday is the day off and compensation
+	  //leave has been accepted (must be within the same month)
+	  type: Boolean,
+	  default: false,
 	},
-});
+  });
+  
 const annualLeaveBalance = new schema({
 	balance: {
 		type: Number,

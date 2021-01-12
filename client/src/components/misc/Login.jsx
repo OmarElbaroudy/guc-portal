@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { GetUser } from "../common/GlobalState";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { loginFetcher } from "../../API/loginFetcher";
-import { hrFetcher } from "../../API/hrFetcher";
 import { getterFetcher } from "../../API/getterFetcher";
 import Form from "react-bootstrap/Form";
 import { Redirect } from "react-router-dom";
@@ -85,7 +84,7 @@ const Login = () => {
   const addFirst = async () => {
     setSpinner1(true);
     const res = await loginFetcher.AddFirst();
-    if (res === "the data base already filled") {
+    if (res === "the data base contains at least a user") {
       setColor("danger");
       setMessage(res);
       setShowAlert(true);
@@ -127,7 +126,7 @@ const Login = () => {
                       placeholder="Enter email"
                     />
                     <Form.Text className="text-muted">
-                      enter your @guc mail.
+                      enter your mail.
                     </Form.Text>
                   </Form.Group>
                   <Form.Group controlId="formBasicPassword">
@@ -181,7 +180,7 @@ const Login = () => {
                         aria-hidden="true"
                       />
                     ) : null}
-                    Add Ashry(HR)
+                    Add Ashry (HR)
                   </Button>
                 </Form>
               </div>

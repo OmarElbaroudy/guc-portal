@@ -48,7 +48,6 @@ const StaffHome = () => {
 
 	const signIn = async () => {
 		const data = await staffFetcher.signIn(user.token);
-		console.log(data);
 		setMessage(data.message);
 		setVariant(data.variant);
 		setShowAlert(true);
