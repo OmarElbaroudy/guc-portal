@@ -15,9 +15,9 @@ const Temp = (props) => {
   const { user } = GetUser();
   const [courses, setCourses] = useState([]);
   const [office, setOffice] = useState("");
-  const [slot, setSlot] = useState(0);
-  const [day, setDay] = useState(0);
-  const [type, setType] = useState("");
+  const [slot, setSlot] = useState(1);
+  const [day, setDay] = useState(6);
+  const [type, setType] = useState("tutorial");
   const [courseName, setCourseName] = useState("");
   const [location, setLocation] = useState("");
   const [newAcademic, setNewAcademic] = useState("");
@@ -68,7 +68,7 @@ const Temp = (props) => {
 
     courseName();
     officeName();
-  }, [props.courses,props.office, user.token]);
+  }, [props.courses, props.office, user.token]);
 
   const disCourses = (course, position) => {
     if (props.courses.length === 0) return <span>no courses </span>;
@@ -228,7 +228,6 @@ const Temp = (props) => {
               <Form.Label>Type</Form.Label>
               <Form.Control
                 as="select"
-                defaultValue="hr"
                 onChange={(event) => {
                   setType(event.target.value);
                 }}
@@ -254,6 +253,9 @@ const Temp = (props) => {
             onClick={() => {
               props.setShowAlert(false);
               handleClose1();
+              setType("tutorial");
+              setSlot(1);
+              setDay(6);
             }}
           >
             Close
@@ -376,7 +378,9 @@ const Temp = (props) => {
             variant="secondary"
             onClick={() => {
               props.setShowAlert(false);
-
+              setType("tutorial");
+              setSlot(1);
+              setDay(6);
               handleClose2();
             }}
           >
@@ -508,6 +512,9 @@ const Temp = (props) => {
             variant="secondary"
             onClick={() => {
               props.setShowAlert(false);
+              setType("tutorial");
+              setSlot(1);
+              setDay(6);
               handleClose3();
             }}
           >
@@ -604,7 +611,7 @@ const Temp = (props) => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Delete course from {props.name}</Modal.Title>
+          <Modal.Title>set {props.name} as course coordinator</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>

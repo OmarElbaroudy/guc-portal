@@ -22,6 +22,7 @@ const auth = async (req, res, next) => {
     _id: decoded.id,
     "courses.position": "coordinator",
   });
+
   if (!ac) return res.status(403).send("unauthorized access");
 
   next();
@@ -152,7 +153,7 @@ router.route("/coordinator/addCourseSlot").post(auth, async (req, res) => {
     res.json("check your slot or weekDay input");
     return;
   }
-  console.log("type" + req.body.type);
+
   if (
     req.body.type != "tutorial" &&
     req.body.type != "lecture" &&
@@ -261,16 +262,6 @@ router.route("/coordinator/updateSlot").post(auth, async (req, res) => {
     res.json("slot type is incorrect");
     return;
   }
-  //   console.log(
-  //     "aiwa hna " +
-  //       location._id +
-  //       " " +
-  //       req.body.weekDay +
-  //       " " +
-  //       req.body.slot +
-  //       " " +
-  //       req.body.type
-  //   );
   let slot = await courses.findOne({
     _id: course._id,
     "schedule.locationId": location._id,

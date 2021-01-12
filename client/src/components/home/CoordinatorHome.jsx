@@ -94,7 +94,7 @@ const CoordinatorHome = () => {
       newType,
       user.token
     );
-    if (res === "Slot updated successfully") {
+    if (res === "slot updated successfully") {
       setAlertColor("success");
       setMessage(res);
       setShowAlert(true);

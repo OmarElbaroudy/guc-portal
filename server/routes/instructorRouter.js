@@ -77,12 +77,12 @@ router.route("/instructor/viewAssignedSlots").get(auth, async (req, res) => {
         const courseInst = await academic.findOne({
           _id: entry.instructorId,
         });
-        
+
         const courseName = courseInst.name + "(" + courseInst.id + ")";
         let session = {
           course: courseName,
           weekDay: entry.weekDay,
-          slot : entry.slot,
+          slot: entry.slot,
           location: await getter.getLocationNameById(entry.locationId),
           type: entry.type,
         };
@@ -193,14 +193,22 @@ router
       let slotAssigned = await courses.findOne({
         _id: courseId,
         instructorId: { $in: [ac._id] },
-        "schedule.instructorId": { $ne: null },
         "schedule.locationId": await getLocationIdByName(req.body.location),
         "schedule.weekDay": req.body.weekDay,
         "schedule.slot": req.body.slot,
         "schedule.type": req.body.type,
       });
-
-      if (slotAssigned) {
+      let flag = false;
+      for (const session of slotAssigned.schedule) {
+        if (
+          session.weekDay === req.body.weekDay &&
+          session.slot === req.body.slot &&
+          session.type === req.body.type &&
+          session.instructorId
+        )
+          flag = true;
+      }
+      if (flag) {
         res.json("This slot is already assigned");
         return;
       }
@@ -479,27 +487,38 @@ router.route("/instructor/deleteSlotAssignment").put(auth, async (req, res) => {
     let slotAssigned = await courses.findOne({
       _id: courseId,
       instructorId: { $in: [ac._id] },
-      "schedule.instructorId": { $ne: null },
       "schedule.locationId": await getLocationIdByName(req.body.location),
       "schedule.weekDay": req.body.weekDay,
       "schedule.slot": req.body.slot,
       "schedule.type": req.body.type,
     });
 
-    if (!slotAssigned) {
+    let flag = false;
+    for (const session of slotAssigned.schedule) {
+      if (
+        session.weekDay === req.body.weekDay &&
+        session.slot === req.body.slot &&
+        session.type === req.body.type &&
+        session.instructorId
+      )
+        flag = true;
+    }
+
+    if (!flag) {
       res.json("This slot is not assigned");
       return;
     }
 
     for (const entry of location.schedule) {
       if (
-        entry.courseId.equals(comparedCourse) ||
-        entry.instructorId.equals(comparedAcademic) ||
-        entry.weekDay === req.body.weekDay ||
-        entry.slot === req.body.slot ||
+        entry.courseId.equals(comparedCourse) &&
+        entry.instructorId &&
+        entry.instructorId.equals(comparedAcademic) &&
+        entry.weekDay === req.body.weekDay &&
+        entry.slot === req.body.slot &&
         entry.type === req.body.type
       ) {
-        entry.instructorId = undefined;
+        entry.instructorId = null;
         await location.save();
         break;
       }
@@ -507,13 +526,14 @@ router.route("/instructor/deleteSlotAssignment").put(auth, async (req, res) => {
 
     for (const entry of slot.schedule) {
       if (
-        entry.locationId.equals(await getLocationIdByName(req.body.location)) ||
-        entry.instructorId.equals(await getAcademicIdById(req.body.academic)) ||
-        entry.weekDay === req.body.weekDay ||
-        entry.slot === req.body.slot ||
+        entry.locationId.equals(await getLocationIdByName(req.body.location)) &&
+        entry.instructorId &&
+        entry.instructorId.equals(await getAcademicIdById(req.body.academic)) &&
+        entry.weekDay === req.body.weekDay &&
+        entry.slot === req.body.slot &&
         entry.type === req.body.type
       ) {
-        entry.instructorId = undefined;
+        entry.instructorId = null;
         await slot.save();
         break;
       }
@@ -557,7 +577,8 @@ router.route("/instructor/deleteAcademic").put(auth, async (req, res) => {
       const c = await courses.findOne({
         name: req.body.course,
       });
-
+      if (!x.courses.includes({ courseId: c._id, position: "academic" }))
+        return res.json("the staff member is not an academic in this course");
       if (c) {
         c.schedule = c.schedule.filter(function (value) {
           if (value.instructorId)
