@@ -31,7 +31,7 @@ const ViewSubmittedRequests = () => {
   return (
     <div>
       <NavBar />
-      <h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
+      <h1 style={{ fontWeight: "bold", padding: 50 }} class="display-6">
         Submitted Requests
       </h1>
       <Form.Label className="offset-4">

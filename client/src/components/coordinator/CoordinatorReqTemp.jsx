@@ -165,7 +165,7 @@ const ReqTemp = (props) => {
           </Form.Text>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose1}>
+          <Button id="close" onClick={handleClose1}>
             Close
           </Button>
           <Button
@@ -204,7 +204,7 @@ const ReqTemp = (props) => {
           </Form.Text>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose2}>
+          <Button id="close" onClick={handleClose2}>
             Close
           </Button>
           <Button

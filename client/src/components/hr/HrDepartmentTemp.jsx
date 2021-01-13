@@ -164,7 +164,7 @@ const HrDepartmentTemp = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               handleClose1();
               props.setShowAlert(false);
@@ -222,7 +222,7 @@ const HrDepartmentTemp = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               handleClose2();
               props.setShowAlert(false);

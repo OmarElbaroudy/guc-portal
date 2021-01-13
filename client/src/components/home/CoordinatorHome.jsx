@@ -11,7 +11,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import { coordinatorFetcher } from "../../API/coordinatorFetcher";
 import { useHistory } from "react-router-dom";
-
+import "../../views/btn.css";
 
 const CoordinatorHome = () => {
   const { user } = GetUser();
@@ -31,7 +31,7 @@ const CoordinatorHome = () => {
   const [newSlot, setNewSlot] = useState(1);
   const [newLocation, setNewLocation] = useState("");
   const [newType, setNewType] = useState("tutorial");
-  const history = useHistory()
+  const history = useHistory();
 
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
@@ -111,10 +111,10 @@ const CoordinatorHome = () => {
     }
   };
 
-  if (redirect){
+  if (redirect) {
     history.push("/coordinatorHome");
     return <Redirect to={redirect} />;
-  } 
+  }
 
   return (
     <div>
@@ -262,7 +262,7 @@ const CoordinatorHome = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               setShowAlert(false);
               setDay(6);
@@ -364,7 +364,7 @@ const CoordinatorHome = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               setShowAlert(false);
               setDay(6);
@@ -527,7 +527,7 @@ const CoordinatorHome = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               setShowAlert(false);
               setDay(6);

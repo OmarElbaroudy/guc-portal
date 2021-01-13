@@ -9,7 +9,7 @@ import Schedule from "../common/Schedule";
 import RequestForm from "../academic/RequestForm";
 import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-
+import "../../views/btn.css";
 
 const AcademicHome = () => {
   const { user } = GetUser();
@@ -39,10 +39,10 @@ const AcademicHome = () => {
     data();
   }, [user.token]);
 
-  if (redirect){
+  if (redirect) {
     history.push("/academicHome");
     return <Redirect to={redirect} />;
-  } 
+  }
 
   return (
     <div>
@@ -63,7 +63,7 @@ const AcademicHome = () => {
           </Modal.Body>
           <Modal.Footer>
             {true ? (
-              <Button variant="secondary" onClick={handleClose}>
+              <Button id="close" onClick={handleClose}>
                 Close
               </Button>
             ) : null}

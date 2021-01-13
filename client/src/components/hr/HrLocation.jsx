@@ -10,205 +10,211 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
+import "../../views/btn.css";
 
 const HrLocation = () => {
-	const { user } = GetUser();
-	const [location, setLocation] = useState([]);
-	const [name, setName] = useState(null);
-	const [type, setType] = useState("office");
-	const [maxCapacity, setMaxCapacity] = useState(20);
-	const [showAlert, setShowAlert] = useState(false);
-	const [message, setMessage] = useState("oops something went wrong");
-	const [spinner, setSpinner] = useState(false);
-	const [spinner1, setSpinner1] = useState(false);
-	const [spinner2, setSpinner2] = useState(false);
+  const { user } = GetUser();
+  const [location, setLocation] = useState([]);
+  const [name, setName] = useState(null);
+  const [type, setType] = useState("office");
+  const [maxCapacity, setMaxCapacity] = useState(20);
+  const [showAlert, setShowAlert] = useState(false);
+  const [message, setMessage] = useState("oops something went wrong");
+  const [spinner, setSpinner] = useState(false);
+  const [spinner1, setSpinner1] = useState(false);
+  const [spinner2, setSpinner2] = useState(false);
 
-	const [showAdd, setShowAdd] = useState(false);
-	const handleClose1 = () => setShowAdd(false);
-	const handleShow1 = () => setShowAdd(true);
+  const [showAdd, setShowAdd] = useState(false);
+  const handleClose1 = () => setShowAdd(false);
+  const handleShow1 = () => setShowAdd(true);
 
-	useEffect(() => {
-		const data = async () => {
-			try {
-				const res = await hrFetcher.viewAllLocations(user.token);
-				setLocation(res);
-			} catch (err) {
-				console.log(err);
-			}
-		};
-		data();
-	}, [user.token]);
+  useEffect(() => {
+    const data = async () => {
+      try {
+        const res = await hrFetcher.viewAllLocations(user.token);
+        setLocation(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    data();
+  }, [user.token]);
 
-	const deleteLocation = async (name) => {
-		setSpinner1(true);
-		try {
-			const res = await hrFetcher.deleteLocation(user.token, name);
-			if (
-				res ===
-				"cannot delete this location as it is occupied by an instructor/session"
-			) {
-				setMessage(res);
-				setShowAlert(true);
-				setSpinner1(false);
-				return;
-			}
+  const deleteLocation = async (name) => {
+    setSpinner1(true);
+    try {
+      const res = await hrFetcher.deleteLocation(user.token, name);
+      if (
+        res ===
+        "cannot delete this location as it is occupied by an instructor/session"
+      ) {
+        setMessage(res);
+        setShowAlert(true);
+        setSpinner1(false);
+        return;
+      }
 
-			setLocation(res);
-			setSpinner1(false);
-		} catch (err) {
-			console.log(err);
-		}
-	};
+      setLocation(res);
+      setSpinner1(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-	const updateLocation = async (name, newName, maxCapacity, type) => {
-		try {
-			setSpinner2(true);
-			const res = await hrFetcher.updateLocation(
-				user.token,
-				name,
-				newName,
-				maxCapacity,
-				type
-			);
-			setLocation(res);
-			setSpinner2(false);
-		} catch (err) {
-			console.log(err);
-		}
-	};
+  const updateLocation = async (name, newName, maxCapacity, type) => {
+    try {
+      setSpinner2(true);
+      const res = await hrFetcher.updateLocation(
+        user.token,
+        name,
+        newName,
+        maxCapacity,
+        type
+      );
+      setLocation(res);
+      setSpinner2(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-	const addLocation = async () => {
-		setSpinner(true);
-		try {
-			const res = await hrFetcher.addLocation(user.token, name, maxCapacity, type);
-			if (
-				res === "please enter maxCapacity" ||
-				res === "Cannot use This location name as it already exists" ||
-				res === "not a valid number"
-			) {
-				setShowAlert(true);
-				setSpinner(false);
-				return setMessage(res);
-			}
-			setLocation(res);
-			setSpinner(false);
-		} catch (err) {
-			console.log(err);
-		}
-	};
-	return (
-		<div>
-			<NavBar />
-			<h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
-				Locations
-			</h1>
-			<Button
-				onClick={() => handleShow1()}
-				className="col-4 offset-4"
-				variant="dark"
-				style={{ padding: 8 }}
-			>
-				Add Location
-			</Button>{" "}
-			<div class="col-9">
-				{location.map((obj) => {
-					return (
-						<HrLocationTemp
-							key={obj.id}
-							name={obj.name}
-							type={obj.type}
-							maxCapacity={obj.maxCapacity}
-							handleDelete={deleteLocation}
+  const addLocation = async () => {
+    setSpinner(true);
+    try {
+      const res = await hrFetcher.addLocation(
+        user.token,
+        name,
+        maxCapacity,
+        type
+      );
+      if (
+        res === "please enter maxCapacity" ||
+        res === "Cannot use This location name as it already exists" ||
+        res === "not a valid number"
+      ) {
+        setShowAlert(true);
+        setSpinner(false);
+        return setMessage(res);
+      }
+      setLocation(res);
+      setSpinner(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  return (
+    <div>
+      <NavBar />
+      <h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
+        Locations
+      </h1>
+      <Button
+        onClick={() => handleShow1()}
+        className="col-4 offset-4"
+        variant="dark"
+        style={{ padding: 8 }}
+      >
+        Add Location
+      </Button>{" "}
+      <div class="col-9">
+        {location.map((obj) => {
+          return (
+            <HrLocationTemp
+              key={obj.id}
+              name={obj.name}
+              type={obj.type}
+              maxCapacity={obj.maxCapacity}
+              handleDelete={deleteLocation}
               handleUpdate={updateLocation}
               setShowAlert={setShowAlert}
-							showAlert={showAlert}
-							message={message}
-							spinner={spinner1}
-							spinner1={spinner2}
-						/>
-					);
-				})}
-			</div>
-			<Modal
-				show={showAdd}
-				onHide={handleClose1}
-				backdrop="static"
-				keyboard={false}
-			>
-				<Modal.Header closeButton>
-					<Modal.Title>Add Location</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<Form>
-						<Form.Row>
-							<Form.Group as={Col} controlId="formGridEmail">
-								<Form.Label>Name</Form.Label>
-								<Form.Control
-									placeholder="Enter location name"
-									onChange={(event) => {
-										setName(event.target.value);
-									}}
-								/>
-							</Form.Group>
+              showAlert={showAlert}
+              message={message}
+              spinner={spinner1}
+              spinner1={spinner2}
+            />
+          );
+        })}
+      </div>
+      <Modal
+        show={showAdd}
+        onHide={handleClose1}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add Location</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Row>
+              <Form.Group as={Col} controlId="formGridEmail">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  placeholder="Enter location name"
+                  onChange={(event) => {
+                    setName(event.target.value);
+                  }}
+                />
+              </Form.Group>
 
-							<Form.Group as={Col} controlId="formGridPassword">
-								<Form.Label>Max Capacity</Form.Label>
-								<Form.Control
-									placeholder="max capacity"
-									onChange={(event) => {
-										setMaxCapacity(event.target.value);
-									}}
-								/>
-							</Form.Group>
-						</Form.Row>
+              <Form.Group as={Col} controlId="formGridPassword">
+                <Form.Label>Max Capacity</Form.Label>
+                <Form.Control
+                  placeholder="max capacity"
+                  onChange={(event) => {
+                    setMaxCapacity(event.target.value);
+                  }}
+                />
+              </Form.Group>
+            </Form.Row>
 
-						<Form.Row>
-							<Form.Group as={Col} controlId="formGridState">
-								<Form.Label>type</Form.Label>
-								<Form.Control
-									as="select"
-									onChange={(event) => {
-										setType(event.target.value);
-									}}
-									defaultValue="office"
-								>
-									<option value="office">office</option>
-									<option value="room">Tutorial room</option>
-									<option value="lab">Lab</option>
-									<option value="hall">Hall</option>
-								</Form.Control>
-							</Form.Group>
-						</Form.Row>
-					</Form>
-					<Alert
-						variant="danger"
-						show={showAlert}
-						onClose={() => setShowAlert(false)}
-						dismissible
-					>
-						{message}
-					</Alert>
-				</Modal.Body>
-				<Modal.Footer>
-					<Button variant="secondary" onClick={handleClose1}>
-						Close
-					</Button>
-					<Button variant="primary" onClick={() => addLocation()}>
-						{spinner ? (
-							<Spinner
-								as="span"
-								animation="border"
-								size="sm"
-								role="status"
-								aria-hidden="true"
-							/>
-						) : null}
-						Add
-					</Button>
-				</Modal.Footer>
-			</Modal>
-		</div>
-	);
+            <Form.Row>
+              <Form.Group as={Col} controlId="formGridState">
+                <Form.Label>type</Form.Label>
+                <Form.Control
+                  as="select"
+                  onChange={(event) => {
+                    setType(event.target.value);
+                  }}
+                  defaultValue="office"
+                >
+                  <option value="office">office</option>
+                  <option value="room">Tutorial room</option>
+                  <option value="lab">Lab</option>
+                  <option value="hall">Hall</option>
+                </Form.Control>
+              </Form.Group>
+            </Form.Row>
+          </Form>
+          <Alert
+            variant="danger"
+            show={showAlert}
+            onClose={() => setShowAlert(false)}
+            dismissible
+          >
+            {message}
+          </Alert>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button id="close" onClick={handleClose1}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={() => addLocation()}>
+            {spinner ? (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            ) : null}
+            Add
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
 };
 
 export default HrLocation;

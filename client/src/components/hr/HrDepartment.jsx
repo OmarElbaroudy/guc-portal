@@ -10,6 +10,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
+import "../../views/btn.css";
 
 const HrDepartment = () => {
   const { user } = GetUser();
@@ -198,7 +199,7 @@ const HrDepartment = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               handleClose1();
               setShowAlert(false);

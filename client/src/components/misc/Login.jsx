@@ -8,6 +8,7 @@ import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
+import "../../views/btn.css";
 
 const Login = () => {
   const { setUser } = GetUser();
@@ -150,7 +151,8 @@ const Login = () => {
                   <button
                     onClick={() => login()}
                     type="button"
-                    class="btn btn-dark"
+                    class="btn"
+                    id="close"
                   >
                     {spinner ? (
                       <Spinner

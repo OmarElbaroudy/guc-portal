@@ -243,7 +243,7 @@ const Temp = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               props.setShowAlert(false);
               handleClose1();
@@ -369,7 +369,7 @@ const Temp = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               props.setShowAlert(false);
               setType("tutorial");
@@ -503,7 +503,7 @@ const Temp = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               props.setShowAlert(false);
               setType("tutorial");
@@ -572,7 +572,7 @@ const Temp = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               props.setShowAlert(false);
               handleClose4();
@@ -628,7 +628,7 @@ const Temp = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               props.setShowAlert(false);
               handleClose5();

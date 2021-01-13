@@ -202,7 +202,7 @@ const ViewStaff = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               handleClose1();
               props.setShowAlert(false);
@@ -259,7 +259,7 @@ const ViewStaff = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               handleClose2();
               props.setShowAlert(false);
@@ -328,7 +328,7 @@ const ViewStaff = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            id="close"
             onClick={() => {
               handleClose3();
               props.setShowAlert(false);

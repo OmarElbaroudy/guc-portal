@@ -645,7 +645,6 @@ router
   .route("/instructor/assignCourseCoordinator")
   .post(auth, async (req, res) => {
     try {
-      console.log("academic " + req.body.id + " course " + req.body.course);
       let courseId = await getCourseIdByName(req.body.course);
       let course = await courses.findOne({
         _id: courseId,

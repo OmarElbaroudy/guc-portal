@@ -39,9 +39,9 @@ const ViewRequest = () => {
   };
 
   return (
-    <div style={{ marginTop: 100 }}>
+    <div>
       <NavBar sticky="top" />
-      <h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
+      <h1 style={{ fontWeight: "bold", padding: 50 }} class="display-6">
         Requests
       </h1>
       <div>

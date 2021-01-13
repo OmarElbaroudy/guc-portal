@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
+import "../../views/btn.css";
 
 const HrFaculty = () => {
   const { user } = GetUser();
@@ -109,10 +110,10 @@ const HrFaculty = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => handleClose1}>
+          <Button id="close" onClick={() => handleClose1}>
             Close
           </Button>
-          <Button variant="primary" onClick={() => addFaculty()}>
+          <Button variant="success" onClick={() => addFaculty()}>
             Add
           </Button>
         </Modal.Footer>

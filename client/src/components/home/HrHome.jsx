@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import SignInOut from "../hr/SignInOut";
 import ViewAttendanceRecord from "../hr/ViewAttendanceRecords";
 import { useHistory } from "react-router-dom";
- 
+import "../../views/btn.css";
 
 const HrHome = () => {
   const history = useHistory();
@@ -20,10 +20,10 @@ const HrHome = () => {
   const handleShow = () => setShow(true);
   const handleShowA = () => setShowA(true);
 
-  if (redirect){
+  if (redirect) {
     history.push("/hrHome");
     return <Redirect to={redirect} />;
-  } 
+  }
 
   return (
     <div>
@@ -36,7 +36,7 @@ const HrHome = () => {
           <SignInOut handleClose={handleClose}></SignInOut>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button id="close" onClick={handleClose}>
             Close
           </Button>
         </Modal.Footer>
@@ -49,7 +49,7 @@ const HrHome = () => {
           <ViewAttendanceRecord></ViewAttendanceRecord>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseA}>
+          <Button id="close" onClick={handleCloseA}>
             Close
           </Button>
         </Modal.Footer>

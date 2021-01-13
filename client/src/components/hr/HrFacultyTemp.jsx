@@ -63,7 +63,7 @@ const HrFacultyTemp = (props) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => handleClose1()}>
+          <Button id="close" onClick={() => handleClose1()}>
             Close
           </Button>
           <Button
