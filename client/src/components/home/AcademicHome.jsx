@@ -8,6 +8,8 @@ import Button from "react-bootstrap/Button";
 import Schedule from "../common/Schedule";
 import RequestForm from "../academic/RequestForm";
 import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
 
 const AcademicHome = () => {
   const { user } = GetUser();
@@ -15,6 +17,7 @@ const AcademicHome = () => {
   const [sessions, setSessions] = useState([]);
   const [redirect, setRedirect] = useState(null);
   const [comp, setComp] = useState("");
+  const history = useHistory();
 
   const handleClose = () => setShow(false);
 
@@ -36,7 +39,10 @@ const AcademicHome = () => {
     data();
   }, [user.token]);
 
-  if (redirect) return <Redirect to={redirect} />;
+  if (redirect){
+    history.push("/academicHome");
+    return <Redirect to={redirect} />;
+  } 
 
   return (
     <div>

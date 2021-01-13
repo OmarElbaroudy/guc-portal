@@ -1,12 +1,16 @@
 import NavBar from "../misc/NavBar";
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-
+import { useHistory } from "react-router-dom"; 
 import "bootstrap/dist/css/bootstrap.css";
 
 const HrHome = () => {
+  const history = useHistory();
   const [redirect, setRedirect] = useState(null);
-  if (redirect) return <Redirect to={redirect} />;
+  if (redirect){
+    history.push("/instructorHome")
+    return <Redirect to={redirect} />;
+  } 
 
   return (
     <div>

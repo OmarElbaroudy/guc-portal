@@ -140,6 +140,7 @@ router.route("/coordinator/addCourseSlot").post(auth, async (req, res) => {
   let location = await locations.findOne({
     name: req.body.location,
   });
+  
   if (!location) {
     res.json("this location is incorrect");
     return;

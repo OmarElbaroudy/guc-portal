@@ -6,8 +6,11 @@ import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.css";
 import SignInOut from "../hr/SignInOut";
 import ViewAttendanceRecord from "../hr/ViewAttendanceRecords";
+import { useHistory } from "react-router-dom";
+ 
 
 const HrHome = () => {
+  const history = useHistory();
   const [redirect, setRedirect] = useState(null);
   const [show, setShow] = useState(false);
   const [showA, setShowA] = useState(false);
@@ -17,7 +20,10 @@ const HrHome = () => {
   const handleShow = () => setShow(true);
   const handleShowA = () => setShowA(true);
 
-  if (redirect) return <Redirect to={redirect} />;
+  if (redirect){
+    history.push("/hrHome");
+    return <Redirect to={redirect} />;
+  } 
 
   return (
     <div>

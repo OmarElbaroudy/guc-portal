@@ -1,14 +1,9 @@
 
 .allO {
 	box-sizing: border-box;
+	box-sizing: inherit;
 	font-family: Arial, Helvetica, sans-serif;
 	margin: 0;
-}
-
-*,
-*:before,
-*:after {
-	box-sizing: inherit;
 }
 
 .columnO {
@@ -35,7 +30,7 @@
 }
 
 .containerO::after,
-.row::after {
+.row0::after {
 	content: "";
 	clear: both;
 	display: table;
@@ -57,12 +52,12 @@
 	width: 100%;
 }
 
-.button:hover {
+.button0:hover {
 	background-color: #555;
 }
 
 @media screen and (max-width: 650px) {
-	.column {
+	.column0 {
 		width: 100%;
 		display: block;
 	}

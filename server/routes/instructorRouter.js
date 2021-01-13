@@ -669,38 +669,36 @@ router
 
       const curId = await getAcademicIdById(req.body.id);
       let academicMember = await academic.findOne({
-        "courses.courseId": courseId,
         _id: curId,
       });
 
       if (!academicMember) {
-        console.log("here");
-        res.json(
-          "This academic either doesn't exist or doesn't teach this course"
+        return res.json(
+          "This academic doesn't exist"
         );
-        return;
+      }
+
+      let flag = false;
+      if(academicMember.courses){
+        for(const course of academicMember.courses){
+          flag |= (course.position === "coordinator");
+        }
+      }
+      
+      if(!flag){
+        return res.json("this academic member is already a coordinator of another course")
       }
 
       course.coordinatorId = academicMember._id;
       await course.save();
 
-      // for (const entry of academicMember.courses) {
-      //   if (entry.courseId.equals(courseId)) {
-      //     if (entry.position !== "coordinator") {
-      //       entry.position = "coordinator";
-      //       await academicMember.save();
-      //       break;
-      //     } else {
-      //       res.json(academicMember);
-      //     }
-      //   }
-      // }
       academicMember.courses.push({
         courseId: courseId,
         position: "coordinator",
       });
+
       await academicMember.save();
-      res.json(academicMember);
+      return res.json(academicMember);
     } catch (err) {
       console.log(err);
     }

@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { Redirect } from "react-router-dom";
 import { GetUser } from "../common/GlobalState";
 import { hodFetcher } from "../../API/hodFetcher";
+import { useHistory } from "react-router-dom";
 
 const RequestOnHome = () => {
 	const { user } = GetUser();
@@ -10,6 +11,7 @@ const RequestOnHome = () => {
 	const [pending, setPending] = useState(0);
 	const [accepted, setAccepted] = useState(0);
 	const [rejected, setRejected] = useState(0);
+	const history = useHistory();
 
 	let classes = "badge m-5 ";
 	classes += pending === 0 ? "badge-warning" : "badge-primary";
@@ -40,7 +42,10 @@ const RequestOnHome = () => {
 		return pending === 0 ? "zero" : pending;
 	};
 
-	if (redirect) return <Redirect to={redirect} />;
+	if (redirect) {
+		history.push("/hodHome")
+		return <Redirect to={redirect} />;
+	}
 	return (
 		<div class="card text-white bg-dark ">
 			<div class="card-header">

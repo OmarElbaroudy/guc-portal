@@ -9,6 +9,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import UpdateProfile from "../staff/UpdateProfile";
+import { useHistory } from "react-router-dom";
 
 function NavBar() {
 	const { user } = GetUser();
@@ -17,6 +18,7 @@ function NavBar() {
 	const [showA, setShowA] = useState(false);
 	const [newPassword, setNewPassword] = useState("");
 	const [passwordText, setPasswordText] = useState("Enter new password");
+	const history = useHistory()
 
 	const handleClose1 = () => setShowAccept(false);
 	const handleShow1 = () => setShowAccept(true);
@@ -45,7 +47,10 @@ function NavBar() {
 		setPasswordText("password updated successfully");
 	};
 
-	if (redirect) return <Redirect to={Redirect} />;
+	if (redirect){
+		history.push(history.location.pathname)
+		return <Redirect to={Redirect} />;
+	} 
 	return (
 		<div className="w-100">
 			<div id="mySidenav" className="sidenav bg-dark">

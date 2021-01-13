@@ -3,7 +3,7 @@
   --duration: 250ms;
   --ease: cubic-bezier(0.215, 0.61, 0.355, 1);
   --font-family: monospace;
-  --color-primary: white;
+  --color-primary: rgba(240, 240, 240, 0.801);
   --color-secondary: black;
   --color-tertiary: dodgerblue;
   --shadow: rgba(0, 0, 0, 0.1);
@@ -23,12 +23,16 @@
   flex-grow: 1;
   cursor: pointer;
   position: relative;
+  border-radius: 0.4rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1.5px 5px 0 rgba(0, 0, 0, 0.19);
+  /* box-shadow: var(--shadow) 2px 2px; */
   border: var(--border-size) solid black;
+  border-color: rgb(141, 141, 141);
   color: var(--color-secondary);
   background-color: var(--color-primary);
-  font-size: 1rem;
-  /* font-family: var(--font-family);
-  text-shadow: var(--shadow) 2px 2px; */
+  font-size: 1.1rem;
+  /* font-family: var(--font-family); */
+  /* text-shadow: var(--shadow) 2px 2px; */
   transition: flex-grow var(--duration) var(--ease);
 }
 
@@ -55,4 +59,8 @@
 
 .multi-button button:active {
   transform: translateY(var(--border-size));
+}
+
+.multi-button button:disabled{
+  background-color :rgb(255, 197, 158);
 }

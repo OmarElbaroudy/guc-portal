@@ -10,6 +10,8 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import { coordinatorFetcher } from "../../API/coordinatorFetcher";
+import { useHistory } from "react-router-dom";
+
 
 const CoordinatorHome = () => {
   const { user } = GetUser();
@@ -29,6 +31,7 @@ const CoordinatorHome = () => {
   const [newSlot, setNewSlot] = useState(1);
   const [newLocation, setNewLocation] = useState("");
   const [newType, setNewType] = useState("tutorial");
+  const history = useHistory()
 
   const handleClose1 = () => setShowAdd(false);
   const handleShow1 = () => setShowAdd(true);
@@ -108,7 +111,10 @@ const CoordinatorHome = () => {
     }
   };
 
-  if (redirect) return <Redirect to={redirect} />;
+  if (redirect){
+    history.push("/coordinatorHome");
+    return <Redirect to={redirect} />;
+  } 
 
   return (
     <div>

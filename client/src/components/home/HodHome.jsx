@@ -4,10 +4,16 @@ import "bootstrap/dist/css/bootstrap.css";
 import {Redirect } from "react-router-dom";
 import NavBar from "../misc/NavBar";
 import RequestsHome from "../hod/RequestsHomePage";
+import { useHistory } from "react-router-dom";
 
 function HodHome() {
+  const history = useHistory();
   const [redirect, setRedirect] = useState(null);
-  if (redirect) return <Redirect to={redirect} />;
+ 
+  if (redirect){
+    history.push("/hodHome");
+    return <Redirect to={redirect} />;
+  } 
 
   return (
     <div class="container-fluid">
