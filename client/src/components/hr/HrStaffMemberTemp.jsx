@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { GetUser } from "../common/GlobalState";
 import "bootstrap/dist/css/bootstrap.css";
+import "../../views/btn.css";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
@@ -82,39 +83,28 @@ const HrStaffMemberTemp = (props) => {
                   {office.name ? office.name : "-no office yet-"}
                 </dd>
               </dl>
-              <Button
-                onClick={() => {
-                  props.handleDelete(props.id);
-                }}
-                className="col col-6"
-                variant="danger"
-              >
-                {props.spinner ? (
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                ) : null}
-                Delete User
-              </Button>
-              <Button
-                onClick={() => handleShow1()}
-                className="col col-6"
-                variant="warning"
-              >
-                update user
-              </Button>
-              <Button
-                onClick={() => handleShow2()}
-                className="col col-12"
-                variant="light"
-                disabled={disable()}
-              >
-                Assign dep
-              </Button>
+              <div class="multi-button col-12">
+                <button
+                  onClick={() => {
+                    props.handleDelete(props.id);
+                  }}
+                >
+                  {props.spinner ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                  Delete User
+                </button>
+                <button onClick={() => handleShow1()}>update user</button>
+                <button onClick={() => handleShow2()} disabled={disable()}>
+                  Assign dep
+                </button>
+              </div>
             </Card.Body>
           </Accordion.Collapse>
         </Card>

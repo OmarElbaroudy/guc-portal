@@ -10,6 +10,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
+import "../../views/btn.css";
 
 const HrCourseTemp = (props) => {
   const { user } = GetUser();
@@ -66,31 +67,25 @@ const HrCourseTemp = (props) => {
                   {props.department ? depName : "-no department-"}
                 </dd>
               </dl>
-              <Button
-                onClick={() => {
-                  props.handleDelete(props.name);
-                }}
-                className="col col-6"
-                variant="light"
-              >
-                {props.spinner ? (
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                ) : null}
-                Delete course
-              </Button>
-              <Button
-                onClick={() => handleShow1()}
-                className="col col-6"
-                variant="light"
-              >
-                update course
-              </Button>
+              <div class="multi-button col-12">
+                <button
+                  onClick={() => {
+                    props.handleDelete(props.name);
+                  }}
+                >
+                  {props.spinner ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                  Delete course
+                </button>
+                <button onClick={() => handleShow1()}>update course</button>
+              </div>
             </Card.Body>
           </Accordion.Collapse>
         </Card>

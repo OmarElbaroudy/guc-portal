@@ -11,6 +11,7 @@ import { getterFetcher } from "../../API/getterFetcher";
 import { GetUser } from "../common/GlobalState";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
+import "../../views/btn.css";
 
 const ViewStaff = (props) => {
   const { user } = GetUser();
@@ -141,37 +142,19 @@ const ViewStaff = (props) => {
                     <dt class="col-sm-3 text-truncate">Office location</dt>
                     <dd class="col-sm-9">{office.name}</dd>
                   </dl>
-                  <Button
-                    className="col col-3"
-                    variant="light"
-                    onClick={handleShow1}
-                  >
-                    Add course
-                  </Button>
-                  <Button
-                    className="col col-3"
-                    variant="light"
-                    onClick={handleShow2}
-                  >
-                    Delete course
-                  </Button>
-                  <Button
-                    className="col col-3"
-                    variant="light"
-                    onClick={handleShow3}
-                  >
-                    update course
-                  </Button>
-                  <OverlayTrigger
-                    rootClose={true}
-                    trigger="click"
-                    placement="top"
-                    overlay={popover}
-                  >
-                    <Button className="col col-3" variant="success">
-                      Click me to see day off
-                    </Button>
-                  </OverlayTrigger>
+                  <div class="multi-button col-12">
+                    <button onClick={handleShow1}>Add course</button>
+                    <button onClick={handleShow2}>Delete course</button>
+                    <button onClick={handleShow3}>update course</button>
+                    <OverlayTrigger
+                      rootClose={true}
+                      trigger="click"
+                      placement="top"
+                      overlay={popover}
+                    >
+                      <button>Click me to see day off</button>
+                    </OverlayTrigger>
+                  </div>
                 </Card.Body>
               </Accordion.Collapse>
             </Card>

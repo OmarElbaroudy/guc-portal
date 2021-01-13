@@ -112,51 +112,43 @@ const Temp = (props) => {
                   <dt class="col-sm-3 text-truncate">Office location</dt>
                   <dd class="col-sm-9">{office.name}</dd>
                 </dl>
-                <Button
-                  onClick={() => {
-                    handleShow1(true);
-                  }}
-                  className="col col-6"
-                  variant="light"
-                >
-                  Assign slot
-                </Button>
-                <Button
-                  onClick={() => {
-                    handleShow2(true);
-                  }}
-                  className="col col-6"
-                  variant="light"
-                >
-                  Delete assigned slot
-                </Button>
-                <Button
-                  onClick={() => {
-                    handleShow3(true);
-                  }}
-                  className="col col-6"
-                  variant="light"
-                >
-                  update assigned slot
-                </Button>
-                <Button
-                  onClick={() => {
-                    handleShow4(true);
-                  }}
-                  className="col col-6"
-                  variant="light"
-                >
-                  delete academic from course
-                </Button>
-                <Button
-                  onClick={() => {
-                    handleShow5(true);
-                  }}
-                  className="col col-12"
-                  variant="light"
-                >
-                  Set course coordinator
-                </Button>
+                <div class="multi-button col-12">
+                  <button
+                    onClick={() => {
+                      handleShow1(true);
+                    }}
+                  >
+                    Assign slot
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleShow2(true);
+                    }}
+                  >
+                    Delete assigned slot
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleShow3(true);
+                    }}
+                  >
+                    update assigned slot
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleShow4(true);
+                    }}
+                  >
+                    delete academic from course
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleShow5(true);
+                    }}
+                  >
+                    Set course coordinator
+                  </button>
+                </div>
               </Card.Body>
             </Accordion.Collapse>
           </Card>
@@ -521,7 +513,7 @@ const Temp = (props) => {
             Close
           </Button>
           <Button
-            variant="success"
+            variant="warning"
             onClick={() =>
               props.handleUpdate(
                 newAcademic,

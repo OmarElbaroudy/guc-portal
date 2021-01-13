@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { getterFetcher } from "../../API/getterFetcher";
 import { GetUser } from "../common/GlobalState";
+import "../../views/btn.css";
 
 const ReqTemp = (props) => {
   const { user } = GetUser();
@@ -126,22 +127,14 @@ const ReqTemp = (props) => {
                         : "-No comment-"}
                     </dd>
                   </dl>
-                  <Button
-                    className="col col-6"
-                    variant="light"
-                    onClick={handleShow1}
-                    disabled={disable()}
-                  >
-                    Accept request
-                  </Button>
-                  <Button
-                    className="col col-6"
-                    variant="light"
-                    onClick={handleShow2}
-                    disabled={disable()}
-                  >
-                    Reject request
-                  </Button>
+                  <div class="multi-button col-12">
+                    <button onClick={handleShow1} disabled={disable()}>
+                      Accept request
+                    </button>
+                    <button onClick={handleShow2} disabled={disable()}>
+                      Reject request
+                    </button>
+                  </div>
                 </Card.Body>
               </Accordion.Collapse>
             </Card>

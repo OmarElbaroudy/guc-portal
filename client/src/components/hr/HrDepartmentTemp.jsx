@@ -10,6 +10,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
+import "../../views/btn.css";
 
 const HrDepartmentTemp = (props) => {
   const { user } = GetUser();
@@ -88,45 +89,33 @@ const HrDepartmentTemp = (props) => {
 
                 <dt class="col-sm-3">Coordinator </dt>
                 <dd class="col-sm-9">
-                  { coordinator
+                  {coordinator
                     ? coordinator.name
                     : "-no coordinator of department yet-"}
                 </dd>
               </dl>
-
-              <Button
-                onClick={() => {
-                  props.handleDelete(props.name);
-                }}
-                className="col col-6"
-                variant="light"
-              >
-                {props.spinner2 ? (
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                ) : null}
-                Delete department
-              </Button>
-              <Button
-                onClick={() => handleShow1()}
-                className="col col-6"
-                variant="light"
-              >
-                update department
-              </Button>
-              <Button
-                onClick={() => handleShow2()}
-                className="col col-12"
-                variant="light"
-                disabled={disable()}
-              >
-                Assign head of department
-              </Button>
+              <div class="multi-button col-12">
+                <button
+                  onClick={() => {
+                    props.handleDelete(props.name);
+                  }}
+                >
+                  {props.spinner2 ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                  Delete department
+                </button>
+                <button onClick={() => handleShow1()}>update department</button>
+                <button onClick={() => handleShow2()} disabled={disable()}>
+                  Assign head of department
+                </button>
+              </div>
             </Card.Body>
           </Accordion.Collapse>
         </Card>
@@ -208,7 +197,7 @@ const HrDepartmentTemp = (props) => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>update Department</Modal.Title>
+          <Modal.Title>Assign head of department</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>

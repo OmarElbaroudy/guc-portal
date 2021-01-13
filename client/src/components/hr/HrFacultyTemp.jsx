@@ -6,6 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
+import "../../views/btn.css";
 
 const HrFacultyTemp = (props) => {
   const [showAdd, setShowAdd] = useState(false);
@@ -23,22 +24,16 @@ const HrFacultyTemp = (props) => {
           </Accordion.Toggle>
           <Accordion.Collapse eventKey="0">
             <Card.Body>
-              <Button
-                onClick={() => {
-                  props.handleDelete(props.name);
-                }}
-                className="col col-6"
-                variant="light"
-              >
-                Delete faculty
-              </Button>
-              <Button
-                onClick={() => handleShow1()}
-                className="col col-6"
-                variant="light"
-              >
-                update faculty
-              </Button>
+              <div class="multi-button col-12">
+                <button
+                  onClick={() => {
+                    props.handleDelete(props.name);
+                  }}
+                >
+                  Delete faculty
+                </button>
+                <button onClick={() => handleShow1()}>update faculty</button>
+              </div>
             </Card.Body>
           </Accordion.Collapse>
         </Card>
@@ -72,7 +67,7 @@ const HrFacultyTemp = (props) => {
             Close
           </Button>
           <Button
-            variant="primary"
+            variant="warning"
             onClick={() => props.handleUpdate(props.name, name)}
           >
             Update
