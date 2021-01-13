@@ -673,20 +673,20 @@ router
       });
 
       if (!academicMember) {
-        return res.json(
-          "This academic doesn't exist"
-        );
+        return res.json("This academic doesn't exist");
       }
 
       let flag = false;
-      if(academicMember.courses){
-        for(const course of academicMember.courses){
-          flag |= (course.position === "coordinator");
+      if (academicMember.courses) {
+        for (const course of academicMember.courses) {
+          flag |= course.position === "coordinator";
         }
       }
-      
-      if(!flag){
-        return res.json("this academic member is already a coordinator of another course")
+
+      if (flag) {
+        return res.json(
+          "this academic member is already a coordinator of another course"
+        );
       }
 
       course.coordinatorId = academicMember._id;
