@@ -50,7 +50,6 @@ router.route("/instructor/viewCoursesCoverage").get(auth, async (req, res) => {
     const output = await courses.findOne({
       _id: entry.courseId,
     });
-
     let courseCoverage;
 
     if (output) {

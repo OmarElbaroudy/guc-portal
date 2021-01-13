@@ -134,6 +134,8 @@ const Temp = (props) => {
                   >
                     update assigned slot
                   </button>
+                </div>
+                <div class="multi-button col-12">
                   <button
                     onClick={() => {
                       handleShow4(true);
