@@ -154,7 +154,8 @@ const InstStaffMem = () => {
       res === "this course doesn't exist" ||
       res === "You are not the instructor of this course" ||
       res === "This academic doesn't exist" ||
-      res === "this academic member is already a coordinator of another course"
+      res === "this academic member is already a coordinator of another course" ||
+      res === "this course already has a coordinator"
     ) {
       setSpinner4(false);
       setShowAlert(true);

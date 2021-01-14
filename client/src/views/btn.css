@@ -61,10 +61,18 @@
   transform: translateY(var(--border-size));
 }
 
-.multi-button button:disabled {
+.multi-button button:disabled{
+  flex-grow : 1;
+  color: rgb(0, 0, 0);
   background-color: #2f4f4f;
 }
+
 #close {
-  background-color: #b4cdcd;
-  border-color: #b4cdcd;
+  background-color: #a6cfcf;
+  border-color: #a6cfcf;
+}
+
+#close:hover{
+  background-color: #80aaaa;
+  border-color: #80aaaa;
 }

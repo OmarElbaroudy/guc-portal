@@ -79,7 +79,6 @@ const HrDepartment = () => {
         setShowAlert(true);
         return;
       }
-      console.log(res);
       setDepartment(res);
       setSpinner(false);
     } catch (err) {

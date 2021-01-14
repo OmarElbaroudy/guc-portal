@@ -167,10 +167,10 @@ const Login = () => {
                   </button>
 
                   <Button
-                    style={{ marginLeft: 60 }}
+                    style={{ marginLeft: 10 }}
                     onClick={() => addFirst()}
                     type="button"
-                    class="btn "
+                    class="btn"
                     id="close"
                   >
                     {spinner1 ? (
