@@ -2,7 +2,7 @@ export class staffFetcher {
 	static async resetPassword(password, token) {
 		try {
 			const params = { newPassword: password };
-			const res = await fetch("http://localhost:3000/myProfile/resetPassword", {
+			const res = await fetch("http://localhost:8000/myProfile/resetPassword", {
 				method: "POST",
 				body: JSON.stringify(params),
 				headers: {
@@ -22,7 +22,7 @@ export class staffFetcher {
 
 	static async viewProfile(token) {
 		try {
-			const res = await fetch("http://localhost:3000/myProfile", {
+			const res = await fetch("http://localhost:8000/myProfile", {
 				method: "GET",
 				headers: {
 					Authorization: "",
@@ -45,7 +45,7 @@ export class staffFetcher {
 				gender: gender,
 				personalInfo: personalInfo,
 			};
-			const res = await fetch("http://localhost:3000/myProfile", {
+			const res = await fetch("http://localhost:8000/myProfile", {
 				method: "PUT",
 				body: JSON.stringify(params),
 				headers: {
@@ -67,7 +67,7 @@ export class staffFetcher {
 		try {
 			const params = { month: parseInt(month) };
 			const res = await fetch(
-				"http://localhost:3000/myProfile/viewAttendanceRecords",
+				"http://localhost:8000/myProfile/viewAttendanceRecords",
 				{
 					method: "POST",
 					body: JSON.stringify(params),
@@ -89,7 +89,7 @@ export class staffFetcher {
 
 	static async signIn(token) {
 		try {
-			const res = await fetch("http://localhost:3000/myProfile/signIn", {
+			const res = await fetch("http://localhost:8000/myProfile/signIn", {
 				method: "GET",
 				headers: {
 					Authorization: "",
@@ -108,7 +108,7 @@ export class staffFetcher {
 
 	static async signOut(token) {
 		try {
-			const res = await fetch("http://localhost:3000/myProfile/signOut", {
+			const res = await fetch("http://localhost:8000/myProfile/signOut", {
 				method: "GET",
 				headers: {
 					Authorization: "",
@@ -127,7 +127,7 @@ export class staffFetcher {
 
 	static async missingHours(token) {
 		try {
-			const res = await fetch("http://localhost:3000/myProfile/viewMissingHours", {
+			const res = await fetch("http://localhost:8000/myProfile/viewMissingHours", {
 				method: "GET",
 				headers: {
 					Authorization: "",
@@ -146,7 +146,7 @@ export class staffFetcher {
 
 	static async missingDays(token) {
 		try {
-			const res = await fetch("http://localhost:3000/myProfile/viewMissingDays", {
+			const res = await fetch("http://localhost:8000/myProfile/viewMissingDays", {
 				method: "GET",
 				headers: {
 					Authorization: "",
@@ -165,7 +165,7 @@ export class staffFetcher {
 
 	static async getNotifications(token) {
 		try {
-			const res = await fetch("http://localhost:3000/myProfile/notifications", {
+			const res = await fetch("http://localhost:8000/myProfile/notifications", {
 				method: "GET",
 				headers: {
 					Authorization: "",

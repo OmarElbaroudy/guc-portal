@@ -7,7 +7,6 @@ const getterRoutes = require("../components/getterRoutes");
 const router = express.Router();
 const getter = new getterRoutes();
 
-const app = express();
 let ac = "";
 
 const numOfDefined = (array) => {
@@ -641,11 +640,11 @@ router
 			if (!course) {
 				res.json("this course doesn't exist");
 				return;
-      }
-      
-      if(course.coordinatorId){
-        return res.json("this course already has a coordinator");
-      }
+			}
+
+			if (course.coordinatorId) {
+				return res.json("this course already has a coordinator");
+			}
 
 			let instructor = await academic.findOne({
 				"courses.courseId": courseId,

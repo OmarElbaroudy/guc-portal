@@ -2,7 +2,7 @@ export class hodFetcher {
   static async view(course, token) {
     try {
       const params = { courseName: course };
-      const res = await fetch("http://localhost:3000/HOD/view_staff", {
+      const res = await fetch("http://localhost:8000/HOD/view_staff", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -24,7 +24,7 @@ export class hodFetcher {
       console.log("staff " + staff);
       const params = { courseName: course, id: staff, type: type };
       const res = await fetch(
-        "http://localhost:3000/HOD/assign_course_instructor",
+        "http://localhost:8000/HOD/assign_course_instructor",
         {
           method: "put",
           body: JSON.stringify(params),
@@ -47,7 +47,7 @@ export class hodFetcher {
       console.log("staff " + staff);
       const params = { courseName: course, id: staff };
       const res = await fetch(
-        "http://localhost:3000/HOD/delete_course_instructor",
+        "http://localhost:8000/HOD/delete_course_instructor",
         {
           method: "put",
           body: JSON.stringify(params),
@@ -70,7 +70,7 @@ export class hodFetcher {
     try {
       const params = { courseName: course, orgId: oldStaff, updId: newStaff };
       const res = await fetch(
-        "http://localhost:3000/HOD/update_course_instructor",
+        "http://localhost:8000/HOD/update_course_instructor",
         {
           method: "put",
           body: JSON.stringify(params),
@@ -91,7 +91,7 @@ export class hodFetcher {
 
   static async viewRequests(token) {
     try {
-      const res = await fetch("http://localhost:3000/HOD/view_requests", {
+      const res = await fetch("http://localhost:8000/HOD/view_requests", {
         method: "get",
         headers: {
           Authorization: "",
@@ -110,7 +110,7 @@ export class hodFetcher {
   static async acceptRequests(id, token, message) {
     try {
       const params = { _id: id, comment: message };
-      const res = await fetch("http://localhost:3000/HOD/accept_requests", {
+      const res = await fetch("http://localhost:8000/HOD/accept_requests", {
         method: "put",
         body: JSON.stringify(params),
         headers: {
@@ -130,7 +130,7 @@ export class hodFetcher {
   static async rejectRequests(id, token, message) {
     try {
       const params = { _id: id, comment: message };
-      const res = await fetch("http://localhost:3000/HOD/reject_requests", {
+      const res = await fetch("http://localhost:8000/HOD/reject_requests", {
         method: "put",
         body: JSON.stringify(params),
         headers: {
@@ -151,7 +151,7 @@ export class hodFetcher {
   static async viewDayOff(id, token) {
     try {
       const params = { id: id };
-      const res = await fetch("http://localhost:3000/HOD/view_day_off", {
+      const res = await fetch("http://localhost:8000/HOD/view_day_off", {
         method: "post",
         body: JSON.stringify(params),
         headers: {
@@ -171,7 +171,7 @@ export class hodFetcher {
   static async viewCourseCoverage(token) {
     try {
       const res = await fetch(
-        "http://localhost:3000/HOD/view_course_coverage",
+        "http://localhost:8000/HOD/view_course_coverage",
         {
           method: "get",
           headers: {
@@ -193,7 +193,7 @@ export class hodFetcher {
     try {
       const params = { courseName: course };
       const res = await fetch(
-        "http://localhost:3000/HOD/view_course_schedule",
+        "http://localhost:8000/HOD/view_course_schedule",
         {
           method: "post",
           body: JSON.stringify(params),

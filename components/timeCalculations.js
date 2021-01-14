@@ -173,12 +173,11 @@ class timeCalculations {
 				compensated: false,
 			});
 
-			console.log(arr);
 			for (const request of arr) {
 				if (curDate >= request.targetDate) {
 					request.compensated = true;
 					doc.compensation = true;
-					attendanceRecords[idx].compensation = true;
+					doc.attendanceRecords[idx].compensation = true;
 					await request.save();
 					break;
 				}

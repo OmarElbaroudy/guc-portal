@@ -1,7 +1,7 @@
 export class getterFetcher {
   static async getCourseNameById(id, token) {
     const params = { id: id };
-    const res = await fetch("http://localhost:3000/getCourseNameById", {
+    const res = await fetch("http://localhost:8000/getCourseNameById", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -19,7 +19,7 @@ export class getterFetcher {
   static async getStaffById(id, token) {
     console.log("id" + id);
     const params = { id: id };
-    const res = await fetch("http://localhost:3000/getStaffNameById", {
+    const res = await fetch("http://localhost:8000/getStaffNameById", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -36,7 +36,7 @@ export class getterFetcher {
 
   static async getCourseIdByName(name, token) {
     const params = { name: name };
-    const res = await fetch("http://localhost:3000/getCourseIdByName", {
+    const res = await fetch("http://localhost:8000/getCourseIdByName", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -52,7 +52,7 @@ export class getterFetcher {
 
   static async getDepNameById(id, token) {
     const params = { id: id };
-    const res = await fetch("http://localhost:3000/getDepNameById", {
+    const res = await fetch("http://localhost:8000/getDepNameById", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -68,7 +68,7 @@ export class getterFetcher {
 
   static async getDepIdByName(name, token) {
     const params = { name: name };
-    const res = await fetch("http://localhost:3000/getDepIdByName", {
+    const res = await fetch("http://localhost:8000/getDepIdByName", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -84,7 +84,7 @@ export class getterFetcher {
 
   static async getLocationNameById(id, token) {
     const params = { id: id };
-    const res = await fetch("http://localhost:3000/getLocationNameById", {
+    const res = await fetch("http://localhost:8000/getLocationNameById", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -99,7 +99,7 @@ export class getterFetcher {
 
   static async getLocationIdByName(name, token) {
     const params = { name: name };
-    const res = await fetch("http://localhost:3000/getLocationIdByName", {
+    const res = await fetch("http://localhost:8000/getLocationIdByName", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -115,7 +115,7 @@ export class getterFetcher {
 
   static async getFacultyNameById(id, token) {
     const params = { id: id };
-    const res = await fetch("http://localhost:3000/getFacultyNameById", {
+    const res = await fetch("http://localhost:8000/getFacultyNameById", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -130,7 +130,7 @@ export class getterFetcher {
 
   static async getFacultyIdByName(name, token) {
     const params = { name: name };
-    const res = await fetch("http://localhost:3000/getFacultyIdByName", {
+    const res = await fetch("http://localhost:8000/getFacultyIdByName", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -146,7 +146,7 @@ export class getterFetcher {
 
   static async getId(id, token) {
     const params = { id: id };
-    const res = await fetch("http://localhost:3000/getId", {
+    const res = await fetch("http://localhost:8000/getId", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -162,7 +162,7 @@ export class getterFetcher {
 
   static async getCoursesInDep(id, token) {
     const params = { id: id };
-    const res = await fetch("http://localhost:3000/getCoursesInDep", {
+    const res = await fetch("http://localhost:8000/getCoursesInDep", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -179,7 +179,7 @@ export class getterFetcher {
   static async isHod(departmentId, userId, token) {
     try {
       const params = { depId: departmentId, userId: userId };
-      const res = await fetch("http://localhost:3000/isHod", {
+      const res = await fetch("http://localhost:8000/isHod", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {

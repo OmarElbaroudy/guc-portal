@@ -1,7 +1,7 @@
 export class logoutFetcher {
   static async logout(token) {
     try {
-      const res = await fetch("http://localhost:3000/logout", {
+      const res = await fetch("http://localhost:8000/logout", {
         method: "get",
         headers: {
           Authorization: "",
