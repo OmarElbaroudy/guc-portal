@@ -170,8 +170,8 @@ const Login = () => {
                     style={{ marginLeft: 60 }}
                     onClick={() => addFirst()}
                     type="button"
-                    class="btn btn-dark"
-                    variant="success"
+                    class="btn "
+                    id="close"
                   >
                     {spinner1 ? (
                       <Spinner

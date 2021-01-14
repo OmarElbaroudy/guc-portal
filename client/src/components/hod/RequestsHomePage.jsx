@@ -14,7 +14,7 @@ const RequestOnHome = () => {
   const history = useHistory();
 
   let classes = "badge m-5 ";
-  classes += pending === 0 ? "badge-light" : "badge-primary";
+  classes += pending === 0 ? "badge-secondary" : "badge-info";
 
   useEffect(() => {
     const data = async () => {

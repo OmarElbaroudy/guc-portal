@@ -122,7 +122,7 @@ const HrDepartment = () => {
   return (
     <div>
       <NavBar />
-      <h1 style={{ fontWeight: 1, padding: 50 }} class="display-6">
+      <h1 style={{ fontWeight: "bold", padding: 50 }} class="display-6">
         Departments
       </h1>
       <Button

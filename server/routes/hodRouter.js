@@ -421,33 +421,31 @@ router.route("/HOD/view_course_schedule").post(auth, async (req, res) => {
       const c = await course.findOne({
         name: req.body.courseName,
       });
-      
+
       if (c) {
-        if (c.departmentId.equals(cur.departmentId)) {
-          let schedule = [];
-          
-          for (const entry of c.schedule) {
-            const courseInst = await academic.findOne({
-              _id: entry.instructorId,
-            });
-            
-            const courseName = courseInst.name + "(" + courseInst.id + ")";
-            let session = {
-              course: courseName,
-              weekDay: entry.weekDay,
-              slot : entry.slot,
-              location: await getter.getLocationNameById(entry.locationId),
-              type: entry.type,
-            };
-            schedule.push(session);
-          }
-          
-          return res.json(schedule);
+        let schedule = [];
+
+        for (const entry of c.schedule) {
+          let courseInst = await academic.findOne({
+            _id: entry.instructorId,
+          });
+          if (!courseInst) courseInst = { name: "no instructor", id: "" };
+
+          const courseName = courseInst.name + "(" + courseInst.id + ")";
+          let session = {
+            course: courseName,
+            weekDay: entry.weekDay,
+            slot: entry.slot,
+            location: await getter.getLocationNameById(entry.locationId),
+            type: entry.type,
+          };
+          schedule.push(session);
         }
 
+        return res.json(schedule);
       }
     }
-  } catch(e) {
+  } catch (e) {
     console.log(e);
   }
 });
@@ -466,7 +464,7 @@ router.route("/HOD/accept_requests").put(auth, async (req, res) => {
         request.receiverComment = req.body.comment;
         const sender = await academic.findById(request.senderId);
         sender.notifications.push(request._id);
-        
+
         await request.save();
         await sender.save();
 
@@ -533,13 +531,13 @@ router.route("/HOD/accept_requests").put(auth, async (req, res) => {
           await request.save();
           await sender.save();
         }
-        
+
         return res.json(request);
       } else {
         return res.json("this request is already accepted/rejected");
       }
     }
-  } catch(e) {
+  } catch (e) {
     console.log(e);
   }
 });

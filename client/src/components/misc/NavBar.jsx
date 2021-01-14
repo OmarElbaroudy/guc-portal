@@ -84,7 +84,7 @@ function NavBar() {
         class="navbar navbar-expand-md"
       >
         <button
-          class="navbar-toggler"
+          class="navbar-toggler fa fa-bars"
           data-toggle="collapse"
           data-target="#collapse-target"
         >
@@ -93,9 +93,9 @@ function NavBar() {
         <div class="collapse navbar-collapse" id="collapse-target">
           <div style={{ fontWeight: "bold" }} className="navbar-brand">
             <button type="btn-dark" href="#" onClick={openNav} className="btn">
-              {/* <span className="navbar-toggler-icon"></span> */}c
+              <span className="fa fa-bars"></span>
             </button>
-            GUC
+            <span style={{ padding: 5 }}>GUC</span>
           </div>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             {

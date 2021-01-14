@@ -62,7 +62,7 @@
 }
 
 .multi-button button:disabled {
-  background-color: rgb(255, 197, 158);
+  background-color: #2f4f4f;
 }
 #close {
   background-color: #b4cdcd;
