@@ -20,6 +20,7 @@ const HrHome = () => {
   const handleShow = () => setShow(true);
   const handleShowA = () => setShowA(true);
 
+
   if (redirect) {
     history.push("/hrHome");
     return <Redirect to={redirect} />;

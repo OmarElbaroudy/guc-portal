@@ -47,6 +47,13 @@ const StaffHome = () => {
     getNotifications();
   }, [user.token]);
 
+  const getTime = (h) => {
+		const time = h * 60;
+		const hours = Math.floor(time / 60);
+    const minutes = time - hours * 60;
+    return {hours : hours , minutes : minutes};
+  }
+
   const signIn = async () => {
     const data = await staffFetcher.signIn(user.token);
     setMessage(data.message);
@@ -152,7 +159,8 @@ const StaffHome = () => {
         </Modal.Header>
         <Modal.Body>
           {missingHours >= 0 ? "Missing Hours " : "Extra Hours "} is{" "}
-          <strong>{missingHours}</strong> hours
+          <strong>{getTime(missingHours).hours}</strong> hours{" "}
+          <strong>{getTime(missingHours).minutes}</strong> minutes
         </Modal.Body>
         <Modal.Footer>
           <Button id="close" onClick={handleCloseB}>

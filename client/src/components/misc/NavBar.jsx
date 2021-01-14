@@ -73,9 +73,6 @@ function NavBar() {
         <a style={{ fontWeight: "bold", color: "black" }} href="/about">
           About Us
         </a>
-        <a style={{ fontWeight: "bold", color: "black" }} href="/contact">
-          Contact
-        </a>
       </div>
 
       <nav
