@@ -1,3 +1,4 @@
+const port = process.env.PORT || 8000;
 export class coordinatorFetcher {
   static async addSlot(location, weekDay, slot, type, token) {
     try {
@@ -8,7 +9,7 @@ export class coordinatorFetcher {
         type: type,
       };
       const res = await fetch(
-        "http://localhost:8000/coordinator/addCourseSlot",
+        "http://localhost:"+ port +"/coordinator/addCourseSlot",
         {
           method: "post",
           body: JSON.stringify(params),
@@ -35,7 +36,7 @@ export class coordinatorFetcher {
         slot: slot,
         type: type,
       };
-      const res = await fetch("http://localhost:8000/coordinator/deleteSlot", {
+      const res = await fetch("http://localhost:"+ port +"/coordinator/deleteSlot", {
         method: "post",
         body: JSON.stringify(params),
         headers: {
@@ -74,7 +75,7 @@ export class coordinatorFetcher {
         newtype: newType,
         newLocation: newLocation,
       };
-      const res = await fetch("http://localhost:8000/coordinator/updateSlot", {
+      const res = await fetch("http://localhost:"+ port +"/coordinator/updateSlot", {
         method: "post",
         body: JSON.stringify(params),
         headers: {
@@ -94,7 +95,7 @@ export class coordinatorFetcher {
   static async viewReq(token) {
     try {
       const res = await fetch(
-        "http://localhost:8000/coordinator/viewSlotLinking",
+        "http://localhost:"+ port +"/coordinator/viewSlotLinking",
         {
           method: "get",
           headers: {
@@ -116,7 +117,7 @@ export class coordinatorFetcher {
     try {
       const params = { reqs: request, comment: comment };
       const res = await fetch(
-        "http://localhost:8000/coordinator/acceptSlotLinking",
+        "http://localhost:"+ port +"/coordinator/acceptSlotLinking",
         {
           method: "post",
           body: JSON.stringify(params),
@@ -138,7 +139,7 @@ export class coordinatorFetcher {
     try {
       const params = { reqs: request, comment: comment };
       const res = await fetch(
-        "http://localhost:8000/coordinator/rejectSlotLinking",
+        "http://localhost:"+ port +"/coordinator/rejectSlotLinking",
         {
           method: "post",
           body: JSON.stringify(params),

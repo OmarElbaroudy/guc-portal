@@ -1,7 +1,8 @@
+const port = process.env.PORT || 8000;
 export class logoutFetcher {
   static async logout(token) {
     try {
-      const res = await fetch("http://localhost:8000/logout", {
+      const res = await fetch("http://localhost:"+ port +"/logout", {
         method: "get",
         headers: {
           Authorization: "",

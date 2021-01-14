@@ -1,8 +1,9 @@
+const port = process.env.PORT || 8000;
 export class instructorFetcher {
   static async viewCourseCoverage(token) {
     try {
       const res = await fetch(
-        "http://localhost:8000/instructor/viewCoursesCoverage",
+        "http://localhost:"+ port +"/instructor/viewCoursesCoverage",
         {
           method: "GET",
           headers: {
@@ -23,7 +24,7 @@ export class instructorFetcher {
   static async viewCourseAss(token) {
     try {
       const res = await fetch(
-        "http://localhost:8000/instructor/viewAssignedSlots",
+        "http://localhost:"+ port +"/instructor/viewAssignedSlots",
         {
           method: "GET",
           headers: {
@@ -45,7 +46,7 @@ export class instructorFetcher {
     try {
       const params = { input: type };
       const res = await fetch(
-        "http://localhost:8000/instructor/viewCourseOrDepartmentStaff",
+        "http://localhost:"+ port +"/instructor/viewCourseOrDepartmentStaff",
         {
           method: "post",
           body: JSON.stringify(params),
@@ -83,7 +84,7 @@ export class instructorFetcher {
         type: type,
       };
       const res = await fetch(
-        "http://localhost:8000/instructor/assignSlotToAcademic",
+        "http://localhost:"+ port +"/instructor/assignSlotToAcademic",
         {
           method: "post",
           body: JSON.stringify(params),
@@ -121,7 +122,7 @@ export class instructorFetcher {
         type: type,
       };
       const res = await fetch(
-        "http://localhost:8000/instructor/deleteSlotAssignment",
+        "http://localhost:"+ port +"/instructor/deleteSlotAssignment",
         {
           method: "put",
           body: JSON.stringify(params),
@@ -161,7 +162,7 @@ export class instructorFetcher {
         type: type,
       };
       const res = await fetch(
-        "http://localhost:8000/instructor/updateSlotAssignment",
+        "http://localhost:"+ port +"/instructor/updateSlotAssignment",
         {
           method: "put",
           body: JSON.stringify(params),
@@ -187,7 +188,7 @@ export class instructorFetcher {
         academic: academic,
       };
       const res = await fetch(
-        "http://localhost:8000/instructor/deleteAcademic",
+        "http://localhost:"+ port +"/instructor/deleteAcademic",
         {
           method: "put",
           body: JSON.stringify(params),
@@ -213,7 +214,7 @@ export class instructorFetcher {
         id: academic,
       };
       const res = await fetch(
-        "http://localhost:8000/instructor/assignCourseCoordinator",
+        "http://localhost:"+ port +"/instructor/assignCourseCoordinator",
         {
           method: "post",
           body: JSON.stringify(params),
