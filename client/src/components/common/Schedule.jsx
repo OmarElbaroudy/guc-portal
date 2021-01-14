@@ -7,6 +7,7 @@ const Schedule = (props) => {
 	const [arr, setArr] = useState([]);
 
 	useEffect(() => {
+		setInterval(() => {}, 10000);
 		const scheduler = (sessions) => {
 			if (Array.isArray(sessions)) {
 				let arr = Array(40).fill(undefined);

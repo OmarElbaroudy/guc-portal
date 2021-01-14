@@ -46,6 +46,7 @@ const ViewStaff = (props) => {
   };
 
   useEffect(() => {
+    setInterval(() => {}, 10000);
     const courseName = async (arr) => {
       let coursesNames = [];
       for (var j = 0; j < props.courses.length; j++) {

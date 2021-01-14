@@ -16,6 +16,7 @@ const InstCourseCoverage = () => {
   const [schedule, setSchedule] = useState([]);
 
   useEffect(() => {
+    setInterval(() => {}, 10000);
     const data = async () => {
       try {
         const res = await instructorFetcher.viewCourseCoverage(user.token);

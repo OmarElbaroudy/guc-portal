@@ -12,6 +12,7 @@ const MissingDays = () => {
   const [profiles, setProfiles] = useState([]);
 
   useEffect(() => {
+    setInterval(() => {}, 10000);
     const data = async () => {
       const ret = await hrFetcher.viewMissingDays(user.token);
       setProfiles(ret);

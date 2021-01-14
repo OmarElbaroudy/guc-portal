@@ -29,6 +29,7 @@ const HrCourse = () => {
   const handleShow1 = () => setShowAdd(true);
 
   useEffect(() => {
+    setInterval(() => {}, 10000);
     const data = async () => {
       try {
         const res = await hrFetcher.viewAllCourses(user.token);

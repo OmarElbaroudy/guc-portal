@@ -12,6 +12,7 @@ const ViewSubmittedRequests = () => {
   const { user } = GetUser();
 
   useEffect(() => {
+    setInterval(() => {}, 10000);
     const data = async () => {
       try {
         const res = await academicFetcher.viewRequests(status, user.token);

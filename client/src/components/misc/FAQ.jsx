@@ -21,6 +21,15 @@ const FAQ = () => {
           </dd>
           <br></br>
           <dt style={{ marginBottom: 5 }}>
+            Is the website concurrent?
+          </dt>
+          <dd>
+           Yes, the website re-renders automatically every <strong>10</strong>seconds
+           so you should wait 10 seconds to see the effect of a change in the database or
+           another operation from another user on the current webpage 
+          </dd>
+          <br></br>
+          <dt style={{ marginBottom: 5 }}>
             How can I navigate within the website?
           </dt>
           <dd>

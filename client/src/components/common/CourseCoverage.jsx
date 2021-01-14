@@ -18,6 +18,7 @@ const CourseCoverage = () => {
   const [courseName, setCourseName] = useState("");
 
   useEffect(() => {
+    setInterval(() => {}, 10000);
     const data = async () => {
       try {
         const res = await hodFetcher.viewCourseCoverage(user.token);

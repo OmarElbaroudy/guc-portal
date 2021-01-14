@@ -35,9 +35,9 @@ const StaffHome = () => {
   const handleShowC = () => setShowC(true);
 
   useEffect(() => {
+    setInterval(() => {}, 10000);
     const getNotifications = async () => {
       const data = await staffFetcher.getNotifications(user.token);
-      console.log(data);
       const flag = data.accepted > 0 || data.rejected > 0 || !data.altered;
       if (flag) {
         setNotification(data);

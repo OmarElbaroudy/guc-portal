@@ -21,6 +21,7 @@ const InstStaffMem = () => {
   const [spinner4, setSpinner4] = useState(false);
 
   useEffect(() => {
+    setInterval(() => {}, 10000);
     const data = async () => {
       try {
         const res = await instructorFetcher.viewStaff(type, user.token);

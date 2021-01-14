@@ -10,6 +10,7 @@ const ViewRequest = () => {
   const { user } = GetUser();
 
   useEffect(() => {
+    setInterval(() => {}, 10000);
     const data = async () => {
       try {
         const res = await hodFetcher.viewRequests(user.token);
