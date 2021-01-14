@@ -15,6 +15,7 @@ const academicRouter = require("./routes/academicRouter");
 const instructorRouter = require("./routes/instructorRouter");
 const coordinatorRouter = require("./routes/coordinatorRouter");
 const key = "iehfoeihfpwhoqhfiu083028430bvf";
+const port = process.env.PORT || 8000;
 
 const app = express();
 app.use(express.json());
@@ -79,7 +80,7 @@ mongoose
 			);
 		});
 
-		app.listen(8000, () => {
+		app.listen(port, () => {
 			console.log("connected");
 		});
 	})
