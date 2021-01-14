@@ -1,9 +1,8 @@
-const port = process.env.PORT || 8000;
 export class staffFetcher {
 	static async resetPassword(password, token) {
 		try {
 			const params = { newPassword: password };
-			const res = await fetch("http://localhost:"+ port +"/myProfile/resetPassword", {
+			const res = await fetch("https://gucportal.herokuapp.com/myProfile/resetPassword", {
 				method: "POST",
 				body: JSON.stringify(params),
 				headers: {
@@ -23,7 +22,7 @@ export class staffFetcher {
 
 	static async viewProfile(token) {
 		try {
-			const res = await fetch("http://localhost:"+ port +"/myProfile", {
+			const res = await fetch("https://gucportal.herokuapp.com/myProfile", {
 				method: "GET",
 				headers: {
 					Authorization: "",
@@ -46,7 +45,7 @@ export class staffFetcher {
 				gender: gender,
 				personalInfo: personalInfo,
 			};
-			const res = await fetch("http://localhost:"+ port +"/myProfile", {
+			const res = await fetch("https://gucportal.herokuapp.com/myProfile", {
 				method: "PUT",
 				body: JSON.stringify(params),
 				headers: {
@@ -68,7 +67,7 @@ export class staffFetcher {
 		try {
 			const params = { month: parseInt(month) };
 			const res = await fetch(
-				"http://localhost:"+ port +"/myProfile/viewAttendanceRecords",
+				"https://gucportal.herokuapp.com/myProfile/viewAttendanceRecords",
 				{
 					method: "POST",
 					body: JSON.stringify(params),
@@ -90,7 +89,7 @@ export class staffFetcher {
 
 	static async signIn(token) {
 		try {
-			const res = await fetch("http://localhost:"+ port +"/myProfile/signIn", {
+			const res = await fetch("https://gucportal.herokuapp.com/myProfile/signIn", {
 				method: "GET",
 				headers: {
 					Authorization: "",
@@ -109,7 +108,7 @@ export class staffFetcher {
 
 	static async signOut(token) {
 		try {
-			const res = await fetch("http://localhost:"+ port +"/myProfile/signOut", {
+			const res = await fetch("https://gucportal.herokuapp.com/myProfile/signOut", {
 				method: "GET",
 				headers: {
 					Authorization: "",
@@ -128,7 +127,7 @@ export class staffFetcher {
 
 	static async missingHours(token) {
 		try {
-			const res = await fetch("http://localhost:"+ port +"/myProfile/viewMissingHours", {
+			const res = await fetch("https://gucportal.herokuapp.com/myProfile/viewMissingHours", {
 				method: "GET",
 				headers: {
 					Authorization: "",
@@ -147,7 +146,7 @@ export class staffFetcher {
 
 	static async missingDays(token) {
 		try {
-			const res = await fetch("http://localhost:"+ port +"/myProfile/viewMissingDays", {
+			const res = await fetch("https://gucportal.herokuapp.com/myProfile/viewMissingDays", {
 				method: "GET",
 				headers: {
 					Authorization: "",
@@ -166,7 +165,7 @@ export class staffFetcher {
 
 	static async getNotifications(token) {
 		try {
-			const res = await fetch("http://localhost:"+ port +"/myProfile/notifications", {
+			const res = await fetch("https://gucportal.herokuapp.com/myProfile/notifications", {
 				method: "GET",
 				headers: {
 					Authorization: "",

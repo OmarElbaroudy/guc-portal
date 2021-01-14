@@ -1,8 +1,7 @@
-const port = process.env.PORT || 8000;
 export class logoutFetcher {
   static async logout(token) {
     try {
-      const res = await fetch("http://localhost:"+ port +"/logout", {
+      const res = await fetch("https://gucportal.herokuapp.com/logout", {
         method: "get",
         headers: {
           Authorization: "",

@@ -1,4 +1,3 @@
-const port = process.env.PORT || 8000;
 export class coordinatorFetcher {
   static async addSlot(location, weekDay, slot, type, token) {
     try {
@@ -9,7 +8,7 @@ export class coordinatorFetcher {
         type: type,
       };
       const res = await fetch(
-        "http://localhost:"+ port +"/coordinator/addCourseSlot",
+        "https://gucportal.herokuapp.com/coordinator/addCourseSlot",
         {
           method: "post",
           body: JSON.stringify(params),
@@ -36,7 +35,7 @@ export class coordinatorFetcher {
         slot: slot,
         type: type,
       };
-      const res = await fetch("http://localhost:"+ port +"/coordinator/deleteSlot", {
+      const res = await fetch("https://gucportal.herokuapp.com/coordinator/deleteSlot", {
         method: "post",
         body: JSON.stringify(params),
         headers: {
@@ -75,7 +74,7 @@ export class coordinatorFetcher {
         newtype: newType,
         newLocation: newLocation,
       };
-      const res = await fetch("http://localhost:"+ port +"/coordinator/updateSlot", {
+      const res = await fetch("https://gucportal.herokuapp.com/coordinator/updateSlot", {
         method: "post",
         body: JSON.stringify(params),
         headers: {
@@ -95,7 +94,7 @@ export class coordinatorFetcher {
   static async viewReq(token) {
     try {
       const res = await fetch(
-        "http://localhost:"+ port +"/coordinator/viewSlotLinking",
+        "https://gucportal.herokuapp.com/coordinator/viewSlotLinking",
         {
           method: "get",
           headers: {
@@ -117,7 +116,7 @@ export class coordinatorFetcher {
     try {
       const params = { reqs: request, comment: comment };
       const res = await fetch(
-        "http://localhost:"+ port +"/coordinator/acceptSlotLinking",
+        "https://gucportal.herokuapp.com/coordinator/acceptSlotLinking",
         {
           method: "post",
           body: JSON.stringify(params),
@@ -139,7 +138,7 @@ export class coordinatorFetcher {
     try {
       const params = { reqs: request, comment: comment };
       const res = await fetch(
-        "http://localhost:"+ port +"/coordinator/rejectSlotLinking",
+        "https://gucportal.herokuapp.com/coordinator/rejectSlotLinking",
         {
           method: "post",
           body: JSON.stringify(params),

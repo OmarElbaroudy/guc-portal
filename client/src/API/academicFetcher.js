@@ -1,7 +1,6 @@
-const port = process.env.PORT || 8000;
 export class academicFetcher {
 	static async viewSchedule(token) {
-		const res = await fetch("http://localhost:" + port + "/ac/viewSchedule", {
+		const res = await fetch("https://gucportal.herokuapp.com/ac/viewSchedule", {
 			method: "GET",
 			headers: {
 				Authorization: "",
@@ -33,7 +32,7 @@ export class academicFetcher {
 			location: location,
 		};
 
-		const res = await fetch("http://localhost:" + port + "/ac/replacement", {
+		const res = await fetch("https://gucportal.herokuapp.com/ac/replacement", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {
@@ -49,7 +48,7 @@ export class academicFetcher {
 	}
 
 	static async viewReplacement(token) {
-		const res = await fetch("http://localhost:"+ port +"/ac/replacement", {
+		const res = await fetch("https://gucportal.herokuapp.com/ac/replacement", {
 			method: "GET",
 			headers: {
 				Authorization: "",
@@ -71,7 +70,7 @@ export class academicFetcher {
 			location: location,
 		};
 
-		const res = await fetch("http://localhost:"+ port +"/ac/slotLinkingRequest", {
+		const res = await fetch("https://gucportal.herokuapp.com/ac/slotLinkingRequest", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {
@@ -92,7 +91,7 @@ export class academicFetcher {
 			comment: comment,
 		};
 
-		const res = await fetch("http://localhost:"+ port +"/ac/changeDayOff", {
+		const res = await fetch("https://gucportal.herokuapp.com/ac/changeDayOff", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {
@@ -114,7 +113,7 @@ export class academicFetcher {
 			comment: comment,
 		};
 
-		const res = await fetch("http://localhost:"+ port +"/ac/leaveRequest", {
+		const res = await fetch("https://gucportal.herokuapp.com/ac/leaveRequest", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {
@@ -131,7 +130,7 @@ export class academicFetcher {
 
 	static async viewRequests(status, token) {
 		const params = { status: status };
-		const res = await fetch("http://localhost:"+ port +"/ac/viewSubmittedRequests", {
+		const res = await fetch("https://gucportal.herokuapp.com/ac/viewSubmittedRequests", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {
@@ -148,7 +147,7 @@ export class academicFetcher {
 
 	static async cancelRequest(type, reqId, token) {
 		const params = { reqId: reqId };
-		const res = await fetch("http://localhost:"+ port +"/ac/cancelRequest", {
+		const res = await fetch("https://gucportal.herokuapp.com/ac/cancelRequest", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {

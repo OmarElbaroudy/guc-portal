@@ -1,10 +1,9 @@
-const port = process.env.PORT || 8000;
 export class hrFetcher {
   //staff members
   static async viewAllStaffMembers(token) {
     try {
       console.log(token);
-      const res = await fetch("http://localhost:"+ port +"/hr/viewAllStaffMembers", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/viewAllStaffMembers", {
         method: "GET",
         headers: {
           Authorization: "",
@@ -41,7 +40,7 @@ export class hrFetcher {
         personalInfo: personalInfo,
         type: type,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/registerMember", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/registerMember", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -76,7 +75,7 @@ export class hrFetcher {
         email: email,
         salary: salary,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/updateStaffMember", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/updateStaffMember", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -97,7 +96,7 @@ export class hrFetcher {
     try {
       console.log(token);
       const params = { id: id };
-      const res = await fetch("http://localhost:"+ port +"/hr/deleteStaffMember", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/deleteStaffMember", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -118,7 +117,7 @@ export class hrFetcher {
   static async viewAllLocations(token) {
     try {
       console.log(token);
-      const res = await fetch("http://localhost:"+ port +"/hr/viewAllLocations", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/viewAllLocations", {
         method: "GET",
         headers: {
           Authorization: "",
@@ -142,7 +141,7 @@ export class hrFetcher {
         maxCapacity: maxCapacity,
         type: type,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/location", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/location", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -168,7 +167,7 @@ export class hrFetcher {
         maxCapacity: maxCapacity,
         type: type,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/location", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/location", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -189,7 +188,7 @@ export class hrFetcher {
     try {
       console.log(token);
       const params = { name: name };
-      const res = await fetch("http://localhost:"+ port +"/hr/deleteLocation", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/deleteLocation", {
         method: "DELETE",
         body: JSON.stringify(params),
         headers: {
@@ -210,7 +209,7 @@ export class hrFetcher {
   static async viewAllFaculties(token) {
     try {
       console.log(token);
-      const res = await fetch("http://localhost:"+ port +"/hr/viewAllFaculties", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/viewAllFaculties", {
         method: "GET",
         headers: {
           Authorization: "",
@@ -232,7 +231,7 @@ export class hrFetcher {
       const params = {
         name: name,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/addFaculty", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/addFaculty", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -256,7 +255,7 @@ export class hrFetcher {
         name: name,
         newName: newName,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/updateFaculty", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/updateFaculty", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -277,7 +276,7 @@ export class hrFetcher {
     try {
       console.log(token);
       const params = { name: name };
-      const res = await fetch("http://localhost:"+ port +"/hr/deleteFaculty", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/deleteFaculty", {
         method: "DELETE",
         body: JSON.stringify(params),
         headers: {
@@ -298,7 +297,7 @@ export class hrFetcher {
   static async viewAllDepartments(token) {
     try {
       console.log(token);
-      const res = await fetch("http://localhost:"+ port +"/hr/viewAllDepartments", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/viewAllDepartments", {
         method: "GET",
         headers: {
           Authorization: "",
@@ -321,7 +320,7 @@ export class hrFetcher {
         name: name,
         faculty: faculty,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/addDepartment", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/addDepartment", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -346,7 +345,7 @@ export class hrFetcher {
         newName: newName,
         newFaculty: newFaculty,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/updateDepartment", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/updateDepartment", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -367,7 +366,7 @@ export class hrFetcher {
     try {
       console.log(token);
       const params = { name: name };
-      const res = await fetch("http://localhost:"+ port +"/hr/deleteDepartment", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/deleteDepartment", {
         method: "DELETE",
         body: JSON.stringify(params),
         headers: {
@@ -388,7 +387,7 @@ export class hrFetcher {
   static async viewAllCourses(token) {
     try {
       console.log(token);
-      const res = await fetch("http://localhost:"+ port +"/hr/viewAllCourses", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/viewAllCourses", {
         method: "GET",
         headers: {
           Authorization: "",
@@ -409,7 +408,7 @@ export class hrFetcher {
         name: name,
         department: department,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/addCourse", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/addCourse", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -434,7 +433,7 @@ export class hrFetcher {
         newName: newName,
         department: department,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/updateCourse", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/updateCourse", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -454,7 +453,7 @@ export class hrFetcher {
   static async deleteCourse(token, name) {
     try {
       const params = { name: name };
-      const res = await fetch("http://localhost:"+ port +"/hr/deleteCourse", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/deleteCourse", {
         method: "DELETE",
         body: JSON.stringify(params),
         headers: {
@@ -474,7 +473,7 @@ export class hrFetcher {
   static async signInOut(id, signIn, signOut, token) {
     try {
       const params = { signIn: signIn, signOut: signOut, id: id };
-      const res = await fetch("http://localhost:"+ port +"/hr/addSignInOut", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/addSignInOut", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -495,7 +494,7 @@ export class hrFetcher {
   static async viewMissingHours(token) {
     try {
       const res = await fetch(
-        "http://localhost:"+ port +"/hr/viewMissingHoursMembers",
+        "https://gucportal.herokuapp.com/hr/viewMissingHoursMembers",
         {
           method: "GET",
           headers: {
@@ -516,7 +515,7 @@ export class hrFetcher {
   static async viewMissingDays(token) {
     try {
       const res = await fetch(
-        "http://localhost:"+ port +"/hr/viewMissingDaysMembers",
+        "https://gucportal.herokuapp.com/hr/viewMissingDaysMembers",
         {
           method: "GET",
           headers: {
@@ -538,7 +537,7 @@ export class hrFetcher {
     try {
       const params = { id: id };
       const res = await fetch(
-        "http://localhost:"+ port +"/hr/viewAttendanceRecords",
+        "https://gucportal.herokuapp.com/hr/viewAttendanceRecords",
         {
           method: "POST",
           body: JSON.stringify(params),
@@ -564,7 +563,7 @@ export class hrFetcher {
         id: id,
         department: department,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/assignDepartment", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/assignDepartment", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -587,7 +586,7 @@ export class hrFetcher {
         hodId: id,
         department: department,
       };
-      const res = await fetch("http://localhost:"+ port +"/hr/assignHod", {
+      const res = await fetch("https://gucportal.herokuapp.com/hr/assignHod", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {

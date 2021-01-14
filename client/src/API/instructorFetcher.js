@@ -1,9 +1,8 @@
-const port = process.env.PORT || 8000;
 export class instructorFetcher {
   static async viewCourseCoverage(token) {
     try {
       const res = await fetch(
-        "http://localhost:"+ port +"/instructor/viewCoursesCoverage",
+        "https://gucportal.herokuapp.com/instructor/viewCoursesCoverage",
         {
           method: "GET",
           headers: {
@@ -24,7 +23,7 @@ export class instructorFetcher {
   static async viewCourseAss(token) {
     try {
       const res = await fetch(
-        "http://localhost:"+ port +"/instructor/viewAssignedSlots",
+        "https://gucportal.herokuapp.com/instructor/viewAssignedSlots",
         {
           method: "GET",
           headers: {
@@ -46,7 +45,7 @@ export class instructorFetcher {
     try {
       const params = { input: type };
       const res = await fetch(
-        "http://localhost:"+ port +"/instructor/viewCourseOrDepartmentStaff",
+        "https://gucportal.herokuapp.com/instructor/viewCourseOrDepartmentStaff",
         {
           method: "post",
           body: JSON.stringify(params),
@@ -84,7 +83,7 @@ export class instructorFetcher {
         type: type,
       };
       const res = await fetch(
-        "http://localhost:"+ port +"/instructor/assignSlotToAcademic",
+        "https://gucportal.herokuapp.com/instructor/assignSlotToAcademic",
         {
           method: "post",
           body: JSON.stringify(params),
@@ -122,7 +121,7 @@ export class instructorFetcher {
         type: type,
       };
       const res = await fetch(
-        "http://localhost:"+ port +"/instructor/deleteSlotAssignment",
+        "https://gucportal.herokuapp.com/instructor/deleteSlotAssignment",
         {
           method: "put",
           body: JSON.stringify(params),
@@ -162,7 +161,7 @@ export class instructorFetcher {
         type: type,
       };
       const res = await fetch(
-        "http://localhost:"+ port +"/instructor/updateSlotAssignment",
+        "https://gucportal.herokuapp.com/instructor/updateSlotAssignment",
         {
           method: "put",
           body: JSON.stringify(params),
@@ -188,7 +187,7 @@ export class instructorFetcher {
         academic: academic,
       };
       const res = await fetch(
-        "http://localhost:"+ port +"/instructor/deleteAcademic",
+        "https://gucportal.herokuapp.com/instructor/deleteAcademic",
         {
           method: "put",
           body: JSON.stringify(params),
@@ -214,7 +213,7 @@ export class instructorFetcher {
         id: academic,
       };
       const res = await fetch(
-        "http://localhost:"+ port +"/instructor/assignCourseCoordinator",
+        "https://gucportal.herokuapp.com/instructor/assignCourseCoordinator",
         {
           method: "post",
           body: JSON.stringify(params),
