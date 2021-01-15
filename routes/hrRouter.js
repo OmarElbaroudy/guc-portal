@@ -122,7 +122,7 @@ router
     }
   });
 
-router.route("/hr/deleteLocation").delete(auth, async (req, res) => {
+router.route("api/hr/deleteLocation").delete(auth, async (req, res) => {
   try {
     const x = await Location.findOne({
       name: req.body.name,
@@ -141,7 +141,7 @@ router.route("/hr/deleteLocation").delete(auth, async (req, res) => {
     console.log(err);
   }
 });
-router.route("/hr/viewAllStaffMembers").get(async (req, res) => {
+router.route("api/hr/viewAllStaffMembers").get(async (req, res) => {
   try {
     const token = req.header("auth-token");
     const decoded = jwt_decode(token);
@@ -163,7 +163,7 @@ router.route("/hr/viewAllStaffMembers").get(async (req, res) => {
   }
 });
 
-router.route("/hr/viewAllLocations").get(async (req, res) => {
+router.route("api/hr/viewAllLocations").get(async (req, res) => {
   try {
     const l = await Location.find();
     res.json(l);
@@ -172,7 +172,7 @@ router.route("/hr/viewAllLocations").get(async (req, res) => {
   }
 });
 
-router.route("/hr/viewAllFaculties").get(async (req, res) => {
+router.route("api/hr/viewAllFaculties").get(async (req, res) => {
   try {
     const f = await Faculty.find();
 
@@ -182,7 +182,7 @@ router.route("/hr/viewAllFaculties").get(async (req, res) => {
   }
 });
 
-router.route("/hr/viewAllDepartments").get(async (req, res) => {
+router.route("api/hr/viewAllDepartments").get(async (req, res) => {
   try {
     const d = await Department.find();
 
@@ -192,7 +192,7 @@ router.route("/hr/viewAllDepartments").get(async (req, res) => {
   }
 });
 
-router.route("/hr/viewAllCourses").get(async (req, res) => {
+router.route("api/hr/viewAllCourses").get(async (req, res) => {
   try {
     const c = await Course.find();
 
@@ -202,7 +202,7 @@ router.route("/hr/viewAllCourses").get(async (req, res) => {
   }
 });
 
-router.route("/hr/registerMember").post(auth, async (req, res) => {
+router.route("api/hr/registerMember").post(auth, async (req, res) => {
   try {
     //should remove id as it should be done automatically
     if (
@@ -282,7 +282,7 @@ router.route("/hr/registerMember").post(auth, async (req, res) => {
   }
 });
 
-router.route("/hr/addFaculty").post(auth, async (req, res) => {
+router.route("api/hr/addFaculty").post(auth, async (req, res) => {
   try {
     const x = await Faculty.findOne({
       name: req.body.name,
@@ -301,7 +301,7 @@ router.route("/hr/addFaculty").post(auth, async (req, res) => {
   }
 });
 
-router.route("/hr/updateFaculty").put(auth, async (req, res) => {
+router.route("api/hr/updateFaculty").put(auth, async (req, res) => {
   try {
     const x = await Faculty.findOne({
       name: req.body.name,
@@ -322,7 +322,7 @@ router.route("/hr/updateFaculty").put(auth, async (req, res) => {
   }
 });
 
-router.route("/hr/deleteFaculty").delete(auth, async (req, res) => {
+router.route("api/hr/deleteFaculty").delete(auth, async (req, res) => {
   try {
     const x = await Faculty.findOne({
       name: req.body.name,
@@ -353,7 +353,7 @@ router.route("/hr/deleteFaculty").delete(auth, async (req, res) => {
   }
 });
 
-router.route("/hr/addDepartment").post(auth, async (req, res) => {
+router.route("api/hr/addDepartment").post(auth, async (req, res) => {
   try {
     const x = await Department.findOne({
       name: req.body.name,
@@ -381,7 +381,7 @@ router.route("/hr/addDepartment").post(auth, async (req, res) => {
   }
 });
 
-router.route("/hr/updateDepartment").put(auth, async (req, res) => {
+router.route("api/hr/updateDepartment").put(auth, async (req, res) => {
   try {
     const x = await Department.findOne({
       name: req.body.name,
@@ -414,7 +414,7 @@ router.route("/hr/updateDepartment").put(auth, async (req, res) => {
   }
 });
 
-router.route("/hr/deleteDepartment").delete(auth, async (req, res) => {
+router.route("api/hr/deleteDepartment").delete(auth, async (req, res) => {
   //delete in course and academic
   try {
     const x = await Department.findOne({
@@ -443,7 +443,7 @@ router.route("/hr/deleteDepartment").delete(auth, async (req, res) => {
   }
 });
 
-router.route("/hr/addCourse").post(async (req, res) => {
+router.route("api/hr/addCourse").post(async (req, res) => {
   try {
     const x = await Course.findOne({
       name: req.body.name,
@@ -476,7 +476,7 @@ router.route("/hr/addCourse").post(async (req, res) => {
   }
 });
 
-router.route("/hr/updateCourse").put(async (req, res) => {
+router.route("api/hr/updateCourse").put(async (req, res) => {
   try {
     console.log(req.body.department);
     const x = await Course.findOne({
@@ -508,7 +508,7 @@ router.route("/hr/updateCourse").put(async (req, res) => {
   }
 });
 
-router.route("/hr/deleteCourse").delete(async (req, res) => {
+router.route("api/hr/deleteCourse").delete(async (req, res) => {
   try {
     const x = await Course.findOne({
       name: req.body.name,
@@ -580,7 +580,7 @@ router.route("/hr/deleteCourse").delete(async (req, res) => {
   }
 });
 
-router.route("/hr/updateStaffMember").put(async (req, res) => {
+router.route("api/hr/updateStaffMember").put(async (req, res) => {
   try {
     const h = await HR.findOne({
       id: req.body.id,
@@ -685,7 +685,7 @@ router.route("/hr/updateStaffMember").put(async (req, res) => {
   }
 });
 
-router.route("/hr/deleteStaffMember").put(async (req, res) => {
+router.route("api/hr/deleteStaffMember").put(async (req, res) => {
   try {
     let acad = false;
     let x = await HR.findOne({
@@ -826,7 +826,7 @@ router.route("/hr/deleteStaffMember").put(async (req, res) => {
 
 /////////////////////////////////////////////////////////////////////
 
-router.post("/hr/addSignInOut", auth, async (req, res) => {
+router.post("api/hr/addSignInOut", auth, async (req, res) => {
   try {
     const token = req.header("auth-token");
     const decoded = jwt_decode(token);
@@ -911,7 +911,7 @@ router.post("/hr/addSignInOut", auth, async (req, res) => {
   }
 });
 
-router.post("/hr/viewAttendanceRecords", auth, async (req, res) => {
+router.post("api/hr/viewAttendanceRecords", auth, async (req, res) => {
   try {
     const input = req.body;
     const doc = await Academic.findOne({
@@ -931,7 +931,7 @@ router.post("/hr/viewAttendanceRecords", auth, async (req, res) => {
   }
 });
 
-router.get("/hr/viewMissingHoursMembers", auth, async (req, res) => {
+router.get("api/hr/viewMissingHoursMembers", auth, async (req, res) => {
   try {
     let ac = await Academic.find({
       missingHours: { $gt: 0 },
@@ -947,7 +947,7 @@ router.get("/hr/viewMissingHoursMembers", auth, async (req, res) => {
   }
 });
 
-router.get("/hr/viewMissingDaysMembers", auth, async (req, res) => {
+router.get("api/hr/viewMissingDaysMembers", auth, async (req, res) => {
   try {
     let ac = await Academic.find({
       missingDays: { $gt: 0 },
@@ -965,7 +965,7 @@ router.get("/hr/viewMissingDaysMembers", auth, async (req, res) => {
 ///////////////////////////////////////////////////////////////
 //extras
 
-router.post("/hr/assignHod", auth, async (req, res) => {
+router.post("api/hr/assignHod", auth, async (req, res) => {
   const hodId = req.body.hodId;
   const dep = req.body.department;
 
@@ -1002,7 +1002,7 @@ router.post("/hr/assignHod", auth, async (req, res) => {
   res.json(department);
 });
 
-router.post("/hr/assignDepartment", auth, async (req, res) => {
+router.post("api/hr/assignDepartment", auth, async (req, res) => {
   const id = req.body.id;
   const dep = req.body.department;
 

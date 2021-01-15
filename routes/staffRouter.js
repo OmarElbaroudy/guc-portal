@@ -59,7 +59,7 @@ router
 		}
 	});
 
-router.post("/myProfile/resetPassword", async (req, res) => {
+router.post("api/myProfile/resetPassword", async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 	const newPassword = req.body.newPassword;
@@ -79,7 +79,7 @@ router.post("/myProfile/resetPassword", async (req, res) => {
 	res.json({ message: "password updated successfully" });
 });
 
-router.get("/myProfile/signIn", async (req, res) => {
+router.get("api/myProfile/signIn", async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 	try {
@@ -98,7 +98,7 @@ router.get("/myProfile/signIn", async (req, res) => {
 	}
 });
 
-router.get("/myProfile/signOut", async (req, res) => {
+router.get("api/myProfile/signOut", async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 	try {
@@ -120,7 +120,7 @@ router.get("/myProfile/signOut", async (req, res) => {
 	}
 });
 
-router.post("/myProfile/viewAttendanceRecords", async (req, res) => {
+router.post("api/myProfile/viewAttendanceRecords", async (req, res) => {
 	//month number or 0 for all
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
@@ -137,7 +137,7 @@ router.post("/myProfile/viewAttendanceRecords", async (req, res) => {
 	res.json(arr);
 });
 
-router.get("/myProfile/viewMissingDays", async (req, res) => {
+router.get("api/myProfile/viewMissingDays", async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -154,7 +154,7 @@ router.get("/myProfile/viewMissingDays", async (req, res) => {
 	res.json(doc.missingDays);
 });
 
-router.get("/myProfile/viewMissingHours", async (req, res) => {
+router.get("api/myProfile/viewMissingHours", async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -171,7 +171,7 @@ router.get("/myProfile/viewMissingHours", async (req, res) => {
 	res.json(doc.missingHours);
 });
 
-router.get("/myProfile/notifications", async (req, res) => {
+router.get("api/myProfile/notifications", async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 

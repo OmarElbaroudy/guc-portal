@@ -158,7 +158,7 @@ router
 		}
 	});
 
-router.route("/HOD/view_staff").post(auth, async (req, res) => {
+router.route("api/HOD/view_staff").post(auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -317,7 +317,7 @@ router
 			console.log(err);
 		}
 	});
-router.route("/HOD/view_day_off").post(auth, async (req, res) => {
+router.route("api/HOD/view_day_off").post(auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 	try {
@@ -344,7 +344,7 @@ router.route("/HOD/view_day_off").post(auth, async (req, res) => {
 		res.send("err");
 	}
 });
-router.route("/HOD/view_requests").get(auth, async (req, res) => {
+router.route("api/HOD/view_requests").get(auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -375,7 +375,7 @@ const numOfNotUndefined = (array) => {
 	}
 	return number;
 };
-router.route("/HOD/view_course_coverage").get(auth, async (req, res) => {
+router.route("api/HOD/view_course_coverage").get(auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -406,7 +406,7 @@ router.route("/HOD/view_course_coverage").get(auth, async (req, res) => {
 		res.send("err");
 	}
 });
-router.route("/HOD/view_course_schedule").post(auth, async (req, res) => {
+router.route("api/HOD/view_course_schedule").post(auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -444,7 +444,7 @@ router.route("/HOD/view_course_schedule").post(auth, async (req, res) => {
 		console.log(e);
 	}
 });
-router.route("/HOD/accept_requests").put(auth, async (req, res) => {
+router.route("api/HOD/accept_requests").put(auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -536,7 +536,7 @@ router.route("/HOD/accept_requests").put(auth, async (req, res) => {
 		console.log(e);
 	}
 });
-router.route("/HOD/reject_requests").put(auth, async (req, res) => {
+router.route("api/HOD/reject_requests").put(auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 

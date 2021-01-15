@@ -17,7 +17,7 @@ const loadTokens = async function () {
   }
 };
 
-router.get("/logout", async (req, res) => {
+router.get("api/logout", async (req, res) => {
   try {
     blackListToken(await loadTokens(), req.header("auth-token"));
     res.json("logged out successfully");

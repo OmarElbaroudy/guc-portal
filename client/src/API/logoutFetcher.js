@@ -1,7 +1,7 @@
 export class logoutFetcher {
   static async logout(token) {
     try {
-      const res = await fetch("https://gucportal.herokuapp.com/logout", {
+      const res = await fetch("api/logout", {
         method: "get",
         headers: {
           Authorization: "",

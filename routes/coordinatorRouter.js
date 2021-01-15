@@ -28,7 +28,7 @@ const auth = async (req, res, next) => {
   next();
 };
 
-router.route("/coordinator/viewSlotLinking").get(auth, async (req, res) => {
+router.route("api/coordinator/viewSlotLinking").get(auth, async (req, res) => {
   try {
     let requests = await request.find({
       receiverId: ac._id,
@@ -44,7 +44,7 @@ router.route("/coordinator/viewSlotLinking").get(auth, async (req, res) => {
     console.log(err);
   }
 });
-router.route("/coordinator/acceptSlotLinking").post(auth, async (req, res) => {
+router.route("api/coordinator/acceptSlotLinking").post(auth, async (req, res) => {
   try {
     let requests = await request.findOne({
       _id: req.body.reqs,
@@ -107,7 +107,7 @@ router.route("/coordinator/acceptSlotLinking").post(auth, async (req, res) => {
     console.log(err);
   }
 });
-router.route("/coordinator/rejectSlotLinking").post(auth, async (req, res) => {
+router.route("api/coordinator/rejectSlotLinking").post(auth, async (req, res) => {
   try {
     let requests = await request.findOne({
       _id: req.body.reqs,
@@ -132,7 +132,7 @@ router.route("/coordinator/rejectSlotLinking").post(auth, async (req, res) => {
   }
 });
 
-router.route("/coordinator/addCourseSlot").post(auth, async (req, res) => {
+router.route("api/coordinator/addCourseSlot").post(auth, async (req, res) => {
   let course = await courses.findOne({
     coordinatorId: ac._id,
   });
@@ -209,7 +209,7 @@ router.route("/coordinator/addCourseSlot").post(auth, async (req, res) => {
   res.json("Slot is added successfully");
 });
 
-router.route("/coordinator/updateSlot").post(auth, async (req, res) => {
+router.route("api/coordinator/updateSlot").post(auth, async (req, res) => {
   let course = await courses.findOne({
     coordinatorId: ac._id,
   });
@@ -329,7 +329,7 @@ router.route("/coordinator/updateSlot").post(auth, async (req, res) => {
   res.json("slot updated successfully");
 });
 
-router.route("/coordinator/deleteSlot").post(auth, async (req, res) => {
+router.route("api/coordinator/deleteSlot").post(auth, async (req, res) => {
   let course = await courses.findOne({
     coordinatorId: ac._id,
   });
