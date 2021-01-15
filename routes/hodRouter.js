@@ -171,8 +171,9 @@ router
 						return !value.courseId.equals(c._id);
 					});
 					x.courses = x.courses.filter(function (value) {
-						return !value.courseId.equals(c._id) && value.position === "instructor";
+						return !value.courseId.equals(c._id);
 					});
+
 					await x.save();
 					res.json(x);
 				} else {
