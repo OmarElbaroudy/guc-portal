@@ -1,6 +1,6 @@
 export class academicFetcher {
 	static async viewSchedule(token) {
-		const res = await fetch("api/ac/viewSchedule", {
+		const res = await fetch("/api/ac/viewSchedule", {
 			method: "GET",
 			headers: {
 				Authorization: "",
@@ -32,7 +32,7 @@ export class academicFetcher {
 			location: location,
 		};
 
-		const res = await fetch("api/ac/replacement", {
+		const res = await fetch("/api/ac/replacement", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {
@@ -48,7 +48,7 @@ export class academicFetcher {
 	}
 
 	static async viewReplacement(token) {
-		const res = await fetch("api/ac/replacement", {
+		const res = await fetch("/api/ac/replacement", {
 			method: "GET",
 			headers: {
 				Authorization: "",
@@ -70,7 +70,7 @@ export class academicFetcher {
 			location: location,
 		};
 
-		const res = await fetch("api/ac/slotLinkingRequest", {
+		const res = await fetch("/api/ac/slotLinkingRequest", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {
@@ -91,7 +91,7 @@ export class academicFetcher {
 			comment: comment,
 		};
 
-		const res = await fetch("api/ac/changeDayOff", {
+		const res = await fetch("/api/ac/changeDayOff", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {
@@ -113,7 +113,7 @@ export class academicFetcher {
 			comment: comment,
 		};
 
-		const res = await fetch("api/ac/leaveRequest", {
+		const res = await fetch("/api/ac/leaveRequest", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {
@@ -130,7 +130,7 @@ export class academicFetcher {
 
 	static async viewRequests(status, token) {
 		const params = { status: status };
-		const res = await fetch("api/ac/viewSubmittedRequests", {
+		const res = await fetch("/api/ac/viewSubmittedRequests", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {
@@ -147,7 +147,7 @@ export class academicFetcher {
 
 	static async cancelRequest(type, reqId, token) {
 		const params = { reqId: reqId };
-		const res = await fetch("api/ac/cancelRequest", {
+		const res = await fetch("/api/ac/cancelRequest", {
 			method: "POST",
 			body: JSON.stringify(params),
 			headers: {

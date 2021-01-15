@@ -43,7 +43,7 @@ const auth = async (req, res, next) => {
 	next();
 };
 
-router.route("api/instructor/viewCoursesCoverage").get(auth, async (req, res) => {
+router.route("/api/instructor/viewCoursesCoverage").get(auth, async (req, res) => {
 	let response = [];
 	for (const entry of ac.courses) {
 		if (entry.position !== "instructor") continue;
@@ -63,7 +63,7 @@ router.route("api/instructor/viewCoursesCoverage").get(auth, async (req, res) =>
 	res.json(response);
 });
 
-router.route("api/instructor/viewAssignedSlots").get(auth, async (req, res) => {
+router.route("/api/instructor/viewAssignedSlots").get(auth, async (req, res) => {
 	let response = [];
 	for (const entry of ac.courses) {
 		const output = await courses.findOne({
@@ -252,7 +252,7 @@ router
 			console.log(err);
 		}
 	});
-router.route("api/instructor/updateSlotAssignment").put(auth, async (req, res) => {
+router.route("/api/instructor/updateSlotAssignment").put(auth, async (req, res) => {
 	try {
 		const comparedCourse = await getCourseIdByName(req.body.course);
 		const comparedLocation = await getLocationIdByName(req.body.location);
@@ -406,7 +406,7 @@ router.route("api/instructor/updateSlotAssignment").put(auth, async (req, res) =
 	}
 });
 
-router.route("api/instructor/deleteSlotAssignment").put(auth, async (req, res) => {
+router.route("/api/instructor/deleteSlotAssignment").put(auth, async (req, res) => {
 	try {
 		const comparedCourse = await getCourseIdByName(req.body.course);
 		const comparedLocation = await getLocationIdByName(req.body.location);
@@ -550,7 +550,7 @@ router.route("api/instructor/deleteSlotAssignment").put(auth, async (req, res) =
 	}
 });
 
-router.route("api/instructor/deleteAcademic").put(auth, async (req, res) => {
+router.route("/api/instructor/deleteAcademic").put(auth, async (req, res) => {
 	try {
 		const courseId = await getCourseIdByName(req.body.course);
 		let cur = await academic.findOne({

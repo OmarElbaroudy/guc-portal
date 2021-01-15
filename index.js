@@ -15,12 +15,11 @@ const academicRouter = require("./routes/academicRouter");
 const instructorRouter = require("./routes/instructorRouter");
 const coordinatorRouter = require("./routes/coordinatorRouter");
 const key = "iehfoeihfpwhoqhfiu083028430bvf";
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, "client", "build")));
 
 const loadTokens = async function () {
 	try {
@@ -62,8 +61,17 @@ mongoose
 				res.status(401).send("invalid token");
 			}
 		}
-		
-		
+
+		if (
+			process.env.NODE_ENV === "production" ||
+			process.env.NODE_ENV === "staging"
+		) {
+			app.use(express.static("client/build"));
+			app.get("*", (req, res) => {
+				res.sendFile(path.join(__dirname + "/client/build/index.html"));
+			});
+		}
+
 		app.use("", loginRouter);
 		app.use(authenticate);
 		app.use("", hrRouter);
@@ -74,13 +82,13 @@ mongoose
 		app.use("", academicRouter);
 		app.use("", instructorRouter);
 		app.use("", coordinatorRouter);
-		
-		app.get("*", (req, res) => {
-			res.sendFile(
-				path.join(__dirname, "client", "build", "./client/public/index.html")
-			);
-		});
-		
+
+		// app.get("*", (req, res) => {
+		// 	res.sendFile(
+		// 		path.join(__dirname, "client", "build", "./client/public/index.html")
+		// 	);
+		// });
+
 		app.listen(port, () => {
 			console.log("connected");
 		});

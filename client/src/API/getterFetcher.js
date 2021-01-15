@@ -1,7 +1,7 @@
 export class getterFetcher {
   static async getCourseNameById(id, token) {
     const params = { id: id };
-    const res = await fetch("api/getCourseNameById", {
+    const res = await fetch("/api/getCourseNameById", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -19,7 +19,7 @@ export class getterFetcher {
   static async getStaffById(id, token) {
     console.log("id" + id);
     const params = { id: id };
-    const res = await fetch("api/getStaffNameById", {
+    const res = await fetch("/api/getStaffNameById", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -36,7 +36,7 @@ export class getterFetcher {
 
   static async getCourseIdByName(name, token) {
     const params = { name: name };
-    const res = await fetch("api/getCourseIdByName", {
+    const res = await fetch("/api/getCourseIdByName", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -52,7 +52,7 @@ export class getterFetcher {
 
   static async getDepNameById(id, token) {
     const params = { id: id };
-    const res = await fetch("api/getDepNameById", {
+    const res = await fetch("/api/getDepNameById", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -68,7 +68,7 @@ export class getterFetcher {
 
   static async getDepIdByName(name, token) {
     const params = { name: name };
-    const res = await fetch("api/getDepIdByName", {
+    const res = await fetch("/api/getDepIdByName", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -84,7 +84,7 @@ export class getterFetcher {
 
   static async getLocationNameById(id, token) {
     const params = { id: id };
-    const res = await fetch("api/getLocationNameById", {
+    const res = await fetch("/api/getLocationNameById", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -99,7 +99,7 @@ export class getterFetcher {
 
   static async getLocationIdByName(name, token) {
     const params = { name: name };
-    const res = await fetch("api/getLocationIdByName", {
+    const res = await fetch("/api/getLocationIdByName", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -115,7 +115,7 @@ export class getterFetcher {
 
   static async getFacultyNameById(id, token) {
     const params = { id: id };
-    const res = await fetch("api/getFacultyNameById", {
+    const res = await fetch("/api/getFacultyNameById", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -130,7 +130,7 @@ export class getterFetcher {
 
   static async getFacultyIdByName(name, token) {
     const params = { name: name };
-    const res = await fetch("api/getFacultyIdByName", {
+    const res = await fetch("/api/getFacultyIdByName", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -146,7 +146,7 @@ export class getterFetcher {
 
   static async getId(id, token) {
     const params = { id: id };
-    const res = await fetch("api/getId", {
+    const res = await fetch("/api/getId", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -162,7 +162,7 @@ export class getterFetcher {
 
   static async getCoursesInDep(id, token) {
     const params = { id: id };
-    const res = await fetch("api/getCoursesInDep", {
+    const res = await fetch("/api/getCoursesInDep", {
       method: "POST",
       body: JSON.stringify(params),
       headers: {
@@ -179,7 +179,7 @@ export class getterFetcher {
   static async isHod(departmentId, userId, token) {
     try {
       const params = { depId: departmentId, userId: userId };
-      const res = await fetch("api/isHod", {
+      const res = await fetch("/api/isHod", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {

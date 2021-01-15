@@ -8,7 +8,7 @@ export class coordinatorFetcher {
         type: type,
       };
       const res = await fetch(
-        "api/coordinator/addCourseSlot",
+        "/api/coordinator/addCourseSlot",
         {
           method: "post",
           body: JSON.stringify(params),
@@ -35,7 +35,7 @@ export class coordinatorFetcher {
         slot: slot,
         type: type,
       };
-      const res = await fetch("api/coordinator/deleteSlot", {
+      const res = await fetch("/api/coordinator/deleteSlot", {
         method: "post",
         body: JSON.stringify(params),
         headers: {
@@ -74,7 +74,7 @@ export class coordinatorFetcher {
         newtype: newType,
         newLocation: newLocation,
       };
-      const res = await fetch("api/coordinator/updateSlot", {
+      const res = await fetch("/api/coordinator/updateSlot", {
         method: "post",
         body: JSON.stringify(params),
         headers: {
@@ -94,7 +94,7 @@ export class coordinatorFetcher {
   static async viewReq(token) {
     try {
       const res = await fetch(
-        "api/coordinator/viewSlotLinking",
+        "/api/coordinator/viewSlotLinking",
         {
           method: "get",
           headers: {
@@ -116,7 +116,7 @@ export class coordinatorFetcher {
     try {
       const params = { reqs: request, comment: comment };
       const res = await fetch(
-        "api/coordinator/acceptSlotLinking",
+        "/api/coordinator/acceptSlotLinking",
         {
           method: "post",
           body: JSON.stringify(params),
@@ -138,7 +138,7 @@ export class coordinatorFetcher {
     try {
       const params = { reqs: request, comment: comment };
       const res = await fetch(
-        "api/coordinator/rejectSlotLinking",
+        "/api/coordinator/rejectSlotLinking",
         {
           method: "post",
           body: JSON.stringify(params),

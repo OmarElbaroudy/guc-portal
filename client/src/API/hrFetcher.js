@@ -3,7 +3,7 @@ export class hrFetcher {
   static async viewAllStaffMembers(token) {
     try {
       console.log(token);
-      const res = await fetch("api/hr/viewAllStaffMembers", {
+      const res = await fetch("/api/hr/viewAllStaffMembers", {
         method: "GET",
         headers: {
           Authorization: "",
@@ -40,7 +40,7 @@ export class hrFetcher {
         personalInfo: personalInfo,
         type: type,
       };
-      const res = await fetch("api/hr/registerMember", {
+      const res = await fetch("/api/hr/registerMember", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -75,7 +75,7 @@ export class hrFetcher {
         email: email,
         salary: salary,
       };
-      const res = await fetch("api/hr/updateStaffMember", {
+      const res = await fetch("/api/hr/updateStaffMember", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -96,7 +96,7 @@ export class hrFetcher {
     try {
       console.log(token);
       const params = { id: id };
-      const res = await fetch("api/hr/deleteStaffMember", {
+      const res = await fetch("/api/hr/deleteStaffMember", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -117,7 +117,7 @@ export class hrFetcher {
   static async viewAllLocations(token) {
     try {
       console.log(token);
-      const res = await fetch("api/hr/viewAllLocations", {
+      const res = await fetch("/api/hr/viewAllLocations", {
         method: "GET",
         headers: {
           Authorization: "",
@@ -141,7 +141,7 @@ export class hrFetcher {
         maxCapacity: maxCapacity,
         type: type,
       };
-      const res = await fetch("api/hr/location", {
+      const res = await fetch("/api/hr/location", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -167,7 +167,7 @@ export class hrFetcher {
         maxCapacity: maxCapacity,
         type: type,
       };
-      const res = await fetch("api/hr/location", {
+      const res = await fetch("/api/hr/location", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -188,7 +188,7 @@ export class hrFetcher {
     try {
       console.log(token);
       const params = { name: name };
-      const res = await fetch("api/hr/deleteLocation", {
+      const res = await fetch("/api/hr/deleteLocation", {
         method: "DELETE",
         body: JSON.stringify(params),
         headers: {
@@ -209,7 +209,7 @@ export class hrFetcher {
   static async viewAllFaculties(token) {
     try {
       console.log(token);
-      const res = await fetch("api/hr/viewAllFaculties", {
+      const res = await fetch("/api/hr/viewAllFaculties", {
         method: "GET",
         headers: {
           Authorization: "",
@@ -231,7 +231,7 @@ export class hrFetcher {
       const params = {
         name: name,
       };
-      const res = await fetch("api/hr/addFaculty", {
+      const res = await fetch("/api/hr/addFaculty", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -255,7 +255,7 @@ export class hrFetcher {
         name: name,
         newName: newName,
       };
-      const res = await fetch("api/hr/updateFaculty", {
+      const res = await fetch("/api/hr/updateFaculty", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -276,7 +276,7 @@ export class hrFetcher {
     try {
       console.log(token);
       const params = { name: name };
-      const res = await fetch("api/hr/deleteFaculty", {
+      const res = await fetch("/api/hr/deleteFaculty", {
         method: "DELETE",
         body: JSON.stringify(params),
         headers: {
@@ -297,7 +297,7 @@ export class hrFetcher {
   static async viewAllDepartments(token) {
     try {
       console.log(token);
-      const res = await fetch("api/hr/viewAllDepartments", {
+      const res = await fetch("/api/hr/viewAllDepartments", {
         method: "GET",
         headers: {
           Authorization: "",
@@ -320,7 +320,7 @@ export class hrFetcher {
         name: name,
         faculty: faculty,
       };
-      const res = await fetch("api/hr/addDepartment", {
+      const res = await fetch("/api/hr/addDepartment", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -345,7 +345,7 @@ export class hrFetcher {
         newName: newName,
         newFaculty: newFaculty,
       };
-      const res = await fetch("api/hr/updateDepartment", {
+      const res = await fetch("/api/hr/updateDepartment", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -366,7 +366,7 @@ export class hrFetcher {
     try {
       console.log(token);
       const params = { name: name };
-      const res = await fetch("api/hr/deleteDepartment", {
+      const res = await fetch("/api/hr/deleteDepartment", {
         method: "DELETE",
         body: JSON.stringify(params),
         headers: {
@@ -387,7 +387,7 @@ export class hrFetcher {
   static async viewAllCourses(token) {
     try {
       console.log(token);
-      const res = await fetch("api/hr/viewAllCourses", {
+      const res = await fetch("/api/hr/viewAllCourses", {
         method: "GET",
         headers: {
           Authorization: "",
@@ -408,7 +408,7 @@ export class hrFetcher {
         name: name,
         department: department,
       };
-      const res = await fetch("api/hr/addCourse", {
+      const res = await fetch("/api/hr/addCourse", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -433,7 +433,7 @@ export class hrFetcher {
         newName: newName,
         department: department,
       };
-      const res = await fetch("api/hr/updateCourse", {
+      const res = await fetch("/api/hr/updateCourse", {
         method: "PUT",
         body: JSON.stringify(params),
         headers: {
@@ -453,7 +453,7 @@ export class hrFetcher {
   static async deleteCourse(token, name) {
     try {
       const params = { name: name };
-      const res = await fetch("api/hr/deleteCourse", {
+      const res = await fetch("/api/hr/deleteCourse", {
         method: "DELETE",
         body: JSON.stringify(params),
         headers: {
@@ -473,7 +473,7 @@ export class hrFetcher {
   static async signInOut(id, signIn, signOut, token) {
     try {
       const params = { signIn: signIn, signOut: signOut, id: id };
-      const res = await fetch("api/hr/addSignInOut", {
+      const res = await fetch("/api/hr/addSignInOut", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -494,7 +494,7 @@ export class hrFetcher {
   static async viewMissingHours(token) {
     try {
       const res = await fetch(
-        "api/hr/viewMissingHoursMembers",
+        "/api/hr/viewMissingHoursMembers",
         {
           method: "GET",
           headers: {
@@ -515,7 +515,7 @@ export class hrFetcher {
   static async viewMissingDays(token) {
     try {
       const res = await fetch(
-        "api/hr/viewMissingDaysMembers",
+        "/api/hr/viewMissingDaysMembers",
         {
           method: "GET",
           headers: {
@@ -537,7 +537,7 @@ export class hrFetcher {
     try {
       const params = { id: id };
       const res = await fetch(
-        "api/hr/viewAttendanceRecords",
+        "/api/hr/viewAttendanceRecords",
         {
           method: "POST",
           body: JSON.stringify(params),
@@ -563,7 +563,7 @@ export class hrFetcher {
         id: id,
         department: department,
       };
-      const res = await fetch("api/hr/assignDepartment", {
+      const res = await fetch("/api/hr/assignDepartment", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -586,7 +586,7 @@ export class hrFetcher {
         hodId: id,
         department: department,
       };
-      const res = await fetch("api/hr/assignHod", {
+      const res = await fetch("/api/hr/assignHod", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {

@@ -56,7 +56,7 @@ const auth = async (req, res, next) => {
 	}
 };
 
-router.get("api/ac/viewSchedule", auth, async (req, res) => {
+router.get("/api/ac/viewSchedule", auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 	try {
@@ -115,7 +115,7 @@ router.get("api/ac/viewSchedule", auth, async (req, res) => {
 // }
 
 router
-	.route("api/ac/replacement")
+	.route("/api/ac/replacement")
 	.post(auth, async (req, res) => {
 		try {
 			const token = req.header("auth-token");
@@ -247,7 +247,7 @@ router
 		}
 	});
 
-router.post("api/ac/slotLinkingRequest", auth, async (req, res) => {
+router.post("/api/ac/slotLinkingRequest", auth, async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -317,7 +317,7 @@ router.post("api/ac/slotLinkingRequest", auth, async (req, res) => {
 	}
 });
 
-router.post("api/ac/changeDayOff", auth, async (req, res) => {
+router.post("/api/ac/changeDayOff", auth, async (req, res) => {
 	//day off as number from 0 to 6 and comment
 	try {
 		const token = req.header("auth-token");
@@ -370,7 +370,7 @@ router.post("api/ac/changeDayOff", auth, async (req, res) => {
 	}
 });
 
-router.post("api/ac/leaveRequest", auth, async (req, res) => {
+router.post("/api/ac/leaveRequest", auth, async (req, res) => {
 	try {
 		//type =maternity| accidental| sick| compensation
 		//date = {"year":"2020","month": "12","day":"22"}
@@ -464,7 +464,7 @@ router.post("api/ac/leaveRequest", auth, async (req, res) => {
 
 //TODO:
 //validate input
-router.post("api/ac/viewSubmittedRequests", auth, async (req, res) => {
+router.post("/api/ac/viewSubmittedRequests", auth, async (req, res) => {
 	try {
 		//status : all, accepted, pending, rejected,
 		const token = req.header("auth-token");
@@ -494,7 +494,7 @@ router.post("api/ac/viewSubmittedRequests", auth, async (req, res) => {
 	}
 });
 
-router.post("api/ac/cancelRequest", auth, async (req, res) => {
+router.post("/api/ac/cancelRequest", auth, async (req, res) => {
 	try {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);

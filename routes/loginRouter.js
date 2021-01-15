@@ -10,7 +10,7 @@ const router = express.Router();
 const calc = new timeCalculations();
 const key = "iehfoeihfpwhoqhfiu083028430bvf";
 
-router.post("api/login", async (req, res) => {
+router.post("/api/login", async (req, res) => {
   const email = req.body.email;
   const h = await hr.findOne({ email: email });
   const a = await academic.findOne({ email: email });
@@ -42,7 +42,7 @@ router.post("api/login", async (req, res) => {
   });
 });
 
-router.get("api/createHr", async (req, res) => {
+router.get("/api/createHr", async (req, res) => {
   const a = await academic.find();
   const h = await hr.find();
   if (a.length === 0 && h.length === 0) {

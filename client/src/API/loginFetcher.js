@@ -2,7 +2,7 @@ export class loginFetcher {
   static async login(email, password) {
     try {
       const params = { email: email, password: password };
-      const res = await fetch("api/login", {
+      const res = await fetch("/api/login", {
         method: "POST",
         body: JSON.stringify(params),
         headers: {
@@ -20,7 +20,7 @@ export class loginFetcher {
   }
   static async AddFirst() {
     try {
-      const res = await fetch("api/createHr", {
+      const res = await fetch("/api/createHr", {
         method: "get",
         headers: {
           Authorization: "",
