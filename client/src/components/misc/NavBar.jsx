@@ -101,17 +101,17 @@ function NavBar() {
                   style={{ color: "black", fontWeight: "bold" }}
                   className="nav-link active"
                   aria-current="page"
-                  href="http://localhost:3001/staffHome/"
+                  href="/staffHome"
                 >
                   Home
                 </a>
               </li>
             }
             <NavDropdown title="preferences" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1" onClick={handleShowA}>
+              <NavDropdown.Item onClick={handleShowA}>
                 Update profile
               </NavDropdown.Item>
-              <NavDropdown.Item onClick={handleShow1} href="#action/3.2">
+              <NavDropdown.Item onClick={handleShow1}>
                 Reset password
               </NavDropdown.Item>
             </NavDropdown>
