@@ -412,9 +412,10 @@ router.route("/api/HOD/view_course_coverage").get(auth, async (req, res) => {
 		if (cur) {
 			let response = [];
 			for (const entry of cur.courses) {
+				if (entry.position !== "hod") continue;
+
 				const output = await course.findOne({
 					_id: entry.courseId,
-					position: "hod",
 				});
 
 				if (output) {

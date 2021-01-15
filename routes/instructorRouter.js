@@ -97,6 +97,7 @@ router
 	.get(auth, async (req, res) => {
 		let response = [];
 		for (const entry of ac.courses) {
+			if(entry.position !== "instructor") continue;
 			const output = await courses.findOne({
 				_id: entry.courseId,
 			});
