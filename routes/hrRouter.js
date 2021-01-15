@@ -59,7 +59,7 @@ const auth = async (req, res, next) => {
 };
 
 router
-  .route("/hr/location")
+  .route("/api/hr/location")
   .post(auth, async (req, res) => {
     try {
       let t = req.body.type;

@@ -74,7 +74,7 @@ const courseAuth = async (req, res, next) => {
 };
 
 router
-	.route("/HOD/assign_course_instructor")
+	.route("/api/HOD/assign_course_instructor")
 	.put(auth, courseAuth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -110,7 +110,7 @@ router
 		}
 	});
 router
-	.route("/HOD/delete_course_instructor")
+	.route("/api/HOD/delete_course_instructor")
 	.put(auth, courseAuth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
@@ -228,7 +228,7 @@ router.route("/api/HOD/view_staff").post(auth, async (req, res) => {
 });
 
 router
-	.route("/HOD/update_course_instructor")
+	.route("/api/HOD/update_course_instructor")
 	.put(auth, courseAuth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
