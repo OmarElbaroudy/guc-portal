@@ -29,7 +29,7 @@ const HrStaffMemberTemp = (props) => {
   const [newDep, setNewDep] = useState("");
 
   useEffect(() => {
-    setInterval(() => {}, 10000);
+    //setInterval(() => {}, 10000);
     const x = async () => {
       const y = await getterFetcher.getLocationNameById(
         props.office,

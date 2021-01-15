@@ -25,7 +25,7 @@ const Request = (props) => {
   const handleShow2 = () => setShowReject(true);
 
   useEffect(() => {
-    setInterval(() => {}, 10000);
+    //setInterval(() => {}, 10000);
     const staff = async () => {
       const a = await getterFetcher.getStaffById(props.senderId, user.token);
       setStaff(a);

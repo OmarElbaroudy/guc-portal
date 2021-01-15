@@ -26,7 +26,7 @@ const AttendanceRecord = () => {
   ];
 
   useEffect(() => {
-    setInterval(() => {}, 10000);
+    //setInterval(() => {}, 10000);
     if (month === -1) setRecords([]);
     else {
       const getRecords = async () => {
