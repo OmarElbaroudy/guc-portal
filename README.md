@@ -1,3 +1,3 @@
 # guc-portal
-#deployment Link : 
+deployment Link : 
 https://gucportal.herokuapp.com/
