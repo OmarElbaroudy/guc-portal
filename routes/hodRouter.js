@@ -414,7 +414,9 @@ router.route("/api/HOD/view_course_coverage").get(auth, async (req, res) => {
 			for (const entry of cur.courses) {
 				const output = await course.findOne({
 					_id: entry.courseId,
+					position: "hod",
 				});
+
 				if (output) {
 					let courseCoverage;
 					if (output.schedule.length !== 0)
