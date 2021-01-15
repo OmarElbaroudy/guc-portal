@@ -63,12 +63,7 @@ mongoose
 			}
 		}
 		
-		app.get("*", (req, res) => {
-			res.sendFile(
-				path.join(__dirname, "client", "build", "./client/public/index.html")
-			);
-		});
-
+		
 		app.use("", loginRouter);
 		app.use(authenticate);
 		app.use("", hrRouter);
@@ -79,8 +74,13 @@ mongoose
 		app.use("", academicRouter);
 		app.use("", instructorRouter);
 		app.use("", coordinatorRouter);
-
-
+		
+		app.get("*", (req, res) => {
+			res.sendFile(
+				path.join(__dirname, "client", "build", "./client/public/index.html")
+			);
+		});
+		
 		app.listen(port, () => {
 			console.log("connected");
 		});

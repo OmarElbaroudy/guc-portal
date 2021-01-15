@@ -108,7 +108,7 @@ const About = () => {
 					<Card style={{ width: "20rem" }}>
 						<Card.Img
 							variant="top"
-							src="https://scontent.xx.fbcdn.net/v/t1.15752-9/s720x720/138782183_426203795394788_4183793643832427885_n.jpg?_nc_cat=107&ccb=2&_nc_sid=f79d6e&_nc_ohc=-6Ec545DJ3kAX9lY5r1&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&tp=7&oh=68f0aec0917b1f16fd250c0eeeed772e&oe=6000BADB"
+							src="https://photos.google.com/share/AF1QipOl7w-0AJJSz-sJ34YDIHGJSYQto7_u2Ye1hpQj5tg41UNEl2Zv0824kOWJz1lDQQ/photo/AF1QipMUs8SzPXcI2JPDrIMMq3vJdCJr0JOac3641jbG?key=Z3ZVTlI5ckpGMTlkWnhVX1FwZzBXRFBCMG50Q01R"
 						/>
 						<Card.Body>
 							<Card.Title>Ahmed Medhat</Card.Title>
