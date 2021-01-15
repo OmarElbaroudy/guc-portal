@@ -96,7 +96,7 @@ router.route("/api/instructor/viewAssignedSlots").get(auth, async (req, res) => 
 });
 
 router
-	.route("/instructor/viewCourseOrDepartmentStaff")
+	.route("/api/instructor/viewCourseOrDepartmentStaff")
 	.post(auth, async (req, res) => {
 		let response = [];
 		if (req.body.input === "department") {
@@ -118,7 +118,7 @@ router
 	});
 
 router
-	.route("/instructor/assignSlotToAcademic")
+	.route("/api/instructor/assignSlotToAcademic")
 	.post(auth, async (req, res) => {
 		try {
 			let courseId = await getCourseIdByName(req.body.course);
@@ -629,7 +629,7 @@ router.route("/api/instructor/deleteAcademic").put(auth, async (req, res) => {
 });
 
 router
-	.route("/instructor/assignCourseCoordinator")
+	.route("/api/instructor/assignCourseCoordinator")
 	.post(auth, async (req, res) => {
 		try {
 			let courseId = await getCourseIdByName(req.body.course);
