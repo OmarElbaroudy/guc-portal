@@ -97,7 +97,7 @@ router
 	.get(auth, async (req, res) => {
 		let response = [];
 		for (const entry of ac.courses) {
-			if(entry.position !== "instructor") continue;
+			if (entry.position !== "instructor") continue;
 			const output = await courses.findOne({
 				_id: entry.courseId,
 			});
@@ -602,11 +602,21 @@ router.route("/api/instructor/deleteAcademic").put(auth, async (req, res) => {
 			const x = await academic.findOne({
 				id: req.body.academic,
 			});
+
 			const c = await courses.findOne({
 				name: req.body.course,
 			});
-			if (!x.courses.includes({ courseId: c._id, position: "academic" }))
+
+			let flag = false;
+			for (const entry of courses) {
+				if (entry.courseId.equals(c._id) && entry.position === "academic") {
+					flag = true;
+				}
+			}
+
+			if (!flag)
 				return res.json("the staff member is not an academic in this course");
+
 			if (c) {
 				c.schedule = c.schedule.filter(function (value) {
 					if (value.instructorId)
@@ -616,9 +626,11 @@ router.route("/api/instructor/deleteAcademic").put(auth, async (req, res) => {
 						}
 					return true;
 				});
+
 				c.academicId = c.academicId.filter(function (value) {
 					return !value.equals(x._id);
 				});
+
 				await c.save();
 
 				for (var i = 0; i < l.length; i++) {
