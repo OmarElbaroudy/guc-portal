@@ -17,7 +17,7 @@ const RequestOnHome = () => {
   classes += pending === 0 ? "badge-secondary" : "badge-info";
 
   useEffect(() => {
-    //setInterval(() => {}, 10000);
+    setInterval(() => {}, 10000);
     const data = async () => {
       let p = 0;
       let a = 0;

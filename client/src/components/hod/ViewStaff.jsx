@@ -17,7 +17,7 @@ const ViewStaff = () => {
   const [spinner1, setSpinner1] = useState(false);
 
   useEffect(() => {
-    //setInterval(() => {}, 10000);
+    setInterval(() => {}, 10000);
     const data = async () => {
       setSpinner(true);
       try {

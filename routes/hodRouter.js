@@ -47,6 +47,7 @@ const auth = async (req, res, next) => {
 		next();
 	}
 };
+
 const courseAuth = async (req, res, next) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);

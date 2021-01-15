@@ -26,11 +26,6 @@ const validToken = function (arr, token) {
 	return !arr.includes(token);
 };
 
-const getLocationIdByName = async (name) => {
-  const ret = await locations.findOne({ name: name });
-  return ret ? ret._id : undefined;
-};
-
 const auth = async (req, res, next) => {
   if (!req.header("auth-token")) {
     return res.status(403).send("unauthenticated access");
@@ -56,6 +51,13 @@ const auth = async (req, res, next) => {
   next();
 };
 
+
+
+const getLocationIdByName = async (name) => {
+  const ret = await locations.findOne({ name: name });
+  return ret ? ret._id : undefined;
+};
+
 router.route("/api/coordinator/viewSlotLinking").get(auth, async (req, res) => {
   try {
     let requests = await request.find({
@@ -72,6 +74,7 @@ router.route("/api/coordinator/viewSlotLinking").get(auth, async (req, res) => {
     console.log(err);
   }
 });
+
 router.route("/api/coordinator/acceptSlotLinking").post(auth, async (req, res) => {
   try {
     let requests = await request.findOne({
@@ -135,6 +138,7 @@ router.route("/api/coordinator/acceptSlotLinking").post(auth, async (req, res) =
     console.log(err);
   }
 });
+
 router.route("/api/coordinator/rejectSlotLinking").post(auth, async (req, res) => {
   try {
     let requests = await request.findOne({

@@ -15,7 +15,7 @@ const AcademicRequest = (props) => {
   const [spinner, setSpinner] = useState(false);
 
   useEffect(() => {
-    //setInterval(() => {}, 10000);
+    setInterval(() => {}, 10000);
     const staff = async () => {
       const a = await getterFetcher.getStaffById(props.senderId, user.token);
       setStaff(a);

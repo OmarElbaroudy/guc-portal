@@ -11,9 +11,39 @@ const requests = require("../models/requests");
 const router = express.Router();
 const calc = new timeCalculations();
 
+const fs = require("fs");
+const jwt = require("jsonwebtoken");
+const key = "iehfoeihfpwhoqhfiu083028430bvf";
+
+const loadTokens = async function () {
+	try {
+		let data = fs.readFileSync("blackList.json");
+		let dataString = data.toString();
+		return await JSON.parse(dataString);
+	} catch (error) {
+		return [];
+	}
+};
+
+const validToken = function (arr, token) {
+	return !arr.includes(token);
+};
+
+const auth = async (req, res, next) => {
+	if (!req.header("auth-token")) {
+		return res.status(403).send("unauthenticated access");
+	}
+
+	jwt.verify(req.header("auth-token"), key);
+	if (!validToken(await loadTokens(), req.header("auth-token"))) {
+		return res.status(450).send("this token is blackListed please login again");
+	}
+	next();
+};
+
 router
 	.route("/api/myProfile")
-	.get(async (req, res) => {
+	.get(auth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
 		try {
@@ -28,7 +58,7 @@ router
 			console.log(err);
 		}
 	})
-	.put(async (req, res) => {
+	.put(auth, async (req, res) => {
 		const token = req.header("auth-token");
 		const decoded = jwt_decode(token);
 		const salt = await bcrypt.genSalt(10);
@@ -59,7 +89,7 @@ router
 		}
 	});
 
-router.post("/api/myProfile/resetPassword", async (req, res) => {
+router.post("/api/myProfile/resetPassword", auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 	const newPassword = req.body.newPassword;
@@ -79,7 +109,7 @@ router.post("/api/myProfile/resetPassword", async (req, res) => {
 	res.json({ message: "password updated successfully" });
 });
 
-router.get("/api/myProfile/signIn", async (req, res) => {
+router.get("/api/myProfile/signIn", auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 	try {
@@ -92,13 +122,13 @@ router.get("/api/myProfile/signIn", async (req, res) => {
 
 		await calc.signIn(doc);
 		await doc.save();
-		res.json({ message: "signed in successfully", variant: "success"});
+		res.json({ message: "signed in successfully", variant: "success" });
 	} catch (e) {
 		res.json({ message: "you can't sign in on a friday", variant: "danger" });
 	}
 });
 
-router.get("/api/myProfile/signOut", async (req, res) => {
+router.get("/api/myProfile/signOut", auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 	try {
@@ -120,7 +150,7 @@ router.get("/api/myProfile/signOut", async (req, res) => {
 	}
 });
 
-router.post("/api/myProfile/viewAttendanceRecords", async (req, res) => {
+router.post("/api/myProfile/viewAttendanceRecords", auth, async (req, res) => {
 	//month number or 0 for all
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
@@ -137,7 +167,7 @@ router.post("/api/myProfile/viewAttendanceRecords", async (req, res) => {
 	res.json(arr);
 });
 
-router.get("/api/myProfile/viewMissingDays", async (req, res) => {
+router.get("/api/myProfile/viewMissingDays", auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -154,7 +184,7 @@ router.get("/api/myProfile/viewMissingDays", async (req, res) => {
 	res.json(doc.missingDays);
 });
 
-router.get("/api/myProfile/viewMissingHours", async (req, res) => {
+router.get("/api/myProfile/viewMissingHours", auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -171,7 +201,7 @@ router.get("/api/myProfile/viewMissingHours", async (req, res) => {
 	res.json(doc.missingHours);
 });
 
-router.get("/api/myProfile/notifications", async (req, res) => {
+router.get("/api/myProfile/notifications", auth, async (req, res) => {
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 

@@ -5,9 +5,44 @@ const courses = require("../models/course");
 const academics = require("../models/academic");
 const departments = require("../models/department");
 const locations = require("../models/locations");
+
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const key = "iehfoeihfpwhoqhfiu083028430bvf";
+
+const loadTokens = async function () {
+	try {
+		let data = fs.readFileSync("blackList.json");
+		let dataString = data.toString();
+		return await JSON.parse(dataString);
+	} catch (error) {
+		return [];
+	}
+};
+
+const validToken = function (arr, token) {
+	return !arr.includes(token);
+};
+
+const auth = async (req, res, next) => {
+	if (!req.header("auth-token")) {
+		return res.status(403).send("unauthenticated access");
+	}
+
+	jwt.verify(req.header("auth-token"), key);
+	if (!validToken(await loadTokens(), req.header("auth-token"))) {
+		return res.status(450).send("this token is blackListed please login again");
+	}
+
+	const token = req.header("auth-token");
+	const decoded = jwt_decode(token);
+
+	if (decoded.type === "academic") {
+		const ac = await academics.findById(decoded.id);
+		if (!ac) return res.status(203).json("unauthorized access");
+		next();
+	}
+};
 
 const router = express.Router();
 
@@ -40,41 +75,6 @@ const getCurDate = () => {
 	const m = new Date().getMonth();
 	const d = new Date().getDate();
 	return new Date(Date.UTC(y, m, d));
-};
-
-const loadTokens = async function () {
-	try {
-		let data = fs.readFileSync("blackList.json");
-		let dataString = data.toString();
-		return await JSON.parse(dataString);
-	} catch (error) {
-		return [];
-	}
-};
-
-const validToken = function (arr, token) {
-	return !arr.includes(token);
-};
-
-//2.2 Academic Member
-const auth = async (req, res, next) => {
-	if (!req.header("auth-token")) {
-		return res.status(403).send("unauthenticated access");
-	}
-
-	jwt.verify(req.header("auth-token"), key);
-	if (!validToken(await loadTokens(), req.header("auth-token"))) {
-		return res.status(450).send("this token is blackListed please login again");
-	}
-
-	const token = req.header("auth-token");
-	const decoded = jwt_decode(token);
-
-	if (decoded.type === "academic") {
-		const ac = await academics.findById(decoded.id);
-		if (!ac) return res.status(203).json("unauthorized access");
-		next();
-	}
 };
 
 router.get("/api/ac/viewSchedule", auth, async (req, res) => {

@@ -30,7 +30,7 @@ const Profile = (props) => {
 	};
 
 	useEffect(() => {
-		//setInterval(() => {}, 10000);
+		setInterval(() => {}, 10000);
 		const getDepartment = async () => {
 			const data = await getterFetcher.getDepNameById(
 				props.department,

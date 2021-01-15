@@ -29,7 +29,7 @@ const HrDepartmentTemp = (props) => {
   const handleShow2 = () => setShowAssign(true);
 
   useEffect(() => {
-    //setInterval(() => {}, 10000);
+    setInterval(() => {}, 10000);
     const facultyNameFunc = async () => {
       const f = await getterFetcher.getFacultyNameById(
         props.faculty,

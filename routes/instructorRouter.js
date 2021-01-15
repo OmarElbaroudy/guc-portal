@@ -27,27 +27,6 @@ const validToken = function (arr, token) {
 	return !arr.includes(token);
 };
 
-const numOfDefined = (array) => {
-	let number = 0;
-	for (const entry of array) {
-		if (entry.instructorId !== undefined) number++;
-	}
-	return number;
-};
-
-const getCourseIdByName = async (name) => {
-	const ret = await courses.findOne({ name: name });
-	return ret ? ret._id : undefined;
-};
-const getAcademicIdById = async (id) => {
-	const ret = await academic.findOne({ id: id });
-	return ret ? ret._id : undefined;
-};
-const getLocationIdByName = async (name) => {
-	const ret = await locations.findOne({ name: name });
-	return ret ? ret._id : undefined;
-};
-
 const auth = async (req, res, next) => {
 	if (!req.header("auth-token")) {
 		return res.status(403).send("unauthenticated access");
@@ -68,6 +47,27 @@ const auth = async (req, res, next) => {
 	if (!ac) return res.status(403).send("unauthorized access");
 
 	next();
+};
+
+const numOfDefined = (array) => {
+	let number = 0;
+	for (const entry of array) {
+		if (entry.instructorId !== undefined) number++;
+	}
+	return number;
+};
+
+const getCourseIdByName = async (name) => {
+	const ret = await courses.findOne({ name: name });
+	return ret ? ret._id : undefined;
+};
+const getAcademicIdById = async (id) => {
+	const ret = await academic.findOne({ id: id });
+	return ret ? ret._id : undefined;
+};
+const getLocationIdByName = async (name) => {
+	const ret = await locations.findOne({ name: name });
+	return ret ? ret._id : undefined;
 };
 
 router

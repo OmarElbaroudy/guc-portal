@@ -27,7 +27,7 @@ const AcademicHome = () => {
 	};
 
 	useEffect(() => {
-		//setInterval(() => {}, 10000);
+		setInterval(() => {}, 10000);
 		const data = async () => {
 			try {
 				const res = await academicFetcher.viewSchedule(user.token);
