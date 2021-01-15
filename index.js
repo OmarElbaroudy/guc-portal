@@ -70,7 +70,7 @@ mongoose
 		}
 
 		app.use("", loginRouter);
-		app.use(authenticate);
+		//app.use(authenticate);
 		app.use("", hrRouter);
 		app.use("", hodRouter);
 		app.use("", staffRouter);

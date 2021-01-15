@@ -11,11 +11,40 @@ const Course = require("../models/course");
 const Requests = require("../models/requests");
 const timeCalculations = require("../components/timeCalculations");
 
+const fs = require("fs");
+const jwt = require("jsonwebtoken");
+const key = "iehfoeihfpwhoqhfiu083028430bvf";
+
 const calc = new timeCalculations();
 const router = express.Router();
 
+const loadTokens = async function () {
+	try {
+		let data = fs.readFileSync("blackList.json");
+		let dataString = data.toString();
+		return await JSON.parse(dataString);
+	} catch (error) {
+		return [];
+	}
+};
+
+const validToken = function (arr, token) {
+	return !arr.includes(token);
+};
+
 //4.4 HR
 const auth = async (req, res, next) => {
+  if (!req.header("auth-token")) {
+    return res.status(403).send("unauthenticated access");
+  }
+
+  jwt.verify(req.header("auth-token"), key);
+  if (!validToken(await loadTokens(), req.header("auth-token"))) {
+    return res
+      .status(450)
+      .send("this token is blackListed please login again");
+  }
+
   const token = req.header("auth-token");
   const decoded = jwt_decode(token);
 

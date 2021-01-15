@@ -9,7 +9,34 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const getter = new getterRoutes();
 
+const fs = require("fs");
+const jwt = require("jsonwebtoken");
+const key = "iehfoeihfpwhoqhfiu083028430bvf";
+
+const loadTokens = async function () {
+	try {
+		let data = fs.readFileSync("blackList.json");
+		let dataString = data.toString();
+		return await JSON.parse(dataString);
+	} catch (error) {
+		return [];
+	}
+};
+
+const validToken = function (arr, token) {
+	return !arr.includes(token);
+};
+
 const auth = async (req, res, next) => {
+	if (!req.header("auth-token")) {
+		return res.status(403).send("unauthenticated access");
+	}
+
+	jwt.verify(req.header("auth-token"), key);
+	if (!validToken(await loadTokens(), req.header("auth-token"))) {
+		return res.status(450).send("this token is blackListed please login again");
+	}
+
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -356,8 +383,8 @@ router.route("/api/HOD/view_requests").get(auth, async (req, res) => {
 				.then((doc) => {
 					const ret = doc.filter((req) => {
 						return req.type !== "slotLinking";
-          });
-          
+					});
+
 					return res.json(ret);
 				})
 				.catch((err) => {

@@ -5,6 +5,9 @@ const courses = require("../models/course");
 const academics = require("../models/academic");
 const departments = require("../models/department");
 const locations = require("../models/locations");
+const fs = require("fs");
+const jwt = require("jsonwebtoken");
+const key = "iehfoeihfpwhoqhfiu083028430bvf";
 
 const router = express.Router();
 
@@ -32,11 +35,6 @@ const getLocationIdByName = async (name) => {
 	return ret ? ret._id : undefined;
 };
 
-const getId = async (_id) => {
-	const c = await academics.findById(_id).select("id");
-	return c ? c.id : null;
-};
-
 const getCurDate = () => {
 	const y = new Date().getFullYear();
 	const m = new Date().getMonth();
@@ -44,8 +42,31 @@ const getCurDate = () => {
 	return new Date(Date.UTC(y, m, d));
 };
 
+const loadTokens = async function () {
+	try {
+		let data = fs.readFileSync("blackList.json");
+		let dataString = data.toString();
+		return await JSON.parse(dataString);
+	} catch (error) {
+		return [];
+	}
+};
+
+const validToken = function (arr, token) {
+	return !arr.includes(token);
+};
+
 //2.2 Academic Member
 const auth = async (req, res, next) => {
+	if (!req.header("auth-token")) {
+		return res.status(403).send("unauthenticated access");
+	}
+
+	jwt.verify(req.header("auth-token"), key);
+	if (!validToken(await loadTokens(), req.header("auth-token"))) {
+		return res.status(450).send("this token is blackListed please login again");
+	}
+
 	const token = req.header("auth-token");
 	const decoded = jwt_decode(token);
 
@@ -131,7 +152,7 @@ router
 				return res
 					.status(217)
 					.json("you must be in a department to send a request");
-			
+
 			const hodId = dep.hodId;
 			const hod = await academics.findById(hodId);
 
@@ -340,7 +361,7 @@ router.post("/api/ac/changeDayOff", auth, async (req, res) => {
 
 		if (!dep)
 			return res.status(217).json("you must be in a department to send a request");
-		
+
 		const hodId = dep.hodId;
 
 		const hod = await academics.findById(hodId);
@@ -386,7 +407,7 @@ router.post("/api/ac/leaveRequest", auth, async (req, res) => {
 
 		if (!departmentId)
 			return res.json("you need to be in a department to send this request");
-		
+
 		const hodId = (await departments.findById(departmentId)).hodId;
 		const hod = await academics.findById(hodId);
 

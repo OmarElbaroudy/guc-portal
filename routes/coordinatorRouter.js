@@ -4,10 +4,27 @@ const courses = require("../models/course");
 const request = require("../models/requests");
 const locations = require("../models/locations");
 const jwt_decode = require("jwt-decode");
+
+const fs = require("fs");
+const jwt = require("jsonwebtoken");
+const key = "iehfoeihfpwhoqhfiu083028430bvf";
+
 const router = express.Router();
-const app = express();
-app.use(express.json());
 let ac = "";
+
+const loadTokens = async function () {
+	try {
+		let data = fs.readFileSync("blackList.json");
+		let dataString = data.toString();
+		return await JSON.parse(dataString);
+	} catch (error) {
+		return [];
+	}
+};
+
+const validToken = function (arr, token) {
+	return !arr.includes(token);
+};
 
 const getLocationIdByName = async (name) => {
   const ret = await locations.findOne({ name: name });
@@ -15,6 +32,17 @@ const getLocationIdByName = async (name) => {
 };
 
 const auth = async (req, res, next) => {
+  if (!req.header("auth-token")) {
+    return res.status(403).send("unauthenticated access");
+  }
+
+  jwt.verify(req.header("auth-token"), key);
+  if (!validToken(await loadTokens(), req.header("auth-token"))) {
+    return res
+      .status(450)
+      .send("this token is blackListed please login again");
+  }
+  
   const token = req.header("auth-token");
   const decoded = jwt_decode(token);
 
