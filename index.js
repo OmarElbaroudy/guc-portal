@@ -62,16 +62,6 @@ mongoose
 			}
 		}
 
-		if (
-			process.env.NODE_ENV === "production" ||
-			process.env.NODE_ENV === "staging"
-		) {
-			app.use(express.static("client/build"));
-			app.get("*", (req, res) => {
-				res.sendFile(path.join(__dirname + "/client/build/index.html"));
-			});
-		}
-
 		app.use("", loginRouter);
 		app.use(authenticate);
 		app.use("", hrRouter);
@@ -82,6 +72,16 @@ mongoose
 		app.use("", academicRouter);
 		app.use("", instructorRouter);
 		app.use("", coordinatorRouter);
+
+		if (
+			process.env.NODE_ENV === "production" ||
+			process.env.NODE_ENV === "staging"
+		) {
+			app.use(express.static("client/build"));
+			app.get("*", (req, res) => {
+				res.sendFile(path.join(__dirname + "/client/build/index.html"));
+			});
+		}
 
 		app.listen(port, () => {
 			console.log("connected");
