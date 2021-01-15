@@ -60,10 +60,9 @@ const HrHome = () => {
           <button
             onClick={() => setRedirect("/hr/Locations")}
             type="button"
-            href="/hr/Locations"
             class="btn"
           >
-            <span class="fa fa-map-marker fa-3x" href="#"></span>
+            <span class="fa fa-map-marker fa-3x"></span>
           </button>
           <p>Locations</p>
           <br />
@@ -77,7 +76,6 @@ const HrHome = () => {
           <button
             onClick={() => setRedirect("/hr/Faculties")}
             type="button"
-            href="/hr/Faculties"
             class="btn"
           >
             <span class="fas fa-school fa-3x"> </span>
@@ -95,7 +93,6 @@ const HrHome = () => {
           <button
             onClick={() => setRedirect("/hr/Departments")}
             type="button"
-            href="/hr/Departments"
             class="btn"
           >
             <span class="fa fa-university fa-3x"> </span>
@@ -112,7 +109,6 @@ const HrHome = () => {
           <button
             onClick={() => setRedirect("/hr/Courses")}
             type="button"
-            href="/hr/Courses"
             class="btn"
           >
             <span class="fas fa-book fa-3x"> </span>
@@ -142,7 +138,6 @@ const HrHome = () => {
           <button
             onClick={() => setRedirect("/hr/StaffMembers")}
             type="button"
-            href="/hr/StaffMembers"
             class="btn"
           >
             <span class="fa fa-users fa-3x"> </span>

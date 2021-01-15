@@ -206,10 +206,9 @@ const StaffHome = () => {
         <div class="container">
           <div class="row center">
             <div class="col-md-3 containerIntro">
-              <button type="button" href="#" class="btn">
+              <button type="button" class="btn">
                 <span
                   class="far fa-clipboard fa-3x"
-                  href="#"
                   onClick={handleShow}
                 ></span>
               </button>
@@ -219,7 +218,7 @@ const StaffHome = () => {
             </div>
 
             <div class="col-md-3 containerIntro">
-              <button type="button" href="#" class="btn" onClick={showProfile}>
+              <button type="button"  class="btn" onClick={showProfile}>
                 <span class="far fa-user fa-3x"> </span>
               </button>
               <p>Profile</p>
@@ -230,7 +229,6 @@ const StaffHome = () => {
             <div class="col-md-3 containerIntro">
               <button
                 type="button"
-                href="#"
                 class="btn"
                 onClick={showMissingDays}
               >
@@ -244,7 +242,6 @@ const StaffHome = () => {
             <div class="col-md-3 containerIntro">
               <button
                 type="button"
-                href="#"
                 class="btn"
                 onClick={showMissingHours}
               >
@@ -261,7 +258,7 @@ const StaffHome = () => {
         <div class="container">
           <div class="row center">
             <div class="offset-md-3 col-md-3 containerIntro">
-              <button type="button" href="#" class="btn" onClick={signIn}>
+              <button type="button" class="btn" onClick={signIn}>
                 <span class="fas fa-sign-in-alt fa-3x"> </span>
               </button>
               <p>Sign In</p>
@@ -270,7 +267,7 @@ const StaffHome = () => {
             </div>
 
             <div class="col-md-3 containerIntro">
-              <button type="button" href="#" class="btn" onClick={signOut}>
+              <button type="button" class="btn" onClick={signOut}>
                 <span class="fas fa-sign-out-alt fa-3x"> </span>
               </button>
               <p>Sign Out</p>

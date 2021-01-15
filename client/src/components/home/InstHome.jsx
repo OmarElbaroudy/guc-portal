@@ -22,7 +22,6 @@ const InstHome = () => {
         >
           <button
             type="button"
-            href="#"
             onClick={() => setRedirect("/instructor/courses")}
             class="btn"
           >
@@ -40,7 +39,6 @@ const InstHome = () => {
           <button
             type="button"
             onClick={() => setRedirect("/instructor/staffMembers")}
-            href="#"
             class="btn"
           >
             <span class="fa fa-users fa-3x"> </span>

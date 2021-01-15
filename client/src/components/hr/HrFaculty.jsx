@@ -93,7 +93,7 @@ const HrFaculty = () => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add Department</Modal.Title>
+          <Modal.Title>Add Faculty</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -111,7 +111,7 @@ const HrFaculty = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button id="close" onClick={() => handleClose1}>
+          <Button id="close" onClick={() => handleClose1()}>
             Close
           </Button>
           <Button variant="success" onClick={() => addFaculty()}>

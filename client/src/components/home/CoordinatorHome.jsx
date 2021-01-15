@@ -128,7 +128,6 @@ const CoordinatorHome = () => {
           <button
             onClick={() => handleShow1()}
             type="button"
-            href="#"
             class="btn"
           >
             <span class="fa fa-plus fa-3x"> </span>
@@ -142,7 +141,6 @@ const CoordinatorHome = () => {
           <button
             onClick={() => handleShow2()}
             type="button"
-            href="#"
             class="btn"
           >
             <span class="fa fa-trash fa-3x"> </span>
@@ -158,7 +156,6 @@ const CoordinatorHome = () => {
           <button
             onClick={() => handleShow3()}
             type="button"
-            href="#"
             class="btn"
           >
             <span class="fa fa-wrench fa-3x"> </span>
@@ -172,7 +169,6 @@ const CoordinatorHome = () => {
           <button
             onClick={() => setRedirect("/coordinator/request")}
             type="button"
-            href="#"
             class="btn"
           >
             <span class="fa fa-envelope fa-3x"> </span>

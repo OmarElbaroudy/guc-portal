@@ -27,13 +27,12 @@ function HodHome() {
           <div class="col-md-4 containerIntro offset-2">
             <button
               type="button"
-              href="#"
               onClick={() => {
                 setRedirect("/homePage/coursesCoverage");
               }}
               class="btn"
             >
-              <span class="fas fa-book fa-3x" href="#"></span>
+              <span class="fas fa-book fa-3x"></span>
             </button>
             <p>Courses</p>
             <br />
@@ -46,7 +45,6 @@ function HodHome() {
           >
             <button
               type="button"
-              href="#"
               onClick={() => {
                 setRedirect("/homePage/staffMembers");
               }}
