@@ -62,6 +62,13 @@ mongoose
 			}
 		}
 
+		if (
+			process.env.NODE_ENV === "production" ||
+			process.env.NODE_ENV === "staging"
+		) {
+			app.use(express.static("client/build"));
+		}
+
 		app.use("", loginRouter);
 		app.use(authenticate);
 		app.use("", hrRouter);
@@ -77,7 +84,6 @@ mongoose
 			process.env.NODE_ENV === "production" ||
 			process.env.NODE_ENV === "staging"
 		) {
-			app.use(express.static("client/build"));
 			app.get("*", (req, res) => {
 				res.sendFile(path.join(__dirname + "/client/build/index.html"));
 			});
