@@ -75,11 +75,11 @@ mongoose
 		app.use("", instructorRouter);
 		app.use("", coordinatorRouter);
 		
-		app.get("*", (req, res) => {
-			res.sendFile(
-				path.join(__dirname, "client", "build", "./client/public/index.html")
-			);
-		});
+		// app.get("*", (req, res) => {
+		// 	res.sendFile(
+		// 		path.join(__dirname, "client", "build", "./client/public/index.html")
+		// 	);
+		// });
 		
 		app.listen(port, () => {
 			console.log("connected");
