@@ -608,7 +608,7 @@ router.route("/api/instructor/deleteAcademic").put(auth, async (req, res) => {
 			});
 
 			let flag = false;
-			for (const entry of courses) {
+			for (const entry of x.courses) {
 				if (entry.courseId.equals(c._id) && entry.position === "academic") {
 					flag = true;
 				}
@@ -667,7 +667,7 @@ router.route("/api/instructor/deleteAcademic").put(auth, async (req, res) => {
 				await x.save();
 			} else {
 				console.log("not found");
-				res.send("not found");
+				res.json("not found");
 			}
 			res.json(x);
 		}
