@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
-//const path = require("path");
+const path = require("path");
 
 const hrRouter = require("./routes/hrRouter");
 const hodRouter = require("./routes/hodRouter");
@@ -20,7 +20,7 @@ const port = process.env.PORT || 8000;
 const app = express();
 app.use(express.json());
 app.use(cors());
-//app.use(express.static(path.join(__dirname, "client", "build")));
+app.use(express.static(path.join(__dirname, "client", "build")));
 
 const loadTokens = async function () {
 	try {
@@ -62,6 +62,12 @@ mongoose
 				res.status(401).send("invalid token");
 			}
 		}
+		
+		app.get("*", (req, res) => {
+			res.sendFile(
+				path.join(__dirname, "client", "build", "./client/public/index.html")
+			);
+		});
 
 		app.use("", loginRouter);
 		app.use(authenticate);
@@ -74,11 +80,6 @@ mongoose
 		app.use("", instructorRouter);
 		app.use("", coordinatorRouter);
 
-		// app.get("*", (req, res) => {
-		// 	res.sendFile(
-		// 		path.join(__dirname, "client", "build", "./client/src/views/index.html")
-		// 	);
-		// });
 
 		app.listen(port, () => {
 			console.log("connected");
