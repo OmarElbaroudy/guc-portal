@@ -11,7 +11,6 @@ const jwt = require("jsonwebtoken");
 const key = "iehfoeihfpwhoqhfiu083028430bvf";
 
 const loadTokens = async function () {
-	
 	try {
 		let data = fs.readFileSync("blackList.json");
 		let dataString = data.toString();
@@ -127,14 +126,6 @@ router.get("/api/ac/viewSchedule", auth, async (req, res) => {
 		console.log(err);
 	}
 });
-
-// {
-// 	"id" : "ac-10",
-// 	"slot": "2",
-// 	"weekDay" : "1",
-// 	"slotDate" : { "year" : "2020" ,  "month" : "12", "day" : "21"},
-// 	"course" : "CSEN101"
-// }
 
 router
 	.route("/api/ac/replacement")
