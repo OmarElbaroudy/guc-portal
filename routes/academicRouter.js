@@ -11,6 +11,7 @@ const jwt = require("jsonwebtoken");
 const key = "iehfoeihfpwhoqhfiu083028430bvf";
 
 const loadTokens = async function () {
+	
 	try {
 		let data = fs.readFileSync("blackList.json");
 		let dataString = data.toString();
