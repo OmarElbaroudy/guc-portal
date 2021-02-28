@@ -1,3 +1,4 @@
 # Default ignored files
 client/.eslintcache
 /node_modules
+.env

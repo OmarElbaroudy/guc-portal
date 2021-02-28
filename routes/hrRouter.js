@@ -13,7 +13,7 @@ const timeCalculations = require("../components/timeCalculations");
 
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
-const key = "iehfoeihfpwhoqhfiu083028430bvf";
+const key = process.env.SECRET;
 
 const calc = new timeCalculations();
 const router = express.Router();

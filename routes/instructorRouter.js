@@ -11,7 +11,7 @@ let ac = "";
 
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
-const key = "iehfoeihfpwhoqhfiu083028430bvf";
+const key = process.env.SECRET;
 
 const loadTokens = async function () {
 	try {

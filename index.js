@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 
+require('dotenv').config()
+
 const hrRouter = require("./routes/hrRouter");
 const hodRouter = require("./routes/hodRouter");
 const loginRouter = require("./routes/loginRouter");
@@ -18,8 +20,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const cluster =
-	"mongodb+srv://admin:admin@cluster0.ryozj.mongodb.net/Proj?retryWrites=true&w=majority";
+const cluster =process.env.DB_URL;
 mongoose
 	.connect(cluster, {
 		useNewUrlParser: true,

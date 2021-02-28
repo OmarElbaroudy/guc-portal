@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const jwt = require("jsonwebtoken");
-const key = "iehfoeihfpwhoqhfiu083028430bvf";
+const key = process.env.SECRET;
 
 const blackListToken = function (arr, token) {
   arr.push(token);

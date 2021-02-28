@@ -7,7 +7,7 @@ const timeCalculations = require("../components/timeCalculations");
 
 const router = express.Router();
 const calc = new timeCalculations();
-const key = "iehfoeihfpwhoqhfiu083028430bvf";
+const key = process.env.SECRET;
 
 router.post("/api/login", async (req, res) => {
 	const email = req.body.email;
