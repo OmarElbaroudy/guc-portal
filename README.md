@@ -1,5 +1,5 @@
 # guc-portal
-## A web app for managing university's staff members.
+## [A web app for managing university's staff members.](https://gucportal.herokuapp.com/)
 
 ### Basic functionalities
 * Login and logout of the system.
@@ -48,6 +48,3 @@ his department.
 * View their schedule. 
 * Send/cancel a request 
 *requests can be (slot linking, maternal leave, change day-Off, acidental leave ...)*
-
-
-[deployment Link](https://gucportal.herokuapp.com/)
