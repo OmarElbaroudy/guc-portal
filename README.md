@@ -8,7 +8,7 @@
 * View attendance records, missing/extra hours and missing/extra days.
 
 ### HR
-As a HR staff member you can do the following : 
+*As a HR staff member you can do the following :* 
 * Add/update/delete a location (e.g offices, labs and lecture halls).
 * Add/update/delete a faculty, departments and courses.
 * Add new staff members to the system.
@@ -19,7 +19,7 @@ As a HR staff member you can do the following :
 * Update the salary of a staff member.
 
 ### Head of Department
-Any HOD can do the following:
+*Any HOD can do the following:*
 * Assign/delete/update a course instructor for each course in his department.
 * View all the staff in his/her department or per course along with their profiles.
 * View the day off of all the staff/ a single staff in his/her department.
@@ -30,7 +30,7 @@ Any HOD can do the following:
 his department.
 
 ### Course Instructor
-Any course instructor can do the following:
+*Any course instructor can do the following:*
 * View the coverage of course(s) he/she is assigned to.
 * View the slots’ assignment of course(s) he/she is assigned to.
 * View all the staff in his/her department or per course along with their profiles.
@@ -50,4 +50,4 @@ Any course instructor can do the following:
 *requests can be (slot linking, maternal leave, change day-Off, acidental leave ...)*
 
 
-[deployment Link]{https://gucportal.herokuapp.com/}
+[deployment Link](https://gucportal.herokuapp.com/)
